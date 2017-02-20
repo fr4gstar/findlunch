@@ -1,5 +1,5 @@
 # FindLunch
-[![Build Status](https://travis-ci.org/CCWI/findlunch.svg?branch=master)](https://travis-ci.org/CCWI/findlunch)
+[![Build Status](https://travis-ci.org/CCWI/findlunch.svg?branch=feature_travis-ci-webapp)](https://travis-ci.org/CCWI/findlunch)
 
 This client server based application allows restaurants to register offers (e.g. for lunch) and helps customer to find these via their smartphone (based on their location).
 
