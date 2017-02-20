@@ -1,6 +1,13 @@
 language: java
 jdk:
-  - oraclejdk8
-  
+- oraclejdk8
 before_script:
-  - cd webapp
+- cd webapp
+deploy:
+  provider: releases
+  api_key:
+    secure: X3jOtu3nkR1aSJ5HoZzsYtuFg+Pnz1iwgp6sPDL+AK93bxmg+RulRs20VC4qdgQKFdKosq+ot/FdtHJnDIQ1j2f21+EXdCwdwf1pVLOHWOgxfdAjpnySGf5L2DxfFbo0auqGU1cVjJ/YnhIExBSlkr0TGolrYKMik3JFkmHXYam37dJ6wL3XTNO3fcYEOLjH1mKAtQTuD/J0Uli3Z9xyysu9ICJYLTE6RxxaTnv1UmUcffwa4N7tAFRY3INkJqw9wBHl0AFH7W7kKlMiwoMVvrULE0TnPKAn4DGRitKXTzO8ohIlZ50Li8uVvnF7E7G8NoLnIJtRjM8HKlLzA7F9E+ocGrM4dAVO7m7WTAIiTlQh4TnG97+Ck2m5WnN8KvOk8KYE4bPT2CBluSDs4p/n36HRxqr4o4JrSjeaQKRyHZ8+5cJWswObFZOy9daw/BUo/3WIazZJRBAFweN5uCFpZD4WBmyB3P3lN5BL18YmSmPJtLG4gmxqRJJ5WvRGhuLBD2dE3xQeLrQUBK2GdQvuaBMYsgO/M0tMmqEjMba1O25jEsh8XWq4nEB6sGzPzIzt4jryyibeMCZjnXXbvSdEE0EVG/u7Cchs7KJk7mMGqj7qXPmZ+Sp1ay5/7bPM6DkzEJ0xpyELotd1gx9i6keaDB1M2ZLakTT1rQdgrpKGhmk=
+  file: target/findLunch-webapp.jar
+  on:
+    repo: CCWI/findlunch
+    branch: feature_travis-ci-webapp
