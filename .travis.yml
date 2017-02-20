@@ -1,4 +1,5 @@
-sudo: false
+# setting sudo to required, to avoid container based system
+sudo: required
 language: android
 env:
   global:
