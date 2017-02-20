@@ -3,6 +3,9 @@ jdk:
 - oraclejdk8
 before_script:
 - cd webapp
+script:
+- mvn test -B
+- mvn package -B
 deploy:
   provider: releases
   api_key:
