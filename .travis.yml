@@ -29,6 +29,8 @@ before_script:
   $ANDROID_ABI --tag $ANDROID_TAG
 - emulator -avd test -no-skin -no-audio -no-window &
 - android-wait-for-emulator
+script:
+- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 deploy:
   provider: releases
   api_key:
