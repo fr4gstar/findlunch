@@ -31,12 +31,12 @@ before_script:
 - android-wait-for-emulator
 script:
 - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
-- "ls -R ."
+#- "ls -R ."
 deploy:
   provider: releases
   api_key:
     secure: Atcd3zL25v/GVxJSa/FqV8uHux2TplIX5eT8yUnq2MKG5PguSZr+x+83xJmbN7dl+uNhArQfJQ6ztPIWY8+v7ftabtUvU/shyuHSzWOcKSj3G+c/M14MGeUk2HfRxkfPOBbScwvbPLXlRg45/lmehZHRMQhN/BlvEbMkXlO8Asxvg7a3/YE7FOxvFI+uxY3R85PK91RdOc3olaAKzNo3eb7eySAQMeg9hEPbhsxmDHufAC6ttneEoxRrh2F1h3+T0pDI2D3fLJ+UgOEGrluzaGPzwzku/LR+5aXdNuL1Gg87QsMh6SiZ6qJ8nyTzfMAkeme9TjS5RTvVwt5PZF8t1lQwkYXscmKdKepsHkrCfo6DEK3BHVMDsHl3Ulf0V73j40zw7N3R1+BlIqQmfxVCrfLeGj/7Cet98ptjQQx9xkf4CrUKqFh5G2n9KiXrrimmYcJWLS4jibKOXFJ+1aefq2vNUufECkCiMOw+SzIxE50j20/38JtYmrxO7ymxKS3ZwJeFzY9v8q5QQMlWa1Mw3+rgPNgMaLBz+XXP8+tUvZn1KYeOyWAwkOK2anDiaRcCxs4JsmhdcFecbIcMut9vOkUjlK4folAtIhse0Rs7grnXjL5+fzSAG4T2+64iqxA6PGc830xjhJQA5uoQ/ClvWtN3eqLlzUbMLAJGkZcXOwU=
-  file: app/build/outputs/apk/app*release*.apk
+  file: app/build/outputs/apk/app-release-unsigned.apk
   skip_cleanup: true
   on:
     repo: CCWI/findlunch
