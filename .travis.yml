@@ -31,6 +31,7 @@ before_script:
 - android-wait-for-emulator
 script:
 - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+- "ls -R ."
 deploy:
   provider: releases
   api_key:
