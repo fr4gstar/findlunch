@@ -13,7 +13,7 @@ def buildTime() {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "edu.hm.cs.projektstudium.findlunch.androidapp"
