@@ -124,7 +124,10 @@ class SendPushNotification implements Runnable {
 	private final Logger LOGGER = LoggerFactory.getLogger(SendPushNotification.class);
 
 	/** The sender id. */
-	private final String SENDER_ID = "AIzaSyAhPUXTaIVu7aDOyKh2ulBt4et9Y0TmVUs";
+	//Android-App
+	//private final String SENDER_ID = "AIzaSyAhPUXTaIVu7aDOyKh2ulBt4et9Y0TmVUs";
+	//iOS-App
+	private final String SENDER_ID = "AAAA6u8NA5U:APA91bFJXyb6fYPsBkNNrpy-vXTae-r5zrNoMvo7uNysQmCAdEU2RLNuHNXghXD8F2B-yNXJ2ARb_ceNvgtDPiJMnQAjAl3QFjRhowo0FZPmysNcNSrudMRhDn0TTptq3Crw-rb1nSoJ";
 
 	/** The collapse key. */
 	private final String COLLAPSE_KEY = "findLunchDaily";

@@ -82,6 +82,7 @@ public class SecurityConfig {
 					.antMatchers(HttpMethod.PUT, "/api/register_favorite/**")
 					.antMatchers(HttpMethod.DELETE, "/api/unregister_favorite/**")
 					.antMatchers(HttpMethod.GET, "/api/restaurants")
+					.antMatchers(HttpMethod.GET, "/api/fav_restaurants")
 				.and().httpBasic().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}

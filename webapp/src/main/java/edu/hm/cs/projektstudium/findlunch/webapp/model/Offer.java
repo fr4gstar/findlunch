@@ -59,6 +59,7 @@ public class Offer {
 	@DateTimeFormat(pattern="dd.MM.yyy")
 	@Column(name="end_date")
 	@NotNull(message="{offer.endDate.notNull}")
+	@JsonView(OfferView.OfferRest.class)
 	private Date endDate;
 
 	/** The preparation time. */
@@ -78,6 +79,7 @@ public class Offer {
 	@DateTimeFormat(pattern="dd.MM.yyy")
 	@Column(name="start_date")
 	@NotNull(message="{offer.startDate.notNull}")
+	@JsonView(OfferView.OfferRest.class)
 	private Date startDate;
 
 	/** The title. */
@@ -125,6 +127,7 @@ public class Offer {
 			@JoinColumn(name="day_of_week_id")
 			}
 		)
+	@JsonView(OfferView.OfferRest.class)
 	private List<DayOfWeek> dayOfWeeks;
 
 	/** The restaurant. */

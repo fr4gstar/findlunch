@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.PushNotificationView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
@@ -27,16 +28,16 @@ public class DayOfWeek {
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({OfferView.OfferRest.class, RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
 	private int id;
 
 	/** The day number. */
 	@Column(name="day_number")
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({OfferView.OfferRest.class, RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
 	private int dayNumber;
 
 	/** The name. */
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({OfferView.OfferRest.class, RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
 	private String name;
 
 	/** The offers. */

@@ -114,6 +114,38 @@ public class RestaurantRestController {
 
 		return getAllRestaurants(longitude, latitude, radius);
 	}
+
+
+	/**
+	 * Gets all favorized restaurants of a user
+	 * @param principal
+	 * @param request
+	 * @return favorized restaurants of user
+	 */
+	@JsonView(RestaurantView.RestaurantRest.class)
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(path = "/api/fav_restaurants", method = RequestMethod.GET,  headers = { "Authorization" })
+	public List<Restaurant> getFavRestaurants(
+			@RequestParam(name = "longitude", required = true) float longitude,
+			@RequestParam(name = "latitude", required = true) float latitude,
+			Principal principal, HttpServletRequest request) {
+		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+
+		// Check favorites
+		List<Restaurant> favorites = restaurantRepo.findByFavUsers_username(authenticatedUser.getUsername());
+		for(Restaurant restaurant : favorites){
+			restaurant.setDistance(
+					DistanceCalculator.calculateDistance(latitude,
+							longitude,
+							restaurant.getLocationLatitude(),
+							restaurant.getLocationLongitude()));
+		}
+
+		return favorites;
+	}
+
 	
 	/**
 	 * Gets the restaurants within a given radius. The flag "isFavorite" is
