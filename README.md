@@ -60,3 +60,13 @@ that is located on the external storage of your Android device. The file must co
 	port=8444
 
 ## iOS App
+The iOS application is based on the following technologies:
+  * 
+
+### Import into XCode
+
+### Clean Project
+
+### Run application
+
+### Using a custom Webapp
