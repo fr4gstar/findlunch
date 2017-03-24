@@ -71,12 +71,12 @@ The iOS application is based on the following technologies:
   * Carthage
 
 ### Update Dependencies
-````bash
+```bash
 brew install cocoapods
 brew install carthage
 pod update
 carthage update
-```
+´´´
 
 ### Import into XCode
 
