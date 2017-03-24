@@ -61,12 +61,40 @@ that is located on the external storage of your Android device. The file must co
 
 ## iOS App
 The iOS application is based on the following technologies:
-  * 
+  * Firebase/Core
+  * Firebase/Messaging
+  * SwiftIconFont
+
+### Requirements
+  * Homebrew
+  * CocoaPods
+  * Carthage
+
+### Update Dependencies
+````bash
+brew install cocoapods
+brew install carthage
+pod update
+carthage update
+```
 
 ### Import into XCode
 
+In order to import the project into XCode, please follow these stepts:
+
+1. Open XCode
+2. Navigate to "File" and select "Open..."
+3. In the following menu navigate to the "FindLunchIosApp" folder, select "FindLunch.xcworkspace" and click "Ok"
+
 ### Clean Project
+
+Before you start the application, please consider to clean the project to avoid issues. To do this, you have to navigate to "Product" and select "Clean".
 
 ### Run application
 
+To start the application, navigate to "Product" and select "Run".
+
 ### Using a custom Webapp
+
+The iOS app gives the ability to define host and port for the connection with the findlunch Webapp. To do this, you have to start the app and navigate to the tab "Einstellungen". Enter the address into the field "Server".  
+
