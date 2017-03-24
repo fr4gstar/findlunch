@@ -76,7 +76,7 @@ brew install cocoapods
 brew install carthage
 pod update
 carthage update
-´´´
+```
 
 ### Import into XCode
 
