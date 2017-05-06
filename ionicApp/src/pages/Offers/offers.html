@@ -1,0 +1,21 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Offers</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    This is the OffersPage.
+    <ion-list>
+        <button ion-item *ngFor="let offer of offers" (click)="itemTapped($event, offer)">
+            <!--<ion-icon [name]="offer.icon" item-left></ion-icon>-->
+            {{offer.title}}
+            <!--<div class="item-note" item-right>
+                {{offer.note}}
+            </div>-->
+        </button>
+    </ion-list>
+</ion-content>
