@@ -8,14 +8,14 @@
 </ion-header>
 
 <ion-content>
-    This is the OffersPage.
+    <h2 padding-left>Aktuelle Angebote</h2>
+
     <ion-list>
-        <button ion-item *ngFor="let offer of offers" (click)="itemTapped($event, offer)">
-            <!--<ion-icon [name]="offer.icon" item-left></ion-icon>-->
-            {{offer.title}}
-            <!--<div class="item-note" item-right>
-                {{offer.note}}
-            </div>-->
+        <button ion-item *ngFor="let offer of offers" (click)="onOfferClicked($event, offer)">
+            <div>{{offer.title}}</div>
+            <div class="item-note" item-right>
+                {{offer.price | currency:'EUR':true}}
+            </div>
         </button>
     </ion-list>
 </ion-content>
