@@ -10,7 +10,7 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {Firebase} from "@ionic-native/firebase";
 import {Geolocation} from '@ionic-native/geolocation';
-import {OffersPage} from "../pages/Offers/offers";
+import {OffersPage} from "../pages/offers/offers";
 
 @NgModule({
     declarations: [
