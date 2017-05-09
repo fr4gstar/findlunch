@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {NavController, Platform} from 'ionic-angular';
+import {NavController, Platform, NavParams} from 'ionic-angular';
 import {Coordinates, Geolocation} from '@ionic-native/geolocation';
+
 
 @Component({
   selector: 'page-home',
@@ -10,9 +11,13 @@ export class HomePage {
 
   public pos: Coordinates;
 
+
   constructor(public navCtrl: NavController, private geolocation: Geolocation, private platform: Platform) {
     this.platform.ready().then(() => this.getGeolocation())
   }
+
+//  this.navController.push(RestaurantsPage,{pos: this.pos});
+
 
   private getGeolocation() {
     this.geolocation.getCurrentPosition().then((res) => {
