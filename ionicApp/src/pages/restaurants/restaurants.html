@@ -16,7 +16,12 @@
   </ion-list>
   <!-- keine Ahnung ob das so geht
 
-  <button ion-button full (click)="showRestaurants(this.pos, this.coordinates);"> Restaurants im Radius anzeigen</button>
   -->
+  <ion-list>
+    <button ion-item *ngFor="let restaurant of restaurants" (click)="showRestaurants()">
+      <div>shalalal</div>
+    </button>
+  </ion-list>
+  <button ion-button full (click)="showRestaurants();"> Restaurants im Radius anzeigen</button>
 </ion-content>
 
