@@ -1,20 +1,20 @@
 import {Component, OnInit} from "@angular/core";
-import {NavParams} from "ionic-angular";
+import {NavController, NavParams} from "ionic-angular";
 import {Http} from "@angular/http";
 
-export const FL_NAVPARAM_RESTAURANT_ID = "restaurant_id";   // TODO: Move this to restaurant-selection-page
 export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
 @Component({
     selector: 'offers',
     templateUrl: 'offers.html'
 })
+
 export class OffersPage implements OnInit {
     private _restaurant_id: number;
     public offers: Object[];
 
     constructor(navParams: NavParams, private http: Http) {
-        this._restaurant_id = navParams.get(FL_NAVPARAM_RESTAURANT_ID);
+        this._restaurant_id = navParams.get("restaurant_id");
     }
 
     ngOnInit() {
