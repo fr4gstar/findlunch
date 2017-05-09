@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {NavController, NavParams} from "ionic-angular";
-import { Http } from "@angular/http";
-
+//import {Http} from "@angular/http";
 
 @Component({
   selector: 'restaurants-page',
@@ -17,15 +16,16 @@ export class RestaurantsPage {
   // durch json iterieren und für jedes Element einen div
   //
   //
-  constructor(public navCtrl : NavController, private navParams:NavParams, http: Http ) {
+  constructor(public navCtrl : NavController, private navParams:NavParams, /*http: Http*/  ) {
   //  this.pos = navParams.get('pos');
 
-  }/* wenn die api dann mal geht
+  }
+  /* http import geht nichT?!
   showRestaurants(pos : Coordinates, radius : number){
-    this.http.get('https://findlunch.biz.tm:8444/api//restaurants?latitude=['+pos.latitude+']&longitude=['+pos.longitude+ ']&radius=['+radius+']')
+    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude=48.154696&longitude=11.54638&radius=1000')
    .subscribe(
    res => this.restaurants = res.json(),
    err => console.error(err);
  }
-*/
 }
+/*
