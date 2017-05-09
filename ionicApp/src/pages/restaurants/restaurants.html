@@ -19,7 +19,7 @@
   -->
   <ion-list>
     <button ion-item *ngFor="let restaurant of restaurants" (click)="showRestaurants()">
-      <div>shalalal</div>
+      <div>{{restaurant.name}}</div>
     </button>
   </ion-list>
   <button ion-button full (click)="showRestaurants();"> Restaurants im Radius anzeigen</button>

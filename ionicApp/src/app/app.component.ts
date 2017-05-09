@@ -27,7 +27,6 @@ export class MyApp {
             {title: 'Home', component: HomePage},
             {title: 'List', component: ListPage},
             {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'List', component: ListPage},
             {title: 'Angebote', component: OffersPage}
         ];
     }

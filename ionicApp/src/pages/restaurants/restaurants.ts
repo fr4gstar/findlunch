@@ -21,14 +21,12 @@ export class RestaurantsPage {
   //  this.pos = navParams.get('pos');
 
   }
-  /* http import geht nichT?!
-*/
+
   showRestaurants(/*pos : Coordinates, radius : number*/){
-    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude=48.154696&longitude=11.54638&radius=1000')
+    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude=48.154696&longitude=11.54638&radius=500')
    .subscribe(
    res => this.restaurants = res.json(),
    err => console.error(err)
   )
-    console.log(this.restaurants)
  }
 }
