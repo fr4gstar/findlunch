@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {NavController, NavParams} from "ionic-angular";
 import {Http} from "@angular/http";
 
+
 @Component({
   selector: 'restaurants-page',
   templateUrl: 'restaurants.html'
@@ -22,8 +23,8 @@ export class RestaurantsPage {
 
   }
 
-  showRestaurants(/*pos : Coordinates, radius : number*/){
-    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude=48.154696&longitude=11.54638&radius=500')
+  showRestaurants(radius : String){
+    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude=48.154696&longitude=11.54638&radius='+radius)
    .subscribe(
    res => this.restaurants = res.json(),
    err => console.error(err)

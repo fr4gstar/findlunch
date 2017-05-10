@@ -11,17 +11,17 @@
   <ion-list>
       <ion-item>
         <ion-label fixed>Entfernung</ion-label>
-        <ion-input type="number"></ion-input>
+        <ion-input #distance type="number"></ion-input>
       </ion-item>
   </ion-list>
   <!-- keine Ahnung ob das so geht
 
   -->
   <ion-list>
-    <button ion-item *ngFor="let restaurant of restaurants" (click)="showRestaurants()">
+    <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers()">
       <div>{{restaurant.name}}</div>
     </button>
   </ion-list>
-  <button ion-button full (click)="showRestaurants();"> Restaurants im Radius anzeigen</button>
+  <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
 </ion-content>
 
