@@ -8,20 +8,25 @@
 </ion-header>
 <ion-content padding>
   <h3>Restaurants in der Nähe</h3>
-  <ion-list>
+  <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
+  <ion-list >
       <ion-item>
         <ion-label fixed>Entfernung</ion-label>
         <ion-input #distance type="number"></ion-input>
       </ion-item>
   </ion-list>
-  <!-- keine Ahnung ob das so geht
 
-  -->
+  <div style = "visibility: hidden">
+    <span>Position:</span><br>
+    <span>Lat: {{pos?.latitude}}</span><br>
+    <span>Long: {{pos?.longitude}}</span><br>
+    <span>Accuracy: {{pos?.accuracy}}</span>
+  </div>
+
   <ion-list>
     <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers()">
       <div>{{restaurant.name}}</div>
     </button>
   </ion-list>
-  <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
 </ion-content>
 

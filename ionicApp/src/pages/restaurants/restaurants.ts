@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {NavController, NavParams} from "ionic-angular";
+import {NavController, NavParams, Platform} from "ionic-angular";
 import {Http} from "@angular/http";
+import {Coordinates, Geolocation} from '@ionic-native/geolocation';
 
 
 @Component({
@@ -9,8 +10,8 @@ import {Http} from "@angular/http";
 
 })
 export class RestaurantsPage {
-  pos: Coordinates;
   public restaurants : Object[];
+  private pos : Coordinates;
   // coordinates pos von Homepage holen
   // Wert für Radius möglich machen anzugeben
   // Koordinaten und radius in API Call mit reinpacken
@@ -18,13 +19,19 @@ export class RestaurantsPage {
   // durch json iterieren und für jedes Element einen div
   //
   //
-  constructor(public navCtrl : NavController, private navParams:NavParams, private http: Http  ) {
-  //  this.pos = navParams.get('pos');
-
+  constructor(public navCtrl : NavController, private navParams:NavParams, private http: Http, private geolocation: Geolocation, private platform: Platform) {
+    this.platform.ready().then(() => this.getGeolocation()  )
   }
 
+  private getGeolocation() {
+      this.geolocation.getCurrentPosition().then((res) => {
+        this.pos = res.coords;
+      }).catch((error) => {
+        console.log('Error getting location', error);
+      });
+    }
   showRestaurants(radius : String){
-    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude=48.154696&longitude=11.54638&radius='+radius)
+    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude='+this.pos.latitude+'6&longitude='+this.pos.longitude+'&radius='+radius)
    .subscribe(
    res => this.restaurants = res.json(),
    err => console.error(err)
