@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {NavController, NavParams, Platform} from "ionic-angular";
 import {Http} from "@angular/http";
 import {Coordinates, Geolocation} from '@ionic-native/geolocation';
+import {SERVER_URL} from "../../app/app.module";
 
 
 @Component({
@@ -31,7 +32,7 @@ export class RestaurantsPage {
       });
     }
   showRestaurants(radius : String){
-    this.http.get('https://findlunch.biz.tm:8444/api/restaurants?latitude='+this.pos.latitude+'6&longitude='+this.pos.longitude+'&radius='+radius)
+    this.http.get(`${SERVER_URL}/api/restaurants?latitude=${this.pos.latitude}&longitude=${this.pos.longitude}&radius=${radius}`)
    .subscribe(
    res => this.restaurants = res.json(),
    err => console.error(err)
