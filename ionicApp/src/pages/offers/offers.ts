@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {Http} from "@angular/http";
+import {OrderDetailsPage} from "../order-details/orderdetails";
 
 export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
@@ -13,7 +14,7 @@ export class OffersPage implements OnInit {
     private _restaurant_id: number;
     public offers: Object[];
 
-    constructor(navParams: NavParams, private http: Http) {
+    constructor(navParams: NavParams, private http: Http, private navCtrl: NavController) {
         this._restaurant_id = navParams.get("restaurant_id");
     }
 
@@ -28,6 +29,6 @@ export class OffersPage implements OnInit {
     }
 
     public onOfferClicked(event, offer) {
-        // TODO: Push to next site
+        this.navCtrl.push(OrderDetailsPage, {offer})
     }
 }
