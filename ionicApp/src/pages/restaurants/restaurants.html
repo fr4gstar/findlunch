@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Restaurants</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <h3>Restaurants in der Nähe</h3>
+  <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
+  <ion-list >
+      <ion-item>
+        <ion-label fixed>Entfernung</ion-label>
+        <ion-input #distance type="number"></ion-input>
+      </ion-item>
+  </ion-list>
+
+  <div style = "visibility: hidden">
+    <span>Position:</span><br>
+    <span>Lat: {{pos?.latitude}}</span><br>
+    <span>Long: {{pos?.longitude}}</span><br>
+    <span>Accuracy: {{pos?.accuracy}}</span>
+  </div>
+
+  <ion-list>
+    <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers()">
+      <div>{{restaurant.name}}</div>
+    </button>
+  </ion-list>
+</ion-content>

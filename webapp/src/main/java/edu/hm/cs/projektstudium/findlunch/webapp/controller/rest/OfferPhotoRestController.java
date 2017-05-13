@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferPhotoReposito
  * Request param offer_id.
  */
 @RestController
+@CrossOrigin
 public class OfferPhotoRestController {
 	
 	/** The offer photo repository. */
