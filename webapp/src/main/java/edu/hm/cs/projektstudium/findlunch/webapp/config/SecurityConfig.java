@@ -87,6 +87,11 @@ public class SecurityConfig {
 							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;" +
 							"; report-uri /api/csp-report-uri"))
 					.and()
+					.csrf().disable()
+				    .authorizeRequests()
+					.antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()//allow CORS option calls
+					
+					.and()
 					.csrf().disable().requestMatchers()
 					// Add a Content-Security-Policy-violation-report-endpoint
 					// The CSRF-protection should be disabled as it is a POST-request.

@@ -1,0 +1,21 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Offers</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <h2 padding-left>Aktuelle Angebote</h2>
+
+    <ion-list>
+        <button ion-item *ngFor="let offer of offers" (click)="onOfferClicked($event, offer)">
+            <div>{{offer.title}}</div>
+            <div class="item-note" item-right>
+                {{offer.price | currency:'EUR':true}}
+            </div>
+        </button>
+    </ion-list>
+</ion-content>

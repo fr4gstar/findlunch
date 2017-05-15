@@ -5,7 +5,9 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 
 import {HomePage} from '../pages/home/home';
 import {ListPage} from '../pages/list/list';
+import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {Firebase} from "@ionic-native/firebase";
+import {OffersPage} from "../pages/offers/offers";
 
 @Component({
     templateUrl: 'app.html'
@@ -23,9 +25,10 @@ export class MyApp {
         // used for an example of ngFor and navigation
         this.pages = [
             {title: 'Home', component: HomePage},
-            {title: 'List', component: ListPage}
+            {title: 'List', component: ListPage},
+            {title: 'Restaurants', component: RestaurantsPage},
+            {title: 'Angebote', component: OffersPage}
         ];
-
     }
 
     initializeApp() {
@@ -36,6 +39,8 @@ export class MyApp {
             this.splashScreen.hide();
 
             if (this.platform.is("cordova")) {
+                // we are not in the web, but on a native platform
+
                 this.firebase.getToken()
                     .then(token => console.log(`The token is ${token}`)) // save the token server-side and use it to push notifications to this device
                     .catch(error => console.error('Error getting token', error));
@@ -44,7 +49,7 @@ export class MyApp {
                     .subscribe((token: string) => console.log(`Got a new token ${token}`));
             }
             else {
-                console.log("I know we are in the web");
+                // we are in the web
 
                 const msg = (<any>window).firebase.messaging();
 
