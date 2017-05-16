@@ -3,6 +3,7 @@ import {NavController, NavParams, Platform} from "ionic-angular";
 import {Http} from "@angular/http";
 import {Coordinates, Geolocation} from '@ionic-native/geolocation';
 import {SERVER_URL} from "../../app/app.module";
+import {OffersPage} from "../offers/offers";
 
 
 @Component({
@@ -38,4 +39,9 @@ export class RestaurantsPage {
    err => console.error(err)
   )
  }
+
+ showOffers(restaurant_id: String){
+    this.navCtrl.push(OffersPage,{restaurant_id: restaurant_id});
+ }
+
 }
