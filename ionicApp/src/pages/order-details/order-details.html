@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Bestelldetails</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <h2 padding-left>Ihre Bestellung</h2>
+
+    <ion-item>
+        <ion-label color="primary" stacked>Produktname</ion-label>
+        <ion-input disabled [(ngModel)]="reservation.offer.title"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label color="primary" stacked>Einzelpreis</ion-label>
+        <ion-input disabled [(ngModel)]="reservation.offer.price"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label color="primary" stacked>Produktbeschreibung</ion-label>
+        <ion-input disabled [(ngModel)]="reservation.offer.description"></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label fixed>Menge:</ion-label>
+        <ion-input type="number" [(ngModel)]="reservation.amount" (ngModelChange)="updateTotalPrice()"></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label color="primary" fixed>Gesamtpreis</ion-label>
+        <ion-input disabled [(ngModel)]="reservation.totalPrice"></ion-input>
+    </ion-item>
+
+    <button ion-button (click)="sendOrder()">Abschicken</button>
+</ion-content>

@@ -8,12 +8,13 @@
 </ion-header>
 <ion-content padding>
   <h3>Restaurants in der Nähe</h3>
-  <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
   <ion-list >
       <ion-item>
         <ion-label fixed>Entfernung</ion-label>
         <ion-input #distance type="number"></ion-input>
       </ion-item>
+    <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
+
   </ion-list>
 
   <div style = "visibility: hidden">

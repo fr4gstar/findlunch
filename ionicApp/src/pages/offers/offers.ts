@@ -1,21 +1,22 @@
 import {Component, OnInit} from "@angular/core";
-import {NavParams} from "ionic-angular";
+import {NavController, NavParams} from "ionic-angular";
 import {Http} from "@angular/http";
+import {OrderDetailsPage} from "../order-details/orderdetails";
 import {SERVER_URL} from "../../app/app.module";
 
-export const FL_NAVPARAM_RESTAURANT_ID = "restaurant_id";   // TODO: Move this to restaurant-selection-page
 export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
 @Component({
     selector: 'offers',
     templateUrl: 'offers.html'
 })
+
 export class OffersPage implements OnInit {
     private _restaurant_id: String;
     public offers: Object[];
 
-    constructor(navParams: NavParams, private http: Http) {
-        this._restaurant_id = navParams.get('restaurant_id');
+    constructor(navParams: NavParams, private http: Http, private navCtrl: NavController) {
+        this._restaurant_id = navParams.get("restaurant_id");
     }
 
     ngOnInit() {
@@ -28,6 +29,6 @@ export class OffersPage implements OnInit {
     }
 
     public onOfferClicked(event, offer) {
-        // TODO: Push to next site
+        this.navCtrl.push(OrderDetailsPage, {offer})
     }
 }
