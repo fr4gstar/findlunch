@@ -15,8 +15,14 @@ import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 
+// online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
-export const SERVER_URL = "https://localhost:8443";
+
+// for web app
+// export const SERVER_URL = "https://localhost:8443";
+
+// please Change this to the respective Server
+export const SERVER_URL = "https://192.168.0.12:8443";
 
 @NgModule({
      declarations: [

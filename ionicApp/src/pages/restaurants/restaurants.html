@@ -24,7 +24,7 @@
   </div>
 
   <ion-list>
-    <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers()">
+    <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers(restaurant.id)">
       <div>{{restaurant.name}}</div>
     </button>
   </ion-list>

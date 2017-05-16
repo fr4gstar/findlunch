@@ -16,7 +16,6 @@ export class HomePage {
     this.platform.ready().then(() => this.getGeolocation())
   }
 
-//  this.navController.push(RestaurantsPage,{pos: this.pos});
 
 
   private getGeolocation() {
