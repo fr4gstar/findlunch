@@ -51,12 +51,9 @@ export class MyApp {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
 
-
-          let token;
             if (this.platform.is("cordova")) {
                 // we are not in the web, but on a native platform
                 this.firebase.getToken()
-                  .then(token => console.log(`The token is ${token}`))// save the token server-side and use it to push notifications to this device
                   .then(token =>
                     this.http.get(`${SERVER_URL}/api/submitToken/${token}`, options)
                       .subscribe(
