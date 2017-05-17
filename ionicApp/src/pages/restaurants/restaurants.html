@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="dark">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <h3>Restaurants in der Nähe</h3>
+
   <ion-list >
       <ion-item>
         <ion-label fixed>Entfernung</ion-label>
@@ -17,7 +17,7 @@
 
   </ion-list>
 
-  <div style = "visibility: hidden">
+  <div style = "visibility: hidden" hidden>
     <span>Position:</span><br>
     <span>Lat: {{pos?.latitude}}</span><br>
     <span>Long: {{pos?.longitude}}</span><br>
@@ -25,6 +25,7 @@
   </div>
 
   <ion-list>
+    <div *ngIf="restaurants!=null"><h3>Restaurants in der Nähe</h3></div>
     <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers(restaurant.id)">
       <div>{{restaurant.name}}</div>
     </button>

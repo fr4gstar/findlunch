@@ -1,16 +1,17 @@
 <ion-header>
-    <ion-navbar>
+    <ion-navbar color="dark">
         <button ion-button menuToggle>
-            <ion-icon name="menu"></ion-icon>
+            <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Offers</ion-title>
+        <ion-title>Aktuelle Angebote</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <h2 padding-left>Aktuelle Angebote</h2>
-
     <ion-list>
+      <ion-toolbar color="light">
+        <h2>Produkte</h2>
+      </ion-toolbar>
         <button ion-item *ngFor="let offer of offers" (click)="onOfferClicked($event, offer)">
             <div>{{offer.title}}</div>
             <div class="item-note" item-right>
