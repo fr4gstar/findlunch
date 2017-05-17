@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-navbar>
+    <ion-navbar color="dark">
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
@@ -33,5 +33,5 @@
         <ion-input disabled [(ngModel)]="reservation.totalPrice"></ion-input>
     </ion-item>
 
-    <button ion-button (click)="sendOrder()">Abschicken</button>
+    <button ion-button full (click)="sendOrder()">Bestellen</button>
 </ion-content>
