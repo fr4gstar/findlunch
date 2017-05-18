@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="edu.hm.cs.projektstudium.findlunch.androidapp977072" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="edu.hm.cs.projektstudium.findlunch.androidapp977072" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
     <name>findLunch</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
@@ -86,4 +86,8 @@
     <plugin name="cordova-plugin-statusbar" spec="2.2.1" />
     <plugin name="cordova-plugin-whitelist" spec="1.3.1" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <plugin name="cordova-plugin-googlemaps" spec="https://github.com/mapsplugin/cordova-plugin-googlemaps">
+        <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g" />
+        <variable name="API_KEY_FOR_IOS" value="AIzaSyCVHpbnWxIqaHLF6xkaV69kmM5RKUv2lQ4" />
+    </plugin>
 </widget>

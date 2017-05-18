@@ -15,6 +15,7 @@ import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
+import {GoogleMaps} from "@ionic-native/google-maps";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -27,36 +28,37 @@ export const SERVER_URL = "https://10.179.5.246:8443";
 // "https://192.168.0.12:8443";
 
 @NgModule({
-    declarations: [
-        MyApp,
-        HomePage,
-        ListPage,
-        OffersPage,
-        RestaurantsPage,
-        OrderDetailsPage
-    ],
-    imports: [
-        CommonModule,
-        BrowserModule,
-        IonicModule.forRoot(MyApp),
-        HttpModule
-    ],
-    bootstrap: [IonicApp],
-    entryComponents: [
-        MyApp,
-        HomePage,
-        ListPage,
-        OffersPage,
-        RestaurantsPage,
-        OrderDetailsPage
-    ],
-    providers: [
-        StatusBar,
-        Firebase,
-        Geolocation,
-        SplashScreen,
-        {provide: ErrorHandler, useClass: IonicErrorHandler}
-    ]
+  declarations: [
+    MyApp,
+    HomePage,
+    ListPage,
+    OffersPage,
+    RestaurantsPage,
+    OrderDetailsPage
+  ],
+  imports: [
+    CommonModule,
+    BrowserModule,
+    IonicModule.forRoot(MyApp),
+    HttpModule
+  ],
+  bootstrap: [IonicApp],
+  entryComponents: [
+    MyApp,
+    HomePage,
+    ListPage,
+    OffersPage,
+    RestaurantsPage,
+    OrderDetailsPage
+  ],
+  providers: [
+    StatusBar,
+    Firebase,
+    Geolocation,
+    SplashScreen,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    GoogleMaps
+  ]
 
 })
 export class AppModule {
