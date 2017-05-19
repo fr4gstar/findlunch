@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {NavController, Platform} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
-import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
+import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng} from "@ionic-native/google-maps";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 
@@ -39,6 +39,10 @@ export class HomePage {
         console.log('Map is ready!');
         // Now you can add elements to the map like the marker
 
+        map.setMyLocationEnabled(true);
+        map.setAllGesturesEnabled(true);
+        map.setCompassEnabled(true);
+
         this.geolocation.getCurrentPosition().then((res) => {
           let pos = new LatLng(res.coords.latitude, res.coords.longitude);
 
@@ -49,12 +53,12 @@ export class HomePage {
 
           map.moveCamera(camPos);
 
-          // create current location marker
+          /*!// create current location marker
           map.addMarker({
             position: pos,
           }).then((marker: Marker) => {
             marker.showInfoWindow();
-          })
+          })*/
         })
       }
     );
