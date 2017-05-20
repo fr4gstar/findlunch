@@ -10,6 +10,7 @@ import {ListPage} from '../pages/list/list';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {Firebase} from "@ionic-native/firebase";
 import {OffersPage} from "../pages/offers/offers";
+import {LoginPage} from "../pages/login/login";
 
 @Component({
     templateUrl: 'app.html'
@@ -30,7 +31,8 @@ export class MyApp {
             {title: 'Restaurants', component: RestaurantsPage},
             {title: 'Home', component: HomePage},
             {title: 'List', component: ListPage},
-            {title: 'Angebote', component: OffersPage}
+            {title: 'Angebote', component: OffersPage},
+            {title: 'Login', component: LoginPage}
         ];
 
     }
