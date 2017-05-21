@@ -7,6 +7,7 @@ import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
+import {FilterPopoverService} from "./FilterPopoverService";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 
@@ -23,7 +24,8 @@ export class HomePage {
               private platform: Platform,
               private googleMaps: GoogleMaps,
               private http: Http,
-              private popCtrl: PopoverController
+              private popCtrl: PopoverController,
+              private popService: FilterPopoverService
   ) {
     this.platform.ready().then(() => {
       // access native APIs
@@ -35,23 +37,17 @@ export class HomePage {
     this.loadMap();
   }
 
-  public openFilterDialog() {
+  public openFilterDialog(ev: Event) {
     this._map.setClickable(false);
 
     let pop = this.popCtrl.create(FilterPopoverComponent);
-    let ev = {
-      target : {
-        getBoundingClientRect : () => {
-          return {
-            // top: '50',
-            right: '50'
-          };
-        }
-      }
-    };
 
     pop.present({ev});
     // TODO: Make map clickable again, after popup was closed
+
+    pop.onWillDismiss(() => {
+      console.log("Popover dismiss. KitchenTypes set to: ", this.popService.selectedKitchenTypes)
+    })
   }
 
 

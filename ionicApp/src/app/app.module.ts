@@ -17,6 +17,7 @@ import {HttpModule} from "@angular/http";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
+import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -61,7 +62,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     Geolocation,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    GoogleMaps
+    GoogleMaps,
+    FilterPopoverService
   ]
 
 })
