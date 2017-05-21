@@ -36,6 +36,8 @@ export class HomePage {
   }
 
   public openFilterDialog() {
+    this._map.setClickable(false);
+
     let pop = this.popCtrl.create(FilterPopoverComponent);
     let ev = {
       target : {
@@ -49,6 +51,7 @@ export class HomePage {
     };
 
     pop.present({ev});
+    // TODO: Make map clickable again, after popup was closed
   }
 
 
@@ -99,7 +102,7 @@ export class HomePage {
             title: restaurant.name,
             snippet: `Adresse: ${restaurant.street} ${restaurant.streetNumber}
 Telefon: ${restaurant.phone}
-Küche: ${restaurant.kitchenTypes.join(', ')}
+Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}
 Entfernung: ${restaurant.distance}m`,
             infoClick: () => {
               this.navCtrl.push(OffersPage,{restaurant_id: restaurant.id});
