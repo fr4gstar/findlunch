@@ -16,6 +16,7 @@ import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {GoogleMaps} from "@ionic-native/google-maps";
+import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -35,7 +36,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     ListPage,
     OffersPage,
     RestaurantsPage,
-    OrderDetailsPage
+    OrderDetailsPage,
+    FilterPopoverComponent
   ],
   imports: [
     CommonModule,
@@ -50,7 +52,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     ListPage,
     OffersPage,
     RestaurantsPage,
-    OrderDetailsPage
+    OrderDetailsPage,
+    FilterPopoverComponent
   ],
   providers: [
     StatusBar,

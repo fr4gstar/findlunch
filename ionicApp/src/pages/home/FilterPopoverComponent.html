@@ -1,0 +1,10 @@
+<ion-list>
+  <ion-item>
+    <ion-label>Küche </ion-label>
+    <ion-select multiple="true" cancelText="Zurück">
+      <ion-option *ngFor="let type of kitchenTypes">{{type.name}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>Zwei</ion-item>
+  <ion-item>Drei</ion-item>
+</ion-list>

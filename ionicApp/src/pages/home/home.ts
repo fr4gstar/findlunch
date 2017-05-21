@@ -1,11 +1,12 @@
 import {Component} from "@angular/core";
-import {NavController, Platform} from "ionic-angular";
+import {NavController, Platform, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
+import {FilterPopoverComponent} from "./FilterPopoverComponent";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 
@@ -17,11 +18,12 @@ export class HomePage {
 
   private _map: GoogleMap;
 
-  constructor(public navCtrl: NavController,
+  constructor(private navCtrl: NavController,
               private geolocation: Geolocation,
               private platform: Platform,
               private googleMaps: GoogleMaps,
-              private http: Http
+              private http: Http,
+              private popCtrl: PopoverController
   ) {
     this.platform.ready().then(() => {
       // access native APIs
@@ -31,6 +33,22 @@ export class HomePage {
   // Load map only after view is initialized
   ngAfterViewInit() {
     this.loadMap();
+  }
+
+  public openFilterDialog() {
+    let pop = this.popCtrl.create(FilterPopoverComponent);
+    let ev = {
+      target : {
+        getBoundingClientRect : () => {
+          return {
+            // top: '50',
+            right: '50'
+          };
+        }
+      }
+    };
+
+    pop.present({ev});
   }
 
 
@@ -79,7 +97,10 @@ export class HomePage {
             position: new LatLng(restaurant.locationLatitude, restaurant.locationLongitude),
             icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png',
             title: restaurant.name,
-            snippet: `Adresse: ${restaurant.street} ${restaurant.streetNumber}\nTelefon: ${restaurant.phone}\nKüche: ${restaurant.kitchenTypes.join(', ')}`,
+            snippet: `Adresse: ${restaurant.street} ${restaurant.streetNumber}
+Telefon: ${restaurant.phone}
+Küche: ${restaurant.kitchenTypes.join(', ')}
+Entfernung: ${restaurant.distance}m`,
             infoClick: () => {
               this.navCtrl.push(OffersPage,{restaurant_id: restaurant.id});
             }
