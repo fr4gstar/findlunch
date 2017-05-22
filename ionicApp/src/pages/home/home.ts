@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NavController, Platform, NavParams} from 'ionic-angular';
+import {NavController, Platform} from 'ionic-angular';
 import {Coordinates, Geolocation} from '@ionic-native/geolocation';
 
 
