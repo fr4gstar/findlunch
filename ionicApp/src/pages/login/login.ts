@@ -4,7 +4,8 @@ import {HTTP} from "@ionic-native/http";
 import {Headers, Http, RequestOptions} from "@angular/http";
 
 import {SERVER_URL} from "../../app/app.module";
-import {RestaurantsPage} from "../restaurants/restaurants";
+import {HomePage} from "../home/home";
+import { ViewChild } from '@angular/core';
 
 
 @Component({
@@ -37,13 +38,14 @@ export class LoginPage {
     //     console.log(error.error);
     //   });
     //  }
-
+    let encodedCredentials: String = atob(userName+""+password);
+    console.log(encodedCredentials);
     let headers = new Headers({
       'Content-Type': 'application/json',
-      "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+      "Authorization": "Basic " + encodedCredentials
     });
+
     let options = new RequestOptions({headers: headers});
-   // this.http.acceptAllCerts(true);
     this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
       (res) => {
         const toast = this.toastCtrl.create({
@@ -51,9 +53,17 @@ export class LoginPage {
           duration: 3000
         });
         toast.present();
-        this.navCtrl.push(RestaurantsPage);
+        this.navCtrl.push(HomePage);
       }, (err) => {
         console.error(err)
       })
+  }
+  public show(userName: string, password: string){
+    alert(userName+password);
+  }
+
+  public encode64(userName: string, password: string){
+    let creds = userName+password;
+    alert(btoa(creds));
   }
 }
