@@ -10,7 +10,10 @@ export class FilterPopoverService {
   public selectedKitchenTypes: Array<KitchenType>;
 
   constructor(private http: Http) {
-    this.http.get(SERVER_URL + "/api/kitchen_types").subscribe(res => this._kitchenTypes = res.json())
+    this.http.get(SERVER_URL + "/api/kitchen_types").subscribe(res => {
+      this._kitchenTypes = res.json();
+      this.selectedKitchenTypes = this._kitchenTypes;
+    })
   }
 
   get kitchenTypes() {
