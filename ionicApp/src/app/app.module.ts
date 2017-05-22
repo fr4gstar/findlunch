@@ -6,6 +6,8 @@ import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {RestaurantsPage} from "../pages/restaurants/restaurants";
+import {LoginPage} from "../pages/login/login";
+import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
@@ -14,7 +16,8 @@ import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
-import {OrderDetailsPage} from "../pages/order-details/orderdetails";
+import {HTTP} from "@ionic-native/http";
+
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -23,8 +26,8 @@ import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 // export const SERVER_URL = "https://localhost:8443";
 
 // please Change this to the respective Server
-export const SERVER_URL = "https://10.179.5.246:8443";
-// "https://192.168.0.12:8443";
+export const SERVER_URL = "https://192.168.0.12:8443";
+
 
 @NgModule({
     declarations: [
@@ -33,7 +36,8 @@ export const SERVER_URL = "https://10.179.5.246:8443";
         ListPage,
         OffersPage,
         RestaurantsPage,
-        OrderDetailsPage
+        OrderDetailsPage,
+        LoginPage
     ],
     imports: [
         CommonModule,
@@ -48,14 +52,16 @@ export const SERVER_URL = "https://10.179.5.246:8443";
         ListPage,
         OffersPage,
         RestaurantsPage,
-        OrderDetailsPage
+        OrderDetailsPage,
+        LoginPage
     ],
     providers: [
         StatusBar,
         Firebase,
         Geolocation,
         SplashScreen,
-        {provide: ErrorHandler, useClass: IonicErrorHandler}
+        {provide: ErrorHandler, useClass: IonicErrorHandler},
+        HTTP
     ]
 
 })
