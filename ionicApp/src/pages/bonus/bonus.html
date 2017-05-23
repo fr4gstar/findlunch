@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon md="md-menu" name="menu"></ion-icon>
+        </button>
+        <ion-title>Bonuspunkte</ion-title>
+      <ion-buttons end>
+        <button ion-button icon-only (click)="onQRClicked($event)">
+          <ion-icon name="qr-scanner"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+      <ion-toolbar color="light">
+        <h2>Ihre Bonuspunkte betragen:</h2>
+      </ion-toolbar>
+        <button ion-item *ngFor="let point of points" (click)="onQRClicked($event)">
+            <div>{{point.title}}</div>
+            <div class="item-note" item-right>
+                {{point.price | currency:'EUR':true}}
+            </div>
+        </button>
+    </ion-list>
+</ion-content>

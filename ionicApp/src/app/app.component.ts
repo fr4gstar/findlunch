@@ -8,6 +8,7 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {HomePage} from '../pages/home/home';
 import {ListPage} from '../pages/list/list';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
+import {BonusPage} from '../pages/bonus/bonus';
 import {Firebase} from "@ionic-native/firebase";
 import {OffersPage} from "../pages/offers/offers";
 
@@ -17,7 +18,7 @@ import {OffersPage} from "../pages/offers/offers";
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = HomePage;
+    rootPage: any = RestaurantsPage;
 
     pages: Array<{ title: string, component: any }>;
 
@@ -27,10 +28,11 @@ export class MyApp {
 
         // used for an example of ngFor and navigation
         this.pages = [
-            {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'Home', component: HomePage},
-            {title: 'List', component: ListPage},
-            {title: 'Angebote', component: OffersPage}
+          {title: 'Home', component: HomePage},
+          {title: 'Restaurants', component: RestaurantsPage},
+          {title: 'List', component: ListPage},
+          {title: 'Angebote', component: OffersPage},
+          {title: 'Bonus', component: BonusPage}
         ];
 
     }
