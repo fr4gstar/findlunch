@@ -4,6 +4,7 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {SERVER_URL} from "../../app/app.module";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import {OffersPage} from "../offers/offers";
 
 //export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
@@ -29,12 +30,16 @@ export class BonusPage implements OnInit {
 
       let options = new RequestOptions({
         headers: headers,
-        method: RequestMethod.Put
+        method: RequestMethod.Get
       });
 
         this.http.get(`${SERVER_URL}/api/get_points`, options)
          .subscribe(
-         res => this.points = res.json(),
+         res => this.points =
+          //console.log(
+           res.json()
+         //)
+          ,
          err => console.error(err)
          )
     }
@@ -64,5 +69,9 @@ export class BonusPage implements OnInit {
         // An error occurred
         });
       }
+
+    showOffers(restaurant_id: String){
+      this.navCtrl.push(OffersPage,{restaurant_id: restaurant_id});
+    }
 
 }
