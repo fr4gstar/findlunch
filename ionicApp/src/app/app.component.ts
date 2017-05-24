@@ -1,13 +1,13 @@
-import {Component, ViewChild} from '@angular/core';
-import {Nav, Platform} from 'ionic-angular';
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
+import {Component, ViewChild} from "@angular/core";
+import {Events, Nav, Platform} from "ionic-angular";
+import {StatusBar} from "@ionic-native/status-bar";
+import {SplashScreen} from "@ionic-native/splash-screen";
 import {SERVER_URL} from "../app/app.module";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 
-import {HomePage} from '../pages/home/home';
-import {ListPage} from '../pages/list/list';
-import {RestaurantsPage} from '../pages/restaurants/restaurants';
+import {HomePage} from "../pages/home/home";
+import {ListPage} from "../pages/list/list";
+import {RestaurantsPage} from "../pages/restaurants/restaurants";
 import {Firebase} from "@ionic-native/firebase";
 import {OffersPage} from "../pages/offers/offers";
 
@@ -21,7 +21,14 @@ export class MyApp {
 
     pages: Array<{ title: string, component: any }>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, private http: Http, public splashScreen: SplashScreen, private firebase: Firebase) {
+    constructor(
+        public platform: Platform,
+        public statusBar: StatusBar,
+        private http: Http,
+        public splashScreen: SplashScreen,
+        private firebase: Firebase,
+        private events: Events
+    ) {
 
       this.initializeApp();
 
@@ -145,5 +152,13 @@ export class MyApp {
         // Reset the content nav to have just this page
         // we wouldn't want the back button to show in this scenario
         this.nav.setRoot(page.component);
+    }
+
+    onMenuClosed() {
+        this.events.publish("menu", "close");
+    }
+
+    onMenuOpened() {
+        this.events.publish("menu", "open");
     }
 }

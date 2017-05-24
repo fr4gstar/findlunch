@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {NavController, Platform, PopoverController} from "ionic-angular";
+import {Events, NavController, Platform, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
@@ -27,10 +27,16 @@ export class HomePage {
               private googleMaps: GoogleMaps,
               private http: Http,
               private popCtrl: PopoverController,
-              private popService: FilterPopoverService
+              private popService: FilterPopoverService,
+              private events: Events
   ) {
-    this.platform.ready().then(() => {
-      // access native APIs
+    this.events.subscribe("menu", eventData => {
+      if (eventData === "open"){
+        this._map.setClickable(false);
+      }
+      else if (eventData === "closed") {
+        this._map.setClickable(true);
+      }
     })
   }
 
@@ -40,7 +46,7 @@ export class HomePage {
   }
 
   public openFilterDialog(ev: Event) {
-    this._map.setClickable(false);
+    this._map.setClickable(false);      // needed to be able to click on the overlay
 
     let pop = this.popCtrl.create(FilterPopoverComponent);
 
