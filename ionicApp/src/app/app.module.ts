@@ -15,6 +15,11 @@ import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
+import {GoogleMaps} from "@ionic-native/google-maps";
+import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
+import {FilterPopoverService} from "../pages/home/FilterPopoverService";
+import {AddressInputComponent} from "../pages/home/AddressInputComponent";
+import {NativeGeocoder} from "@ionic-native/native-geocoder";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -23,8 +28,9 @@ import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 // export const SERVER_URL = "https://localhost:8443";
 
 // please Change this to the respective Server
-export const SERVER_URL = "https://10.179.5.246:8443";
-// "https://192.168.0.12:8443";
+export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
+// export const SERVER_URL = "https://192.168.178.38:8443";
+
 
 @NgModule({
     declarations: [
@@ -33,7 +39,9 @@ export const SERVER_URL = "https://10.179.5.246:8443";
         ListPage,
         OffersPage,
         RestaurantsPage,
-        OrderDetailsPage
+        OrderDetailsPage,
+        FilterPopoverComponent,
+        AddressInputComponent
     ],
     imports: [
         CommonModule,
@@ -48,14 +56,19 @@ export const SERVER_URL = "https://10.179.5.246:8443";
         ListPage,
         OffersPage,
         RestaurantsPage,
-        OrderDetailsPage
+        OrderDetailsPage,
+        FilterPopoverComponent,
+        AddressInputComponent
     ],
     providers: [
         StatusBar,
         Firebase,
         Geolocation,
         SplashScreen,
-        {provide: ErrorHandler, useClass: IonicErrorHandler}
+        {provide: ErrorHandler, useClass: IonicErrorHandler},
+        GoogleMaps,
+        FilterPopoverService,
+        NativeGeocoder
     ]
 
 })
