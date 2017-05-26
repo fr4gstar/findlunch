@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Events, NavController, Platform, PopoverController} from "ionic-angular";
+import {Events, ModalController, NavController, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
@@ -8,8 +8,10 @@ import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
+import {AddressInputComponent} from "./AddressInputComponent";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
+export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
 
 @Component({
   selector: 'page-home',
@@ -23,7 +25,7 @@ export class HomePage {
 
   constructor(private navCtrl: NavController,
               private geolocation: Geolocation,
-              private platform: Platform,
+              private modalCtrl: ModalController,
               private googleMaps: GoogleMaps,
               private http: Http,
               private popCtrl: PopoverController,
@@ -34,7 +36,7 @@ export class HomePage {
       if (eventData === "open"){
         this._map.setClickable(false);
       }
-      else if (eventData === "closed") {
+      else if (eventData === "close") {
         this._map.setClickable(true);
       }
     })
@@ -90,7 +92,9 @@ export class HomePage {
         this._map.setAllGesturesEnabled(true);
         this._map.setCompassEnabled(true);
 
-        this.geolocation.getCurrentPosition().then((res) => {
+        this.geolocation.getCurrentPosition({
+          timeout: CONFIG_GEOLOCATION_TIMEOUT
+        }).then((res) => {
           let pos = new LatLng(res.coords.latitude, res.coords.longitude);
 
           this.fetchRestaurants(res.coords);
@@ -102,6 +106,10 @@ export class HomePage {
 
           this._map.moveCamera(camPos);
         })
+            .catch(err => {
+              this._map.setMyLocationEnabled(false);
+              this.showAddressInput();
+            })
       }
     );
   }
@@ -148,5 +156,26 @@ Entfernung: ${restaurant.distance}m`,
         this._mapMarkers.push(marker);
       })
     });
+  }
+
+
+  private showAddressInput() {
+    this._map.setClickable(false);
+    const modal = this.modalCtrl.create(AddressInputComponent);
+    modal.onWillDismiss(coords => {
+      const latlng = new LatLng(coords.latitude, coords.longitude);
+      this._map.setClickable(true);
+      this._map.addMarker({
+        position: latlng,
+        title: "Ihr Standort"
+      });
+      this._map.moveCamera({
+        target: latlng,
+        zoom: 16
+      });
+
+      this.fetchRestaurants(coords)
+    });
+    modal.present();
   }
 }

@@ -18,6 +18,8 @@ import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
+import {AddressInputComponent} from "../pages/home/AddressInputComponent";
+import {NativeGeocoder} from "@ionic-native/native-geocoder";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -31,40 +33,43 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
 
 
 @NgModule({
-  declarations: [
-    MyApp,
-    HomePage,
-    ListPage,
-    OffersPage,
-    RestaurantsPage,
-    OrderDetailsPage,
-    FilterPopoverComponent
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    IonicModule.forRoot(MyApp),
-    HttpModule
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-    ListPage,
-    OffersPage,
-    RestaurantsPage,
-    OrderDetailsPage,
-    FilterPopoverComponent
-  ],
-  providers: [
-    StatusBar,
-    Firebase,
-    Geolocation,
-    SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    GoogleMaps,
-    FilterPopoverService
-  ]
+    declarations: [
+        MyApp,
+        HomePage,
+        ListPage,
+        OffersPage,
+        RestaurantsPage,
+        OrderDetailsPage,
+        FilterPopoverComponent,
+        AddressInputComponent
+    ],
+    imports: [
+        CommonModule,
+        BrowserModule,
+        IonicModule.forRoot(MyApp),
+        HttpModule
+    ],
+    bootstrap: [IonicApp],
+    entryComponents: [
+        MyApp,
+        HomePage,
+        ListPage,
+        OffersPage,
+        RestaurantsPage,
+        OrderDetailsPage,
+        FilterPopoverComponent,
+        AddressInputComponent
+    ],
+    providers: [
+        StatusBar,
+        Firebase,
+        Geolocation,
+        SplashScreen,
+        {provide: ErrorHandler, useClass: IonicErrorHandler},
+        GoogleMaps,
+        FilterPopoverService,
+        NativeGeocoder
+    ]
 
 })
 export class AppModule {
