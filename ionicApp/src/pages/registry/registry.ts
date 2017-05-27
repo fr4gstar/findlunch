@@ -43,9 +43,10 @@ export class RegistryPage {
 
   public onRegisterClicked(username: string, password: string, password2: string) {
     if (this.validateCredentials(username, password, password2)) {
-     // alert("geht durch");
+
        this.user.username = username;
        this.user.password = password;
+       console.log(this.user.username = username+":"+this.user.password);
 
 
       let headers = new Headers({
@@ -63,8 +64,7 @@ export class RegistryPage {
           toast.present();
           this.navCtrl.push(LoginPage);
         }, (err) => {
-          alert(err);
-          console.error(err.json);
+          console.log(err);
         })
     }
   }
