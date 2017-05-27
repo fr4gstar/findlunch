@@ -11,6 +11,8 @@ import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {Firebase} from "@ionic-native/firebase";
 import {OffersPage} from "../pages/offers/offers";
 import {LoginPage} from "../pages/login/login";
+import {RegistryPage} from "../pages/registry/registry";
+
 
 @Component({
     templateUrl: 'app.html'
@@ -32,7 +34,9 @@ export class MyApp {
             {title: 'Home', component: HomePage},
             {title: 'List', component: ListPage},
             {title: 'Angebote', component: OffersPage},
-            {title: 'Login', component: LoginPage}
+            {title: 'Login', component: LoginPage},
+            {title: 'Registrieren', component: RegistryPage} //TODO: hier wieder entfernen
+
         ];
 
     }

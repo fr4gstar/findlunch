@@ -5,6 +5,7 @@ import {ModalController} from "ionic-angular";
 
 import {SERVER_URL} from "../../app/app.module";
 import {HomePage} from "../home/home";
+import {RegistryPage} from "../registry/registry";
 
 
 @Component({
@@ -42,5 +43,7 @@ export class LoginPage {
 
       })
   }
-  //TODO : goToRegisterPage();
+  public goToRegisterPage(){
+    this.navCtrl.push(RegistryPage);
+  }
 }

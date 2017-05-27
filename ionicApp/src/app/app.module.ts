@@ -8,6 +8,7 @@ import {ListPage} from "../pages/list/list";
 import {RestaurantsPage} from "../pages/restaurants/restaurants";
 import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
+import {RegistryPage} from "../pages/registry/registry";
 
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
@@ -37,7 +38,8 @@ export const SERVER_URL = "https://192.168.0.12:8443";
         OffersPage,
         RestaurantsPage,
         OrderDetailsPage,
-        LoginPage
+        LoginPage,
+        RegistryPage
     ],
     imports: [
         CommonModule,
@@ -53,7 +55,8 @@ export const SERVER_URL = "https://192.168.0.12:8443";
         OffersPage,
         RestaurantsPage,
         OrderDetailsPage,
-        LoginPage
+        LoginPage,
+        RegistryPage
     ],
     providers: [
         StatusBar,
