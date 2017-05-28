@@ -27,7 +27,8 @@ import {HTTP} from "@ionic-native/http";
 // export const SERVER_URL = "https://localhost:8443";
 
 // please Change this to the respective Server
-export const SERVER_URL = "https://192.168.0.12:8443";
+export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
+  //"https://192.168.0.12:8443";
 
 
 @NgModule({
