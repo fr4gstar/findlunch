@@ -10,7 +10,8 @@ branches:
     - ftr_testing
 
 before_install:
-    - export PATH=${PATH}:/ionicApp
+    - cd /ionicApp
+    - cd '/root/src/github.com/fr4gstar/findlunch/package.json'
 
 build:
   ci:
