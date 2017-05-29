@@ -24,7 +24,7 @@ export class RegistryPage {
 
 
   public onRegisterClicked(username: string, password: string, password2: string) {
-    if (this.validateCredentials(username, password, password2)) {
+    if (this.passwordsIdentical(password, password2)) {
 
        this.user.username = username;
        this.user.password = password;
@@ -53,7 +53,7 @@ export class RegistryPage {
               alert("keine gültige E-Mail Adresse");
               break;
             case "2" :
-              alert("ungültiges Passwort");
+              alert("Passwort entspricht nicht den Passwortrichtlinien (mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen)");
               break;
             case "3" :
               alert("E-Mail adresse bereits vergeben");
@@ -66,18 +66,9 @@ export class RegistryPage {
     }
   }
 
-  private validateCredentials(userName: string, password: string, password2: string) { //TODO: tatsächliche  Passwortregeln ermitteln und implementieren
+  private passwordsIdentical( password: string, password2: string) {
     if (password !== password2) {
       alert("Passworteingaben stimmen nicht überein, bitte überprüfen Sie Ihre Eingabe");
-      return false;
-    } else if (password.length < 6) {
-      alert("Passwort muss mindestens 6 Zeichen haben ");
-      return false;
-    } else if (userName.length < 6) {
-      alert("E-Mail Adresse muss mindestens 6 Zeichen haben");
-      return false;
-    } else if (userName.indexOf("@") === -1) {
-      alert("keine gültige E-Mail Adresse");
       return false;
     }
     else
