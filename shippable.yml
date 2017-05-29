@@ -22,6 +22,6 @@ build:
 after_success:
   - mkdir -p shippable/testresults
   - mkdir -p shippable/codecoverage
-  - mocha -R xunit >> coverage/result.xml
-  - mv coverage/cobertura-coverage.xml shippable/codecoverage/coverage.xml
-  - mv coverage/result.xml shippable/testresults/result.xml
+#  - mocha -R xunit >> coverage/result.xml
+#  - mv coverage/cobertura-coverage.xml shippable/codecoverage/coverage.xml
+#  - mv coverage/result.xml shippable/testresults/result.xml
