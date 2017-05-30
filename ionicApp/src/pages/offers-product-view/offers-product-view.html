@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon md="md-menu" name="menu"></ion-icon>
+        </button>
+        <ion-title>Aktuelle Angebote</ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list>
+        <ion-card *ngFor="let offer of offers" id="{{offer.id}}" padding>
+            <ion-card-title>{{offer.title}}</ion-card-title>
+            <ion-card-content>
+                <p>{{offer.description}}</p>
+                <div>Preis: {{offer.price}}</div>
+                <div>Zubereitungszeit: {{offer.preparationTime}}</div>
+                <div>Punkte: {{offer.neededPoints}}</div>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+</ion-content>

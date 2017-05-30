@@ -20,6 +20,8 @@ import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
+import {OffersProductViewPage} from "../pages/offers-product-view/offers-product-view";
+import {OffersService} from "../pages/offers/OffersService";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -36,12 +38,12 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     declarations: [
         MyApp,
         HomePage,
-        ListPage,
         OffersPage,
         RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
-        AddressInputComponent
+        AddressInputComponent,
+        OffersProductViewPage
     ],
     imports: [
         CommonModule,
@@ -53,12 +55,12 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     entryComponents: [
         MyApp,
         HomePage,
-        ListPage,
         OffersPage,
         RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
-        AddressInputComponent
+        AddressInputComponent,
+        OffersProductViewPage
     ],
     providers: [
         StatusBar,
@@ -68,7 +70,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         GoogleMaps,
         FilterPopoverService,
-        NativeGeocoder
+        NativeGeocoder,
+        OffersService
     ]
 
 })

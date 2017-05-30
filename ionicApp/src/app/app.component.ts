@@ -9,7 +9,6 @@ import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {RestaurantsPage} from "../pages/restaurants/restaurants";
 import {Firebase} from "@ionic-native/firebase";
-import {OffersPage} from "../pages/offers/offers";
 
 @Component({
     templateUrl: 'app.html'
@@ -35,9 +34,7 @@ export class MyApp {
         // used for an example of ngFor and navigation
         this.pages = [
             {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'Home', component: HomePage},
-            {title: 'List', component: ListPage},
-            {title: 'Angebote', component: OffersPage}
+            {title: 'Home', component: HomePage}
         ];
 
     }
