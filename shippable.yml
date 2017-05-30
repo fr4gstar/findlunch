@@ -1,9 +1,9 @@
 # language setting
 language: node_js
 
-# version numbers, testing against multiple versions of node
+# version numbers, spec against multiple versions of node
 node_js:
-  - 6.0.0
+  - 7.10.0
 
 branches:
   only:
@@ -17,6 +17,7 @@ build:
     - npm install
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
+    - npm test
 #    - mysql -e 'create database if not exists test;'
 
 after_success:

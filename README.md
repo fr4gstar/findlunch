@@ -1,6 +1,8 @@
 # FindLunch
 This client server based application allows restaurants to register offers (e.g. for lunch) and helps customer to find these via their smartphone (based on their location).
 
+
+
 ## Webapp
 The web application is based on several technologies:
   * Spring Boot
@@ -67,3 +69,6 @@ that is located on the external storage of your Android device. The file must co
 	
 ### Pushnotification
 See README in branch feature_pushNotification.
+
+### Ionic Hybrid App
+ftr_testing: [![Run Status](https://api.shippable.com/projects/592bdad3882e5107008dd98b/badge?branch=ftr_testing)](https://app.shippable.com/github/fr4gstar/findlunch)
