@@ -22,6 +22,7 @@ import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import {OffersProductViewPage} from "../pages/offers-product-view/offers-product-view";
 import {OffersService} from "../pages/offers/OffersService";
+import {CartService} from "../services/CartService";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -71,7 +72,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         GoogleMaps,
         FilterPopoverService,
         NativeGeocoder,
-        OffersService
+        OffersService,
+        CartService
     ]
 
 })
