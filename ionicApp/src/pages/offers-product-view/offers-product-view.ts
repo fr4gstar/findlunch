@@ -48,7 +48,9 @@ export class OffersProductViewPage implements OnInit {
   }
 
   goToCheckout() {
-    this.navCtrl.push(OrderDetailsPage);
+    this.navCtrl.push(OrderDetailsPage, {
+      restaurant_id: this._restaurantId
+    });
   }
 
 }
