@@ -17,6 +17,8 @@ import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
+import {AuthService} from "../providers/auth-service.ts";
+
 
 
 // online Server:
@@ -64,6 +66,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
+        AuthService
 
     ]
 
