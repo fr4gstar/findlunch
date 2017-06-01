@@ -22,16 +22,17 @@ export class LoginPage {
 
 
   public login(userName: string, password: string) { // TODO: das hier muss hier raus
-
-    if(this.auth.login(userName,password)){
-     const toast = this.toastCtrl.create({
-     message: "Login Erfolgreich",
-     duration: 3000});
-     toast.present();
-     this.navCtrl.push(HomePage);
-    } else{
+    this.auth.login(userName,password).then(data => {
+      if(data) {
+          const toast = this.toastCtrl.create({
+            message: "Login Erfolgreich",
+            duration: 3000});
+          toast.present();
+          this.navCtrl.setRoot(HomePage);
+      } else{
       alert("E-Mail und/oder Passwort nicht bekannt");
-    }
+      }
+    });
       /*
     let encodedCredentials: String = btoa(userName+":"+password);
     console.log(encodedCredentials);

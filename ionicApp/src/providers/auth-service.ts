@@ -23,19 +23,22 @@ export class AuthService {
     });
 
     let options = new RequestOptions({headers: headers});
-    this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
-      (res) => {
-        console.log("api call erfolgreich");
-        window.localStorage.setItem(userName,"loggedIn");
+    return new Promise(resolve => {
+      this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
+        (res) => {
+          console.log("api call erfolgreich");
+          window.localStorage.setItem(userName,"loggedIn");
 
-        return true;
-      }, (err) => {
-           console.log("hier isch der fähler");
-           return false;
+           resolve(true);
+        }, (err) => {
+          console.log("hier isch der fähler");
+           resolve(false);
 
 
-      })
-  }
+        })
+     })
+   }
+
 
   public register(credentials) {
 
