@@ -6,20 +6,20 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 
 -- -----------------------------------------------------
--- Schema findlunch
+-- Schema ou7pojgz8l7rkgda
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `findlunch` ;
+DROP SCHEMA IF EXISTS `ou7pojgz8l7rkgda` ;
 
 -- -----------------------------------------------------
--- Schema findlunch
+-- Schema ou7pojgz8l7rkgda
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `findlunch` DEFAULT CHARACTER SET utf8 ;
-USE `findlunch` ;
+CREATE SCHEMA IF NOT EXISTS `ou7pojgz8l7rkgda` DEFAULT CHARACTER SET utf8 ;
+USE `ou7pojgz8l7rkgda` ;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`country`
+-- Table `ou7pojgz8l7rkgda`.`country`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`country` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`country` (
   `country_code` VARCHAR(2) NOT NULL,
   `name` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`country_code`))
@@ -28,9 +28,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- ——————————————————————————
--- Table `findlunch`.`day_of_week`
+-- Table `ou7pojgz8l7rkgda`.`day_of_week`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`day_of_week` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`day_of_week` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
   `day_number` INT(11) NOT NULL,
@@ -41,9 +41,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`restaurant_type`
+-- Table `ou7pojgz8l7rkgda`.`restaurant_type`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`restaurant_type` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`restaurant_type` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`))
@@ -52,9 +52,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`restaurant`
+-- Table `ou7pojgz8l7rkgda`.`restaurant`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`restaurant` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`restaurant` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `customer_id` INT(11) NOT NULL,
   `name` VARCHAR(60) NOT NULL,
@@ -77,12 +77,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`restaurant` (
   UNIQUE INDEX `customer_id_UNIQUE` (`customer_id` ASC),
   CONSTRAINT `fk_restaurant_countries1`
     FOREIGN KEY (`country_code`)
-    REFERENCES `findlunch`.`country` (`country_code`)
+    REFERENCES `ou7pojgz8l7rkgda`.`country` (`country_code`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_restaurant_restaurant_type1`
     FOREIGN KEY (`restaurant_type_id`)
-    REFERENCES `findlunch`.`restaurant_type` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -90,9 +90,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`user_type`
+-- Table `ou7pojgz8l7rkgda`.`user_type`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`user_type` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`user_type` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`))
@@ -101,9 +101,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`account_type`
+-- Table `ou7pojgz8l7rkgda`.`account_type`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`account_type` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`account_type` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`))
@@ -111,9 +111,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`account`
+-- Table `ou7pojgz8l7rkgda`.`account`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`account` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`account` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `account_number` INT(11) NOT NULL,
   `account_type_id` INT(11) NOT NULL,
@@ -121,15 +121,15 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`account` (
   INDEX `fk_account_account_type1_idx` (`account_type_id` ASC),
   CONSTRAINT `fk_account_account_type1`
     FOREIGN KEY (`account_type_id`)
-    REFERENCES `findlunch`.`account_type` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`account_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`course_types`
+-- Table `ou7pojgz8l7rkgda`.`course_types`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`course_types` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`course_types` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` INT(11) NOT NULL,
   `name` VARCHAR(30) NOT NULL,
@@ -138,16 +138,16 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`course_types` (
   INDEX `fk_course_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_course_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)  
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`user`
+-- Table `ou7pojgz8l7rkgda`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`user` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(60) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
@@ -161,17 +161,17 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`user` (
   INDEX `fk_user_account1_idx` (`account_id` ASC),
   CONSTRAINT `fk_user_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_user_type1`
     FOREIGN KEY (`user_type_id`)
-    REFERENCES `findlunch`.`user_type` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_account1`
     FOREIGN KEY (`account_id`)
-    REFERENCES `findlunch`.`account` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`account` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -179,9 +179,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`favorites`
+-- Table `ou7pojgz8l7rkgda`.`favorites`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`favorites` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`favorites` (
   `user_id` INT(11) NOT NULL,
   `restaurant_id` INT(11) NOT NULL,
   PRIMARY KEY (`user_id`, `restaurant_id`),
@@ -189,12 +189,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`favorites` (
   INDEX `fk_user_has_restaurant_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_user_has_restaurant_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_has_restaurant_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `findlunch`.`user` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -202,9 +202,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`kitchen_type`
+-- Table `ou7pojgz8l7rkgda`.`kitchen_type`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`kitchen_type` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`kitchen_type` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`))
@@ -213,9 +213,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`offer`
+-- Table `ou7pojgz8l7rkgda`.`offer`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`offer` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` INT(11) NOT NULL,
   `title` VARCHAR(60) NOT NULL,
@@ -232,22 +232,22 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
   INDEX `fk_product_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_product_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   INDEX `fk_product_course_idx` (`course_type` ASC),
   CONSTRAINT `fk_productcourse1`
     FOREIGN KEY (`course_type`)
-    REFERENCES `findlunch`.`course_types` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`course_types` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`user_pushtoken`
+-- Table `ou7pojgz8l7rkgda`.`user_pushtoken`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`user_pushtoken` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`user_pushtoken` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `fcm_token` TEXT(4096) NOT NULL,
@@ -255,16 +255,16 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`user_pushtoken` (
   INDEX `fk_user_pushtoken_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_user_pushtoken_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `findlunch`.`user` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`offer_has_day_of_week`
+-- Table `ou7pojgz8l7rkgda`.`offer_has_day_of_week`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_day_of_week` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`offer_has_day_of_week` (
   `offer_id` INT(11) NOT NULL,
   `day_of_week_id` INT(11) NOT NULL,
   PRIMARY KEY (`offer_id`, `day_of_week_id`),
@@ -272,12 +272,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_day_of_week` (
   INDEX `fk_offer_has_day_of_week_offer1_idx` (`offer_id` ASC),
   CONSTRAINT `fk_offer_has_day_of_week_day_of_week1`
     FOREIGN KEY (`day_of_week_id`)
-    REFERENCES `findlunch`.`day_of_week` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`day_of_week` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_offer_has_day_of_week_offer1`
     FOREIGN KEY (`offer_id`)
-    REFERENCES `findlunch`.`offer` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`offer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -285,9 +285,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`offer_photo`
+-- Table `ou7pojgz8l7rkgda`.`offer_photo`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`offer_photo` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`offer_photo` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `offer_id` INT(11) NOT NULL,
   `photo` MEDIUMBLOB NOT NULL,
@@ -296,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer_photo` (
   INDEX `fk_offer_photo_offer1_idx` (`offer_id` ASC),
   CONSTRAINT `fk_offer_photo_offer1`
     FOREIGN KEY (`offer_id`)
-    REFERENCES `findlunch`.`offer` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`offer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -304,9 +304,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`time_schedule`
+-- Table `ou7pojgz8l7rkgda`.`time_schedule`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`time_schedule` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`time_schedule` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` INT(11) NOT NULL,
   `offer_start_time` DATETIME NULL DEFAULT NULL,
@@ -317,12 +317,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`time_schedule` (
   INDEX `fk_time_schedule_day_of_week1_idx` (`day_of_week_id` ASC),
   CONSTRAINT `fk_time_schedule_day_of_week1`
     FOREIGN KEY (`day_of_week_id`)
-    REFERENCES `findlunch`.`day_of_week` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`day_of_week` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_time_schedule_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -330,9 +330,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`opening_time`
+-- Table `ou7pojgz8l7rkgda`.`opening_time`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`opening_time` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`opening_time` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `opening_time` DATETIME NOT NULL,
   `closing_time` DATETIME NOT NULL,
@@ -341,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`opening_time` (
   INDEX `fk_opening_time_time_schedule1_idx` (`time_schedule_id` ASC),
   CONSTRAINT `fk_opening_time_time_schedule1`
     FOREIGN KEY (`time_schedule_id`)
-    REFERENCES `findlunch`.`time_schedule` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`time_schedule` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -349,9 +349,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`push_notification`
+-- Table `ou7pojgz8l7rkgda`.`push_notification`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`push_notification` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`push_notification` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `title` VARCHAR(60) NULL DEFAULT NULL,
@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`push_notification` (
   INDEX `fk_push_notification_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_push_notification_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `findlunch`.`user` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -372,9 +372,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`push_notification_has_day_of_week`
+-- Table `ou7pojgz8l7rkgda`.`push_notification_has_day_of_week`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`push_notification_has_day_of_week` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`push_notification_has_day_of_week` (
   `push_notification_id` INT(11) NOT NULL,
   `day_of_week_id` INT(11) NOT NULL,
   PRIMARY KEY (`push_notification_id`, `day_of_week_id`),
@@ -382,12 +382,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`push_notification_has_day_of_week` (
   INDEX `fk_push_notification_has_day_of_week_push_notification1_idx` (`push_notification_id` ASC),
   CONSTRAINT `fk_push_notification_has_day_of_week_day_of_week1`
     FOREIGN KEY (`day_of_week_id`)
-    REFERENCES `findlunch`.`day_of_week` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`day_of_week` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_push_notification_has_day_of_week_push_notification1`
     FOREIGN KEY (`push_notification_id`)
-    REFERENCES `findlunch`.`push_notification` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`push_notification` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -395,9 +395,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`push_notification_has_kitchen_type`
+-- Table `ou7pojgz8l7rkgda`.`push_notification_has_kitchen_type`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`push_notification_has_kitchen_type` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`push_notification_has_kitchen_type` (
   `push_notification_id` INT(11) NOT NULL,
   `kitchen_type_id` INT(11) NOT NULL,
   PRIMARY KEY (`push_notification_id`, `kitchen_type_id`),
@@ -405,12 +405,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`push_notification_has_kitchen_type` (
   INDEX `fk_push_notification_has_kitchen_type_push_notification1_idx` (`push_notification_id` ASC),
   CONSTRAINT `fk_push_notification_has_kitchen_type_kitchen_type1`
     FOREIGN KEY (`kitchen_type_id`)
-    REFERENCES `findlunch`.`kitchen_type` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`kitchen_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_push_notification_has_kitchen_type_push_notification1`
     FOREIGN KEY (`push_notification_id`)
-    REFERENCES `findlunch`.`push_notification` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`push_notification` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -418,9 +418,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`restaurant_has_kitchen_type`
+-- Table `ou7pojgz8l7rkgda`.`restaurant_has_kitchen_type`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`restaurant_has_kitchen_type` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`restaurant_has_kitchen_type` (
   `restaurant_id` INT(11) NOT NULL,
   `kitchen_type_id` INT(11) NOT NULL,
   PRIMARY KEY (`restaurant_id`, `kitchen_type_id`),
@@ -428,12 +428,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`restaurant_has_kitchen_type` (
   INDEX `fk_restaurant_has_kitchen_type_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_restaurant_has_kitchen_type_kitchen_type1`
     FOREIGN KEY (`kitchen_type_id`)
-    REFERENCES `findlunch`.`kitchen_type` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`kitchen_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_restaurant_has_kitchen_type_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -441,9 +441,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`points`
+-- Table `ou7pojgz8l7rkgda`.`points`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`points` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`points` (
   `user_id` INT(11) NOT NULL,
   `restaurant_id` INT(11) NOT NULL,
   `points` INT(11) NOT NULL,
@@ -451,21 +451,21 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`points` (
   INDEX `fk_points_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_points_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `findlunch`.`user` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_points_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`euro_per_point`
+-- Table `ou7pojgz8l7rkgda`.`euro_per_point`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`euro_per_point` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`euro_per_point` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `euro` DECIMAL(3,2) NOT NULL,
   PRIMARY KEY (`id`))
@@ -473,9 +473,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`minimum_profit`
+-- Table `ou7pojgz8l7rkgda`.`minimum_profit`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`minimum_profit` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`minimum_profit` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `profit` DECIMAL(5,2) NOT NULL,
   PRIMARY KEY (`id`))
@@ -483,9 +483,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`bill`
+-- Table `ou7pojgz8l7rkgda`.`bill`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`bill` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`bill` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `bill_number` VARCHAR(12) NOT NULL,
   `start_date` DATE NOT NULL,
@@ -500,21 +500,21 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`bill` (
   INDEX `fk_bill_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_bill_minimum_profit1`
     FOREIGN KEY (`minimum_profit_id`)
-    REFERENCES `findlunch`.`minimum_profit` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`minimum_profit` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_bill_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`reservation`
+-- Table `ou7pojgz8l7rkgda`.`reservation`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`reservation` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `reservation_number` INT(11) NOT NULL,
   `amount` INT(4) NOT NULL,
@@ -538,36 +538,36 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   UNIQUE INDEX `reservation_number_UNIQUE` (`reservation_number` ASC),
   CONSTRAINT `fk_reservation_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `findlunch`.`user` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_reservation_offer1`
     FOREIGN KEY (`offer_id`)
-    REFERENCES `findlunch`.`offer` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`offer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_reservation_euro_per_point1`
     FOREIGN KEY (`euro_per_point_id`)
-    REFERENCES `findlunch`.`euro_per_point` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`euro_per_point` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_reservation_bill1`
     FOREIGN KEY (`bill_id`)
-    REFERENCES `findlunch`.`bill` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`bill` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_reservation_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`booking_reason`
+-- Table `ou7pojgz8l7rkgda`.`booking_reason`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`booking_reason` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`booking_reason` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `reason` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`))
@@ -575,9 +575,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`booking`
+-- Table `ou7pojgz8l7rkgda`.`booking`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`booking` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`booking` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `book_id` INT NOT NULL,
   `booking_time` DATETIME NOT NULL,
@@ -591,26 +591,26 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`booking` (
   INDEX `fk_booking_bill1_idx` (`bill_id` ASC),
   CONSTRAINT `fk_booking_booking_reason1`
     FOREIGN KEY (`booking_reason_id`)
-    REFERENCES `findlunch`.`booking_reason` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`booking_reason` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_booking_account1`
     FOREIGN KEY (`account_id`)
-    REFERENCES `findlunch`.`account` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`account` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_booking_bill1`
     FOREIGN KEY (`bill_id`)
-    REFERENCES `findlunch`.`bill` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`bill` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`donation_per_month`
+-- Table `ou7pojgz8l7rkgda`.`donation_per_month`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`donation_per_month` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`donation_per_month` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `date` DATE NOT NULL,
   `amount` DECIMAL(5,2) NOT NULL,
@@ -622,21 +622,21 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`donation_per_month` (
   INDEX `fk_donation_per_month_bill1_idx` (`bill_id` ASC),
   CONSTRAINT `fk_donation_per_month_restaurant1`
     FOREIGN KEY (`restaurant_id`)
-    REFERENCES `findlunch`.`restaurant` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_donation_per_month_bill1`
     FOREIGN KEY (`bill_id`)
-    REFERENCES `findlunch`.`bill` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`bill` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`bill_counter`
+-- Table `ou7pojgz8l7rkgda`.`bill_counter`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`bill_counter` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`bill_counter` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `counter` INT NOT NULL,
   `date` DATE NOT NULL,
