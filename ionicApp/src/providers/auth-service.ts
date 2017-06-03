@@ -62,7 +62,7 @@ public register(userName: string, password: string) {
     this.http.post(SERVER_URL+"/api/register_user", user , options).subscribe(
       (res) => {
         //Bei erfolgreicher Registrierung direkt Login
-      //  this.login(userName, password);
+        this.login(userName, password);
         resolve(true);
       }, (err) => {
         console.log("registry hat nicht funktioniert \n ErrorCode:" + err._body);
