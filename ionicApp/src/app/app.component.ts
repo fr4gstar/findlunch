@@ -29,7 +29,16 @@ export class MyApp {
                 public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService) {
 
       this.initializeApp();
-      //TODO: in andere Methode auslagern, muss jedes mal bei neustart und resume ausgeführt werden
+      this.setNavPages();
+
+      //bei "pausieren und wieder öffnen" der App werden Seiten entprechend des Einlogstatus status angezeigt
+      document.addEventListener('resume', () => {
+        this.setNavPages();
+      })
+
+    }
+      private setNavPages(){
+
       this.auth.verifyUser().then(loggedIn =>
        // Kundenpages anzeigen
         this.pages = [
@@ -54,10 +63,10 @@ export class MyApp {
 
         ]
       )
+      }
 
         // used for an example of ngFor and navigation
 
-    }
 
 
     initializeApp() {
