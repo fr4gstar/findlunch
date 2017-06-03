@@ -29,8 +29,9 @@ export class MyApp {
                 public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService) {
 
       this.initializeApp();
-      this.auth.verifyUser().then( loggedIn =>
-
+      //TODO: in andere Methode auslagern, muss jedes mal bei neustart und resume ausgeführt werden
+      this.auth.verifyUser().then(loggedIn =>
+       // Kundenpages anzeigen
         this.pages = [
           {title: 'Restaurants', component: RestaurantsPage},
           {title: 'Home', component: HomePage},
@@ -41,6 +42,7 @@ export class MyApp {
           {title: 'Logout', component: RestaurantsPage}
         ]
       )
+        // Gäste-Pages anzeigen
       .catch (notLoggedIn =>
         this.pages = [
           {title: 'Restaurants', component: RestaurantsPage},
@@ -165,9 +167,6 @@ export class MyApp {
             }
 
         });
-      console.log("aktueller user ist eingeloggt : " + this.auth.getLoggedIn());
-
-
     }
 
     openPage(page) {
