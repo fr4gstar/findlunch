@@ -4,6 +4,7 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {SERVER_URL} from "../app/app.module";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {AuthService} from "../providers/auth-service";
 
 import {HomePage} from '../pages/home/home';
 import {ListPage} from '../pages/list/list';
@@ -24,27 +25,43 @@ export class MyApp {
 
     pages: Array<{ title: string, component: any }>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, private http: Http, public splashScreen: SplashScreen, private firebase: Firebase) {
+    constructor(public platform: Platform, public statusBar: StatusBar, private http: Http,
+                public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService) {
 
       this.initializeApp();
+      this.auth.verifyUser().then( loggedIn =>
+
+        this.pages = [
+          {title: 'Restaurants', component: RestaurantsPage},
+          {title: 'Home', component: HomePage},
+          {title: 'List', component: ListPage},
+          {title: 'Angebote', component: OffersPage},
+          {title: 'Profil', component: RestaurantsPage},//TODO: Profil Bonus und Logout zeigen alle auf Restaurants-seite
+          {title: 'Bonus', component: RestaurantsPage}, //TODO: umschreiben sobald seiten da
+          {title: 'Logout', component: RestaurantsPage}
+        ]
+      )
+      .catch (notLoggedIn =>
+        this.pages = [
+          {title: 'Restaurants', component: RestaurantsPage},
+          {title: 'Home', component: HomePage},
+          {title: 'List', component: ListPage},
+          {title: 'Angebote', component: OffersPage},
+          {title: 'Login', component: LoginPage},
+          {title: 'Registrieren', component: RegistryPage}
+
+        ]
+      )
 
         // used for an example of ngFor and navigation
-        this.pages = [
-            {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'Home', component: HomePage},
-            {title: 'List', component: ListPage},
-            {title: 'Angebote', component: OffersPage},
-            {title: 'Login', component: LoginPage},
-            {title: 'Registrieren', component: RegistryPage} //TODO: hier wieder entfernen
-
-        ];
 
     }
 
+
     initializeApp() {
-      //read windows.localstorage.readItem
-      //header mit diesen Daten austatten
-      //Login-API-call er
+      console.log("zuletzt eingeloggter user aus app.module " + window.localStorage.getItem("username") +
+        "\n dazugehöriges token " + window.localStorage.getItem(window.localStorage.getItem("username")) );
+
       let headers = new Headers({
         'Content-Type': 'application/json',
         "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
@@ -148,6 +165,9 @@ export class MyApp {
             }
 
         });
+      console.log("aktueller user ist eingeloggt : " + this.auth.getLoggedIn());
+
+
     }
 
     openPage(page) {
@@ -155,4 +175,6 @@ export class MyApp {
         // we wouldn't want the back button to show in this scenario
         this.nav.setRoot(page.component);
     }
+
+    show
 }

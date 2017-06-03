@@ -8,13 +8,14 @@ import {HomePage} from "../pages/home/home";
 
 @Injectable()
 export class AuthService {
-    error : any;
+      private loggedIn: boolean;
   constructor(private http: Http) {
+
   }
 
-  public login(userName: string, password: string) {
+  public login(username: string, password: string) {
     console.log("in auth-service login angekommen");
-    let encodedCredentials: string = btoa(userName + ":" + password);
+    let encodedCredentials: string = btoa(username + ":" + password);
     console.log(encodedCredentials);
     let headers = new Headers({
       'Content-Type': 'application/json',
@@ -26,8 +27,10 @@ export class AuthService {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
           console.log("api call erfolgreich");
-          window.localStorage.setItem(userName, encodedCredentials);
-
+          window.localStorage.setItem("username", username);
+          window.localStorage.setItem(username, encodedCredentials);
+          console.log("user und token gesetzt");
+          this.loggedIn = true;
           resolve(true);
         }, (err) => {
           console.log("hier isch der fähler");
@@ -46,8 +49,8 @@ export class AuthService {
    * @returns {Promise<T>}
    */
 
-public register(userName: string, password: string) {
-  let user = { username : userName,
+public register(username: string, password: string) {
+  let user = { username : username,
                password : password
   }
 
@@ -62,7 +65,7 @@ public register(userName: string, password: string) {
     this.http.post(SERVER_URL+"/api/register_user", user , options).subscribe(
       (res) => {
         //Bei erfolgreicher Registrierung direkt Login
-        this.login(userName, password);
+        this.login(username, password);
         resolve(true);
       }, (err) => {
         console.log("registry hat nicht funktioniert \n ErrorCode:" + err._body);
@@ -73,10 +76,45 @@ public register(userName: string, password: string) {
 }
 
 
-  public getUserInfo() {
+  public verifyUser() {
+    //zuletzt eingeloggter user
+    let currentUser = window.localStorage.getItem("username");
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      //token zum zuletzt eingeloggten user, gespeichert als value zum key des currentuser
+      "Authorization": "Basic " + window.localStorage.getItem(currentUser)
+    });
+    console.log("derzeitiger User " + currentUser);
+    console.log("vorhandenere key :" + window.localStorage.getItem(currentUser));
+    let options = new RequestOptions({headers: headers});
+    return new Promise((resolve, reject) => {
+      let startTime = Date.now();
+      this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
+        (res) => {
+          console.log("user verifiziert");
+          this.loggedIn = true;
+          console.log ("RTT: " + (Date.now() - startTime));
+          resolve(true);
+        }, (err) => {
+          console.log("user konnte nicht verifiziert werden \n autmatischer Logout")
+          this.logout();
+          reject(false);
+
+        })
+    })
   }
 
-  public logout() {
+  public getLoggedIn(){
+    return this.loggedIn;
+  }
 
+  public logout(){
+    let currentUser = window.localStorage.getItem("username");
+    //lösche key-value paar gespeichert unter dem zuletzt eingeloggten namen
+    window.localStorage.removeItem(currentUser);
+    //lösche den zuletzt eingeloggten usernamen gesetzt unter dem literal key "username"
+    window.localStorage.removeItem("username");
+    this.loggedIn = false;
+    console.log("logout erfolgt");
   }
 }
