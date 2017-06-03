@@ -8,14 +8,13 @@ import {HomePage} from "../pages/home/home";
 
 @Injectable()
 export class AuthService {
-
-  constructor(private http: Http){
-
-}
+    error : any;
+  constructor(private http: Http) {
+  }
 
   public login(userName: string, password: string) {
     console.log("in auth-service login angekommen");
-    let encodedCredentials: String = btoa(userName+":"+password);
+    let encodedCredentials: string = btoa(userName + ":" + password);
     console.log(encodedCredentials);
     let headers = new Headers({
       'Content-Type': 'application/json',
@@ -27,22 +26,52 @@ export class AuthService {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
           console.log("api call erfolgreich");
-          window.localStorage.setItem(userName,"loggedIn");
+          window.localStorage.setItem(userName, encodedCredentials);
 
-           resolve(true);
+          resolve(true);
         }, (err) => {
           console.log("hier isch der fähler");
-           resolve(false);
+          resolve(err.body);
 
 
         })
-     })
-   }
-
-
-  public register(credentials) {
-
+    })
   }
+
+
+  /**
+   * Registriert User und Loggt user direkt ein
+   * @param userName
+   * @param password
+   * @returns {Promise<T>}
+   */
+
+public register(userName: string, password: string) {
+  let user = { username : userName,
+               password : password
+  }
+
+
+  let headers = new Headers({
+    'Content-Type': 'application/json',
+    "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+  });
+  let options = new RequestOptions({ headers: headers });
+
+  return new Promise( (resolve, reject) => {
+    this.http.post(SERVER_URL+"/api/register_user", user , options).subscribe(
+      (res) => {
+        //Bei erfolgreicher Registrierung direkt Login
+      //  this.login(userName, password);
+        resolve(true);
+      }, (err) => {
+        console.log("registry hat nicht funktioniert \n ErrorCode:" + err._body);
+        reject(err._body);
+
+      })
+  })
+}
+
 
   public getUserInfo() {
   }

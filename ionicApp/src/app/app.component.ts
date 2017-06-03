@@ -42,6 +42,9 @@ export class MyApp {
     }
 
     initializeApp() {
+      //read windows.localstorage.readItem
+      //header mit diesen Daten austatten
+      //Login-API-call er
       let headers = new Headers({
         'Content-Type': 'application/json',
         "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
