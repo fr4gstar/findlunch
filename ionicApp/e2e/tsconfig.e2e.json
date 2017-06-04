@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.ng-cli.json",
+  "exclude": [
+    "node_modules",
+    "e2e"
+  ],
+  "compilerOptions": {
+    "outDir": "../out-tsc/e2e",
+    "module": "commonjs",
+    "target": "es5",
+    "types": [
+      "jasmine",
+      "node"
+    ]
+  }
+}

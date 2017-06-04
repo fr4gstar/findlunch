@@ -1,2 +1,5 @@
 
 webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/\.DS_Store
+# e2e
+/e2e/*.js
+/e2e/*.map
