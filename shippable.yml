@@ -5,9 +5,6 @@ language: node_js
 node_js:
   - 6.10.3
 
-addons:
-  firefox: "23.0"
-
 services:
   - selenium
 
@@ -21,11 +18,16 @@ before_install:
     - sudo npm install webdriver-manager -g
 
 build:
+  pre_ci_boot:
+        image_name: drydock/u14pytall
+        image_tag: prod
+        pull: true
   ci:
     - npm install
     - mkdir -p shippable/testresults
 #    - mkdir -p shippable/codecoverage
-    - npm test
+    - export DISPLAY=:99.0
+    - xvfb-run --server-args="-ac" npm test
     - npm run e2e
 #    - mysql -e 'create database if not exists test;'
 
