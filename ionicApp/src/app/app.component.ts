@@ -5,9 +5,10 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {SERVER_URL} from "../app/app.module";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 
-import {HomePage} from "../pages/home/home";
-import {ListPage} from "../pages/list/list";
-import {RestaurantsPage} from "../pages/restaurants/restaurants";
+import {HomePage} from '../pages/home/home';
+import {RestaurantsPage} from '../pages/restaurants/restaurants';
+import {BonusPage} from '../pages/bonus/bonus';
+import {ListPage} from '../pages/list/list';
 import {Firebase} from "@ionic-native/firebase";
 
 @Component({
@@ -16,7 +17,7 @@ import {Firebase} from "@ionic-native/firebase";
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = HomePage;
+    rootPage: any = RestaurantsPage;
 
     pages: Array<{ title: string, component: any }>;
 
@@ -33,8 +34,9 @@ export class MyApp {
 
         // used for an example of ngFor and navigation
         this.pages = [
-            {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'Home', component: HomePage}
+          {title: 'Home', component: HomePage},
+          {title: 'Restaurants', component: RestaurantsPage},
+          {title: 'Bonus', component: BonusPage}
         ];
 
     }

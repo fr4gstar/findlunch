@@ -6,6 +6,7 @@ import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {RestaurantsPage} from "../pages/restaurants/restaurants";
+import {BonusPage} from "../pages/bonus/bonus";
 
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
@@ -15,6 +16,7 @@ import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
@@ -40,6 +42,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         MyApp,
         HomePage,
         OffersPage,
+        BonusPage,
         RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
@@ -57,6 +60,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         MyApp,
         HomePage,
         OffersPage,
+        BonusPage,
         RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
@@ -74,6 +78,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         NativeGeocoder,
         OffersService,
         CartService
+        BarcodeScanner,
+        {provide: ErrorHandler, useClass: IonicErrorHandler}
     ]
 
 })
