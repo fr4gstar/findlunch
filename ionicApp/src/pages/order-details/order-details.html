@@ -10,28 +10,17 @@
 <ion-content>
     <h2 padding-left>Ihre Bestellung</h2>
 
-    <ion-item>
-        <ion-label color="primary" stacked>Produktname</ion-label>
-        <ion-input disabled [(ngModel)]="reservation.offer.title"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label color="primary" stacked>Einzelpreis</ion-label>
-        <ion-input disabled [(ngModel)]="reservation.offer.price"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label color="primary" stacked>Produktbeschreibung</ion-label>
-        <ion-input disabled [(ngModel)]="reservation.offer.description"></ion-input>
-    </ion-item>
-
-    <ion-item>
-        <ion-label fixed>Menge:</ion-label>
-        <ion-input type="number" [(ngModel)]="reservation.amount" (ngModelChange)="updateTotalPrice()"></ion-input>
-    </ion-item>
-
-    <ion-item>
-        <ion-label color="primary" fixed>Gesamtpreis</ion-label>
-        <ion-input disabled [(ngModel)]="reservation.totalPrice"></ion-input>
-    </ion-item>
+    <ion-list>
+        <ion-item *ngFor="let item of reservation.items">
+            <span item-left>{{item.title}}</span>
+            <span item-right>{{item.price | currency:'EUR':true}}</span>
+        </ion-item>
+        <div style="border: 1px solid black"></div>
+        <ion-item>
+            <span item-left color="primary">Gesamtpreis</span>
+            <span item-right color="primary">{{reservation.totalPrice | currency:'EUR':true}}</span>
+        </ion-item>
+    </ion-list>
 
     <button ion-button full (click)="sendOrder()">Bestellen</button>
 </ion-content>
