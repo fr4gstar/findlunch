@@ -3,7 +3,7 @@ language: node_js
 
 # version numbers, spec against multiple versions of node
 node_js:
-  - 7.10.0
+  - 6.10.3
 
 addons:
   firefox: "19.0"
