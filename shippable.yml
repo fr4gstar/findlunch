@@ -5,25 +5,32 @@ language: node_js
 node_js:
   - 7.10.0
 
+addons:
+  firefox: "19.0"
+
+services:
+  - selenium
+
 branches:
   only:
     - ftr_testing
 
 before_install:
     - cd '/root/src/github.com/fr4gstar/findlunch/ionicApp'
+    - sudo npm install -g protractor
 
 build:
   ci:
     - npm install
     - mkdir -p shippable/testresults
-    - mkdir -p shippable/codecoverage
+#    - mkdir -p shippable/codecoverage
     - npm test
     - npm run e2e
 #    - mysql -e 'create database if not exists test;'
 
 after_success:
   - mkdir -p shippable/testresults
-  - mkdir -p shippable/codecoverage
+#  - mkdir -p shippable/codecoverage
 #  - mocha -R xunit >> coverage/result.xml
 #  - mv coverage/cobertura-coverage.xml shippable/codecoverage/coverage.xml
 #  - mv coverage/result.xml shippable/testresults/result.xml
