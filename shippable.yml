@@ -6,7 +6,7 @@ node_js:
   - 6.10.3
 
 addons:
-  firefox: "19.0"
+  firefox: "23.0"
 
 services:
   - selenium
@@ -18,6 +18,7 @@ branches:
 before_install:
     - cd '/root/src/github.com/fr4gstar/findlunch/ionicApp'
     - sudo npm install -g protractor
+    - sudo npm install webdriver-manager -g
 
 build:
   ci:
