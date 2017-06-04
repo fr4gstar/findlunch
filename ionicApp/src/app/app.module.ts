@@ -77,7 +77,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         FilterPopoverService,
         NativeGeocoder,
         OffersService,
-        CartService
+        CartService,
         BarcodeScanner,
         {provide: ErrorHandler, useClass: IonicErrorHandler}
     ]
