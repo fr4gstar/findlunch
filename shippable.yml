@@ -3,7 +3,7 @@ language: node_js
 
 # version numbers, spec against multiple versions of node
 node_js:
-  - 6.9.0
+  - 8.0.0
 
 services:
   - selenium
@@ -14,6 +14,7 @@ branches:
 
 before_install:
     - cd '/root/src/github.com/fr4gstar/findlunch/ionicApp'
+    - sudo np
     - sudo npm install -g protractor
     - sudo npm install webdriver-manager -g
 
