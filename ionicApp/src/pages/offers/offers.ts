@@ -12,14 +12,15 @@ export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
 export class OffersPage implements OnInit {
     private _restaurant_id: number;
-    public offers: Object[];
+    public offers: any;
 
     constructor(
         navParams: NavParams,
         private offerService: OffersService,
         private navCtrl: NavController
     ) {
-        this._restaurant_id = parseInt(navParams.get("restaurant_id"), 10);
+        this._restaurant_id = parseInt(navParams.get("restaurant_id"));
+
     }
 
     ngOnInit() {

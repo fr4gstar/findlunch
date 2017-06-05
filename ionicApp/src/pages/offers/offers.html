@@ -12,11 +12,19 @@
       <ion-toolbar color="light">
         <h2>Produkte</h2>
       </ion-toolbar>
-        <button ion-item *ngFor="let offer of offers" (click)="onOfferClicked($event, offer)">
+        <ion-list>
+
+          <div ion-item *ngFor="let courseType of offers">
+            <div>{{courseType}}</div>
+
+
+          <button ion-item *ngFor="let offer of courseType" (click)="onOfferClicked($event, offer)">
             <div>{{offer.title}}</div>
             <div class="item-note" item-right>
                 {{offer.price | currency:'EUR':true}}
             </div>
-        </button>
+          </button>
+          </div>
+        </ion-list>
     </ion-list>
 </ion-content>
