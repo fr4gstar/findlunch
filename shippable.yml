@@ -14,7 +14,6 @@ branches:
 
 before_install:
     - cd '/root/src/github.com/fr4gstar/findlunch/ionicApp'
-    - sudo np
     - sudo npm install -g protractor
     - sudo npm install webdriver-manager -g
 
