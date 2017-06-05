@@ -6,14 +6,13 @@ import {SERVER_URL} from "../app/app.module";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
+import {ToastController} from "ionic-angular";
+
 
 import {HomePage} from '../pages/home/home';
-import {ListPage} from '../pages/list/list';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {Firebase} from "@ionic-native/firebase";
-import {OffersPage} from "../pages/offers/offers";
-import {LoginPage} from "../pages/login/login";
-import {RegistryPage} from "../pages/registry/registry";
+
 
 
 @Component({
@@ -27,54 +26,17 @@ export class MyApp {
 
     constructor(public platform: Platform, public statusBar: StatusBar, private http: Http,
                 public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService,
-                public menu : MenuService) {
+                public menu : MenuService, private toastCtrl: ToastController) {
 
       this.initializeApp();
-      //this.setMenuPages();
-      this.auth.verifyUser()
+      this.auth.verifyUser();
 
-      //bei "pausieren und wieder öffnen" der App werden Seiten entprechend des Einlogstatus status angezeigt
+      //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
       document.addEventListener('resume', () => {
-    //    this.setMenuPages();
-        this.auth.verifyUser()
+        this.auth.verifyUser();
       })
 
     }
-      private setMenuPages(){
-
-        this.auth.verifyUser().then(loggedIn => {
-          // Kundenpages anzeigen
-         // this.pages = this.menu.customerPages;
-            /*[
-            {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'Home', component: HomePage},
-            {title: 'List', component: ListPage},
-            {title: 'Angebote', component: OffersPage},
-            {title: 'Profil', component: RestaurantsPage},//TODO: Profil Bonus und Logout zeigen alle auf Restaurants-seite
-            {title: 'Bonus', component: RestaurantsPage}, //TODO: umschreiben sobald seiten da
-            {title: 'Logout', component: RestaurantsPage}
-          ]
-          */
-        })
-          // Gäste-Pages anzeigen
-        .catch (notLoggedIn => {
-       //   this.pages = this.menu.guestPages;
-          /*[
-            {title: 'Restaurants', component: RestaurantsPage},
-            {title: 'Home', component: HomePage},
-            {title: 'List', component: ListPage},
-            {title: 'Angebote', component: OffersPage},
-            {title: 'Login', component: LoginPage},
-            {title: 'Registrieren', component: RegistryPage}
-
-          ]
-          */
-        })
-      }
-
-        // used for an example of ngFor and navigation
-
-
 
     initializeApp() {
       console.log("zuletzt eingeloggter user aus app.module " + window.localStorage.getItem("username") +
@@ -191,5 +153,11 @@ export class MyApp {
         this.nav.setRoot(page.component);
     }
 
-    show
+    public logout (){
+      this.auth.logout();
+      const toast = this.toastCtrl.create({
+        message: "Logout erfolgt",
+        duration: 3000});
+      toast.present();
+    }
 }

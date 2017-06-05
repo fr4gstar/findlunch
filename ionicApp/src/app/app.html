@@ -7,14 +7,11 @@
 
   <ion-content>
     <ion-list>
-      <!--
-      <button> f this shit {{this.loggedIn}}</button>
-      -->
       <div *ngIf="this.auth.getLoggedIn()">
         <button color="findlunch" menuClose ion-item *ngFor="let p of this.menu.customerPages" (click)="openPage(p)">
          {{p.title}}
         </button>
-        <button ion-button block  (click)="this.auth.logout()">Logout</button>
+        <button ion-button block menuClose (click)="this.logout()">Logout</button>
       </div>
 
       <div *ngIf="!this.auth.getLoggedIn()">

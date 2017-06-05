@@ -27,14 +27,14 @@ export class AuthService {
     return new Promise(resolve => {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
-          console.log("api call erfolgreich");
+          console.log("lgoin api-call erfolgreich");
           window.localStorage.setItem("username", username);
           window.localStorage.setItem(username, encodedCredentials);
           console.log("user und token gesetzt");
           this.loggedIn = true;
           resolve(true);
         }, (err) => {
-          console.log("api call negative antwort")
+          console.log("login api-call negative antwort")
           resolve(err.body);
 
 
@@ -82,19 +82,17 @@ public register(username: string, password: string) {
     let currentUser = window.localStorage.getItem("username");
     let headers = new Headers({
       'Content-Type': 'application/json',
-      //token zum zuletzt eingeloggten user, gespeichert als value zum key des currentuser
+      //token zum zuletzt eingeloggten user, gespeichert als value zum key der Variable currentuser
       "Authorization": "Basic " + window.localStorage.getItem(currentUser)
     });
     console.log("derzeitiger User " + currentUser);
     console.log("vorhandenere key :" + window.localStorage.getItem(currentUser));
     let options = new RequestOptions({headers: headers});
     return new Promise((resolve, reject) => {
-      let startTime = Date.now();
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
           console.log("user verifiziert");
           this.loggedIn = true;
-          console.log ("RTT: " + (Date.now() - startTime));
           resolve(true);
         }, (err) => {
           console.log("user konnte nicht verifiziert werden \n automatischer Logout")
@@ -111,9 +109,9 @@ public register(username: string, password: string) {
 
   public logout(){
     let currentUser = window.localStorage.getItem("username");
-    //lösche key-value paar gespeichert unter dem zuletzt eingeloggten namen
+    //lösche key-value paar gespeichert unter dem zuletzt eingeloggten namen bzw Variable currentUser
     window.localStorage.removeItem(currentUser);
-    //lösche den zuletzt eingeloggten usernamen gesetzt unter dem literal key "username"
+    //lösche den zuletzt eingeloggten usernamen gesetzt unter dem key-String "username"
     window.localStorage.removeItem("username");
     this.loggedIn = false;
     console.log("logout erfolgt");

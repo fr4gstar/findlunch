@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 import {HomePage} from '../pages/home/home';
-import {ListPage} from '../pages/list/list';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {OffersPage} from "../pages/offers/offers";
 import {LoginPage} from "../pages/login/login";
 import {RegistryPage} from "../pages/registry/registry";
 
-/*
-  Generated class for the MenuPages provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class MenuService {
   customerPages = [
@@ -25,7 +18,6 @@ export class MenuService {
     {title: 'Bonus', component: RestaurantsPage}, //TODO: umschreiben sobald seiten da
     {title: 'Bestellungen', component: RestaurantsPage},
 
-    //{title: 'Logout', component: RestaurantsPage}
   ];
 
   guestPages = [
