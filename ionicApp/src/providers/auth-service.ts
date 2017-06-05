@@ -9,6 +9,7 @@ import {HomePage} from "../pages/home/home";
 @Injectable()
 export class AuthService {
       private loggedIn: boolean;
+
   constructor(private http: Http) {
 
   }
@@ -33,7 +34,7 @@ export class AuthService {
           this.loggedIn = true;
           resolve(true);
         }, (err) => {
-          console.log("hier isch der fähler");
+          console.log("api call negative antwort")
           resolve(err.body);
 
 
@@ -96,7 +97,7 @@ public register(username: string, password: string) {
           console.log ("RTT: " + (Date.now() - startTime));
           resolve(true);
         }, (err) => {
-          console.log("user konnte nicht verifiziert werden \n autmatischer Logout")
+          console.log("user konnte nicht verifiziert werden \n automatischer Logout")
           this.logout();
           reject(false);
 

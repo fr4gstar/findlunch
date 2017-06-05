@@ -5,6 +5,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {SERVER_URL} from "../app/app.module";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
+import {MenuService} from "../providers/menu-service";
 
 import {HomePage} from '../pages/home/home';
 import {ListPage} from '../pages/list/list';
@@ -22,47 +23,53 @@ export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
     rootPage: any = HomePage;
-
     pages: Array<{ title: string, component: any }>;
 
     constructor(public platform: Platform, public statusBar: StatusBar, private http: Http,
-                public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService) {
+                public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService,
+                public menu : MenuService) {
 
       this.initializeApp();
-      this.setNavPages();
+      //this.setMenuPages();
+      this.auth.verifyUser()
 
       //bei "pausieren und wieder öffnen" der App werden Seiten entprechend des Einlogstatus status angezeigt
       document.addEventListener('resume', () => {
-        this.setNavPages();
+    //    this.setMenuPages();
+        this.auth.verifyUser()
       })
 
     }
-      private setNavPages(){
+      private setMenuPages(){
 
-      this.auth.verifyUser().then(loggedIn =>
-       // Kundenpages anzeigen
-        this.pages = [
-          {title: 'Restaurants', component: RestaurantsPage},
-          {title: 'Home', component: HomePage},
-          {title: 'List', component: ListPage},
-          {title: 'Angebote', component: OffersPage},
-          {title: 'Profil', component: RestaurantsPage},//TODO: Profil Bonus und Logout zeigen alle auf Restaurants-seite
-          {title: 'Bonus', component: RestaurantsPage}, //TODO: umschreiben sobald seiten da
-          {title: 'Logout', component: RestaurantsPage}
-        ]
-      )
-        // Gäste-Pages anzeigen
-      .catch (notLoggedIn =>
-        this.pages = [
-          {title: 'Restaurants', component: RestaurantsPage},
-          {title: 'Home', component: HomePage},
-          {title: 'List', component: ListPage},
-          {title: 'Angebote', component: OffersPage},
-          {title: 'Login', component: LoginPage},
-          {title: 'Registrieren', component: RegistryPage}
+        this.auth.verifyUser().then(loggedIn => {
+          // Kundenpages anzeigen
+         // this.pages = this.menu.customerPages;
+            /*[
+            {title: 'Restaurants', component: RestaurantsPage},
+            {title: 'Home', component: HomePage},
+            {title: 'List', component: ListPage},
+            {title: 'Angebote', component: OffersPage},
+            {title: 'Profil', component: RestaurantsPage},//TODO: Profil Bonus und Logout zeigen alle auf Restaurants-seite
+            {title: 'Bonus', component: RestaurantsPage}, //TODO: umschreiben sobald seiten da
+            {title: 'Logout', component: RestaurantsPage}
+          ]
+          */
+        })
+          // Gäste-Pages anzeigen
+        .catch (notLoggedIn => {
+       //   this.pages = this.menu.guestPages;
+          /*[
+            {title: 'Restaurants', component: RestaurantsPage},
+            {title: 'Home', component: HomePage},
+            {title: 'List', component: ListPage},
+            {title: 'Angebote', component: OffersPage},
+            {title: 'Login', component: LoginPage},
+            {title: 'Registrieren', component: RegistryPage}
 
-        ]
-      )
+          ]
+          */
+        })
       }
 
         // used for an example of ngFor and navigation

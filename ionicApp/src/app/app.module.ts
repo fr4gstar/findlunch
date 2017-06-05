@@ -18,6 +18,8 @@ import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {AuthService} from "../providers/auth-service.ts";
+import {MenuService} from "../providers/menu-service";
+
 
 
 
@@ -66,7 +68,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
-        AuthService
+        AuthService,
+        MenuService
 
     ]
 
