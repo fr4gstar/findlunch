@@ -18,6 +18,10 @@ before_install:
     - sudo npm install webdriver-manager -g
 
 build:
+  pre_ci_boot:
+    image_name: drydock/u14nodpls
+    image_tag: prod
+    pull: true
   ci:
     - npm install
     - mkdir -p shippable/testresults
