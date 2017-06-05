@@ -1,7 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
-import {Nav, Platform} from 'ionic-angular';
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
+import {Component, ViewChild} from "@angular/core";
+import {Events, Nav, Platform} from "ionic-angular";
+import {StatusBar} from "@ionic-native/status-bar";
+import {SplashScreen} from "@ionic-native/splash-screen";
 import {SERVER_URL} from "../app/app.module";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
@@ -11,6 +11,8 @@ import {ToastController} from "ionic-angular";
 
 import {HomePage} from '../pages/home/home';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
+import {BonusPage} from '../pages/bonus/bonus';
+import {ListPage} from '../pages/list/list';
 import {Firebase} from "@ionic-native/firebase";
 
 
@@ -21,12 +23,21 @@ import {Firebase} from "@ionic-native/firebase";
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = HomePage;
+    rootPage: any = RestaurantsPage;
+
     pages: Array<{ title: string, component: any }>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, private http: Http,
-                public splashScreen: SplashScreen, private firebase: Firebase, private auth : AuthService,
-                public menu : MenuService, private toastCtrl: ToastController) {
+    constructor(
+        public platform: Platform,
+        public statusBar: StatusBar,
+        private http: Http,
+        public splashScreen: SplashScreen,
+        private firebase: Firebase,
+        private events: Events,
+        private auth: AuthService,
+        public menu: MenuService,
+        private toastCtrl: ToastController
+    ) {
 
       this.initializeApp();
       this.auth.verifyUser();
@@ -159,5 +170,13 @@ export class MyApp {
         message: "Logout erfolgt",
         duration: 3000});
       toast.present();
+    }
+
+    onMenuClosed() {
+        this.events.publish("menu", "close");
+    }
+
+    onMenuOpened() {
+        this.events.publish("menu", "open");
     }
 }

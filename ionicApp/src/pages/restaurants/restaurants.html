@@ -27,7 +27,7 @@
   </div>
 
   <ion-list>
-    <div *ngIf="restaurants!=null"><h3>Restaurants in der Nähe</h3></div>
+    <div *ngIf="restaurants"><h3>Restaurants in der Nähe</h3></div>
     <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers(restaurant.id)">
       <div>{{restaurant.name}}</div>
     </button>
