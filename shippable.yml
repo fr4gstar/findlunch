@@ -18,17 +18,12 @@ before_install:
     - sudo npm install webdriver-manager -g
 
 build:
-  pre_ci_boot:
-        image_name: drydock/u14pytall
-        image_tag: prod
-        pull: true
   ci:
     - npm install
     - mkdir -p shippable/testresults
 #    - mkdir -p shippable/codecoverage
     - export DISPLAY=:99.0
-    - xvfb-run --server-args="-ac" npm test
-    - npm run e2e
+    - xvfb-run --server-args="-ac" npm run e2e
 #    - mysql -e 'create database if not exists test;'
 
 after_success:
