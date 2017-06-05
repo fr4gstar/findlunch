@@ -14,13 +14,7 @@ import {OffersPage} from "../offers/offers";
 export class RestaurantsPage {
   public restaurants : Object[];
   private pos : Coordinates;
-  // coordinates pos von Homepage holen
-  // Wert für Radius möglich machen anzugeben
-  // Koordinaten und radius in API Call mit reinpacken
-  // json zurückbekommen
-  // durch json iterieren und für jedes Element einen div
-  //
-  //
+
   constructor(public navCtrl : NavController, private navParams:NavParams, private http: Http, private geolocation: Geolocation, private platform: Platform) {
     this.platform.ready().then(() => this.getGeolocation()  )
   }

@@ -3,13 +3,19 @@ import {Events, Nav, Platform} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {SERVER_URL} from "../app/app.module";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {AuthService} from "../providers/auth-service";
+import {MenuService} from "../providers/menu-service";
+import {ToastController} from "ionic-angular";
+
 
 import {HomePage} from '../pages/home/home';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {BonusPage} from '../pages/bonus/bonus';
 import {ListPage} from '../pages/list/list';
 import {Firebase} from "@ionic-native/firebase";
+
+
 
 @Component({
     templateUrl: 'app.html'
@@ -27,21 +33,26 @@ export class MyApp {
         private http: Http,
         public splashScreen: SplashScreen,
         private firebase: Firebase,
-        private events: Events
+        private events: Events,
+        private auth: AuthService,
+        public menu: MenuService,
+        private toastCtrl: ToastController
     ) {
 
       this.initializeApp();
+      this.auth.verifyUser();
 
-        // used for an example of ngFor and navigation
-        this.pages = [
-          {title: 'Home', component: HomePage},
-          {title: 'Restaurants', component: RestaurantsPage},
-          {title: 'Bonus', component: BonusPage}
-        ];
+      //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
+      document.addEventListener('resume', () => {
+        this.auth.verifyUser();
+      })
 
     }
 
     initializeApp() {
+      console.log("zuletzt eingeloggter user aus app.module " + window.localStorage.getItem("username") +
+        "\n dazugehöriges token " + window.localStorage.getItem(window.localStorage.getItem("username")) );
+
       let headers = new Headers({
         'Content-Type': 'application/json',
         "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
@@ -151,6 +162,14 @@ export class MyApp {
         // Reset the content nav to have just this page
         // we wouldn't want the back button to show in this scenario
         this.nav.setRoot(page.component);
+    }
+
+    public logout (){
+      this.auth.logout();
+      const toast = this.toastCtrl.create({
+        message: "Logout erfolgt",
+        duration: 3000});
+      toast.present();
     }
 
     onMenuClosed() {
