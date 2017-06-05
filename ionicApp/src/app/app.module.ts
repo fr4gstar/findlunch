@@ -90,6 +90,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OffersService,
         BarcodeScanner,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
+        CartService,
         AuthService,
         MenuService
     ]
