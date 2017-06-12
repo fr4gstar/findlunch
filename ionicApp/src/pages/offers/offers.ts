@@ -28,11 +28,10 @@ export class OffersPage implements OnInit {
         this.offerService.getOffers(this._restaurant_id).subscribe(
 
             offers => {
-              console.log(offers);
               this.offers = offers;
               this.arrayOfKeys = Object.keys(offers);
                       },
-            err => console.log(err)
+            err => console.error(err)
         )
     }
 

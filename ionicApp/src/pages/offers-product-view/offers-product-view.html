@@ -16,24 +16,22 @@
 
 
 <ion-content padding>
-    <ion-list>
-        <ion-card *ngFor="let offer of offers" id="{{offer.id}}" padding>
-            <ion-card-title>{{offer.title}}</ion-card-title>
-            <ion-card-content>
-                <p>{{offer.description}}</p>
-                <div>Preis: {{offer.price}}</div>
-                <div>Zubereitungszeit: {{offer.preparationTime}}</div>
-                <div>Punkte: {{offer.neededPoints}}</div>
-            </ion-card-content>
+    <ion-card padding>
+        <ion-card-title>{{offer.title}}</ion-card-title>
+        <ion-card-content>
+            <p>{{offer.description}}</p>
+            <div>Preis: {{offer.price}}</div>
+            <div>Zubereitungszeit: {{offer.preparationTime}}</div>
+            <div>Punkte: {{offer.neededPoints}}</div>
+        </ion-card-content>
 
-            <ion-row>
-                <ion-col>
-                    <button ion-button icon-left clear small (click)="addToCart(offer)">
-                        <ion-icon name="add-circle"></ion-icon>
-                        <div>In den Warenkorb</div>
-                    </button>
-                </ion-col>
-            </ion-row>
-        </ion-card>
-    </ion-list>
+        <ion-row>
+            <ion-col>
+                <button ion-button icon-left clear small (click)="addToCart(offer)">
+                    <ion-icon name="add-circle"></ion-icon>
+                    <div>In den Warenkorb</div>
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-card>
 </ion-content>
