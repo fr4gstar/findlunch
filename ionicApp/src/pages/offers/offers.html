@@ -18,7 +18,7 @@
                 {{category}}
               </ion-list-header>
               <div *ngFor='let offer of offers[category]'>
-                  <ion-item (click)="onOfferClicked(offer)">{{offer.title}} {{offer.price | currency:'EUR':true}}</ion-item>
+                  <ion-item (click)="onOfferClicked($event, offer)">{{offer.title}} {{offer.price | currency:'EUR':true}}</ion-item>
               </div>
             </div>
     </ion-list>

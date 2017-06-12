@@ -21,6 +21,7 @@ export class OffersProductViewPage implements OnInit {
   public offers: Offer[];
   public cart: Array<Object>;
   private _restaurantId: number;
+  private _offerId: number;
 
   constructor(
       public navCtrl: NavController,
@@ -29,6 +30,7 @@ export class OffersProductViewPage implements OnInit {
       private cartService: CartService
   ) {
     this._restaurantId = navParams.get("restaurant_id");
+    this._offerId = navParams.get("offer_id");
     let cart = cartService.getCart(this._restaurantId);
     if (cart === null || cart === undefined) {
       this.cart = cartService.createCart(this._restaurantId);
@@ -38,7 +40,9 @@ export class OffersProductViewPage implements OnInit {
   }
 
   ngOnInit() {
-    this.offerService.getOffers(this._restaurantId).subscribe(offers => {
+    this.offerService.getOffers(this._restaurantId)
+      // .filter(offers => offers === this.offer)
+      .subscribe(offers => {
       this.offers = offers;
     })
   }
