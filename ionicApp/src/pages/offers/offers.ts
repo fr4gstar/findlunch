@@ -14,6 +14,7 @@ export const FL_NAVPARAM_OFFER_ID = "offer_id";
 export class OffersPage implements OnInit {
     private _restaurant_id: number;
     public offers: any;
+    public arrayOfKeys;
 
     constructor(
         navParams: NavParams,
@@ -21,30 +22,17 @@ export class OffersPage implements OnInit {
         private navCtrl: NavController
     ) {
         this._restaurant_id = parseInt(navParams.get("restaurant_id"));
-
     }
 
     ngOnInit() {
         this.offerService.getOffers(this._restaurant_id).subscribe(
-            offers => {this.offers = Object.keys(offers),
-                      console.log(this.offers),
-                      console.log("offers hat den typ :" + typeof this.offers)
-                      for(let coursetype of this.offers){
-                        console.log(coursetype)
-                        console.log(offers[coursetype])
-                      }
-                        /*
-                        for (let coursetype of this.offers){
-                          console.log("offers.coursetype hat den typ: " +typeof this.offers.courseType)
-                          console.log(this.offers.coursetype)
-                          for (let i=0; i< this.offers.coursetype.length; i++){
-                            console.log(this.offers.courseType.food[i].title)
-                          }
-                        }
-                        */
-                      },
 
-            err => alert(err)
+            offers => {
+              console.log(offers);
+              this.offers = offers;
+              this.arrayOfKeys = Object.keys(offers);
+                      },
+            err => console.log(err)
         )
     }
 

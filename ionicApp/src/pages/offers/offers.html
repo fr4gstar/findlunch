@@ -12,18 +12,14 @@
       <ion-toolbar color="light">
         <h2>Produkte</h2>
       </ion-toolbar>
-        <ion-list>
-          <div ion-item *ngFor="let courseType of offers">
-            <div>{{courseType}}</div>
-            <div *ngFor="let offer of offers.courseType" >
-              <div>{{offer.title}}</div>
-              <div class="item-note" item-right>
-                  {{offer.price | currency:'EUR':true}}
+
+            <div *ngFor="let category of arrayOfKeys">
+              <ion-list-header>
+                {{category}}
+              </ion-list-header>
+              <div *ngFor='let offer of offers[category]'>
+                  <ion-item (click)="onOfferClicked(offer)">{{offer.title}} {{offer.price | currency:'EUR':true}}</ion-item>
               </div>
             </div>
-          <!--
-          -->
-          </div>
-        </ion-list>
     </ion-list>
 </ion-content>
