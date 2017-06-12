@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Aktuelle Angebote</ion-title>
+        <ion-title>Ionic Café</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -13,17 +13,16 @@
         <h2>Produkte</h2>
       </ion-toolbar>
         <ion-list>
-
           <div ion-item *ngFor="let courseType of offers">
             <div>{{courseType}}</div>
-
-
-          <button ion-item *ngFor="let offer of courseType" (click)="onOfferClicked($event, offer)">
-            <div>{{offer.title}}</div>
-            <div class="item-note" item-right>
-                {{offer.price | currency:'EUR':true}}
+            <div *ngFor="let offer of offers.courseType" >
+              <div>{{offer.title}}</div>
+              <div class="item-note" item-right>
+                  {{offer.price | currency:'EUR':true}}
+              </div>
             </div>
-          </button>
+          <!--
+          -->
           </div>
         </ion-list>
     </ion-list>

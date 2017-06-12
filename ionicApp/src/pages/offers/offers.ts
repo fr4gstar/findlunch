@@ -3,6 +3,7 @@ import {NavController, NavParams} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 
+
 export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
 @Component({
@@ -25,7 +26,24 @@ export class OffersPage implements OnInit {
 
     ngOnInit() {
         this.offerService.getOffers(this._restaurant_id).subscribe(
-            offers => this.offers = offers,
+            offers => {this.offers = Object.keys(offers),
+                      console.log(this.offers),
+                      console.log("offers hat den typ :" + typeof this.offers)
+                      for(let coursetype of this.offers){
+                        console.log(coursetype)
+                        console.log(offers[coursetype])
+                      }
+                        /*
+                        for (let coursetype of this.offers){
+                          console.log("offers.coursetype hat den typ: " +typeof this.offers.courseType)
+                          console.log(this.offers.coursetype)
+                          for (let i=0; i< this.offers.coursetype.length; i++){
+                            console.log(this.offers.courseType.food[i].title)
+                          }
+                        }
+                        */
+                      },
+
             err => alert(err)
         )
     }
