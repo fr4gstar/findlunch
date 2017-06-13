@@ -37,8 +37,7 @@ export class OrderDetailsPage {
 
     incrementDonation() {
         let newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
-        let donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
-        this.reservation.donation = donation;
+        this.reservation.donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
         this.reservation.totalPrice = newTotalPrice;
     }
 
