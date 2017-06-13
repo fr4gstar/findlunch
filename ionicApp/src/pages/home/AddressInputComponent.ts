@@ -2,6 +2,7 @@ import {Component, NgZone, OnInit} from "@angular/core";
 import {ViewController} from "ionic-angular";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import ComponentRestrictions = google.maps.places.ComponentRestrictions;
+import {} from '@types/googlemaps';
 
 @Component({
     selector: 'AddressInputComponent',
