@@ -39,8 +39,9 @@ export class OffersProductViewPage {
   }
 
   addToCart(offer: Offer) {
-    this.cart.push(offer);
+    this.cartService.addItemToCart(this._restaurantId, offer);
   }
+
 
   goToCheckout() {
     this.navCtrl.push(OrderDetailsPage, {
