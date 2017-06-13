@@ -11,7 +11,6 @@ import {ToastController} from "ionic-angular";
 
 import {HomePage} from '../pages/home/home';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
-import {BonusPage} from '../pages/bonus/bonus';
 import {ListPage} from '../pages/list/list';
 import {Firebase} from "@ionic-native/firebase";
 
@@ -40,9 +39,13 @@ export class MyApp {
     ) {
 
       this.initializeApp();
+
       this.auth.verifyUser();
 
-      //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
+
+
+
+  //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
       document.addEventListener('resume', () => {
         this.auth.verifyUser();
       })
