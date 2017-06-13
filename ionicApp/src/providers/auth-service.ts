@@ -88,17 +88,14 @@ public register(username: string, password: string) {
     console.log("derzeitiger User " + currentUser);
     console.log("vorhandenere key :" + window.localStorage.getItem(currentUser));
     let options = new RequestOptions({headers: headers});
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
           console.log("user verifiziert");
           this.loggedIn = true;
-          resolve(true);
         }, (err) => {
           console.log("user konnte nicht verifiziert werden \n automatischer Logout")
           this.logout();
-          reject(false);
-
         })
     })
   }
