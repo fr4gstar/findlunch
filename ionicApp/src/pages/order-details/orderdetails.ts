@@ -12,7 +12,8 @@ import {Offer} from "../../model/Offer";
 export class OrderDetailsPage {
     public reservation: {
         totalPrice?: number,
-        items: Offer[]
+        items: Offer[],
+        donation: number
     };
 
 
@@ -24,13 +25,35 @@ export class OrderDetailsPage {
         private cartService: CartService
     ) {
         this.reservation = {
-            items: cartService.getCart(navParams.get("restaurant_id"))
+            items: cartService.getCart(navParams.get("restaurant_id")),
+            donation: 0
         };
         this.reservation.totalPrice = this.reservation.items
             .map(offer => offer.price)
             .reduce((prevPrice: number, price: number) => {
                 return prevPrice + price
             });
+    }
+
+    incrementDonation() {
+        let newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 1) / 10;
+        let donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
+        this.reservation.donation = donation;
+        this.reservation.totalPrice = newTotalPrice;
+    }
+
+    decrementDonation() {
+        let newTotalPrice, donation;
+        if (this.reservation.donation > 0.10) {
+            newTotalPrice = Math.floor(this.reservation.totalPrice * 10 - 1) / 10;
+            donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
+        }
+        else {
+            newTotalPrice = this.reservation.totalPrice - this.reservation.donation;
+            donation = 0;
+        }
+        this.reservation.donation = donation;
+        this.reservation.totalPrice = newTotalPrice;
     }
 
     sendOrder() {
