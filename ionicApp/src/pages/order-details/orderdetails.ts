@@ -36,7 +36,7 @@ export class OrderDetailsPage {
     }
 
     incrementDonation() {
-        let newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 1) / 10;
+        let newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
         let donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
         this.reservation.donation = donation;
         this.reservation.totalPrice = newTotalPrice;
@@ -45,7 +45,7 @@ export class OrderDetailsPage {
     decrementDonation() {
         let newTotalPrice, donation;
         if (this.reservation.donation > 0.10) {
-            newTotalPrice = Math.floor(this.reservation.totalPrice * 10 - 1) / 10;
+            newTotalPrice = Math.floor(this.reservation.totalPrice * 10 - 0.1) / 10;
             donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
         }
         else {
