@@ -3,6 +3,7 @@ import {NavController, NavParams, Platform} from "ionic-angular";
 import {Http} from "@angular/http";
 import {Coordinates, Geolocation} from '@ionic-native/geolocation';
 import {SERVER_URL} from "../../app/app.module";
+import {OffersPage} from "../offers/offers";
 
 
 @Component({
@@ -13,13 +14,7 @@ import {SERVER_URL} from "../../app/app.module";
 export class RestaurantsPage {
   public restaurants : Object[];
   private pos : Coordinates;
-  // coordinates pos von Homepage holen
-  // Wert für Radius möglich machen anzugeben
-  // Koordinaten und radius in API Call mit reinpacken
-  // json zurückbekommen
-  // durch json iterieren und für jedes Element einen div
-  //
-  //
+
   constructor(public navCtrl : NavController, private navParams:NavParams, private http: Http, private geolocation: Geolocation, private platform: Platform) {
     this.platform.ready().then(() => this.getGeolocation()  )
   }
@@ -38,4 +33,9 @@ export class RestaurantsPage {
    err => console.error(err)
   )
  }
+
+ showOffers(restaurant_id: String){
+    this.navCtrl.push(OffersPage,{restaurant_id: restaurant_id});
+ }
+
 }

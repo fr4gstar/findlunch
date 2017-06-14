@@ -1,23 +1,17 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle (ionOpen)="disableMap()">
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>FindLunch</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openFilterDialog($event)">
+        <ion-icon name="ios-funnel"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Ionic Notification Prototype</h3>
-
-  <button ion-button full (click)="sendToWeb();">Send Notification to Web-App</button>
-
-  <button ion-button full color="secondary" (click)="sendToAndroid();">Send Notification to Android-App</button>
-
-  <div>
-    <span>Position:</span><br>
-    <span>Lat: {{pos?.latitude}}</span><br>
-    <span>Long: {{pos?.longitude}}</span><br>
-    <span>Accuracy: {{pos?.accuracy}}</span>
-  </div>
+<ion-content>
+  <div #map id="map" style="height:100%;"></div>
 </ion-content>

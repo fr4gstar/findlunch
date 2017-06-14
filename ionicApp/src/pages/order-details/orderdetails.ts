@@ -2,6 +2,8 @@ import {Component} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {NavController, NavParams, ToastController} from "ionic-angular";
+import {CartService} from "../../services/CartService";
+import {Offer} from "../../model/Offer";
 
 @Component({
     selector: 'order-details',
@@ -9,28 +11,34 @@ import {NavController, NavParams, ToastController} from "ionic-angular";
 })
 export class OrderDetailsPage {
     public reservation: {
-        amount: number,
-        totalPrice: number,
-        offer: any
+        totalPrice?: number,
+        items: Offer[]
     };
 
 
-    constructor(private http: Http, navParams: NavParams, private toastCtrl: ToastController, private navCtrl: NavController) {
+    constructor(
+        private http: Http,
+        navParams: NavParams,
+        private toastCtrl: ToastController,
+        private navCtrl: NavController,
+        private cartService: CartService
+    ) {
         this.reservation = {
-            amount: 1,
-            totalPrice: navParams.get("offer").price,
-            offer: navParams.get("offer")
+            items: cartService.getCart(navParams.get("restaurant_id"))
         };
-    }
-
-    updateTotalPrice() {
-        this.reservation.totalPrice = this.reservation.offer.price * this.reservation.amount;
+        this.reservation.totalPrice = this.reservation.items
+            .map(offer => offer.price)
+            .reduce((prevPrice: number, price: number) => {
+                return prevPrice + price
+            });
     }
 
     sendOrder() {
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+      let user = window.localStorage.getItem("userName");
+      let token = window.localStorage.getItem(user);
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        "Authorization": "Basic " +token
         });
         let options = new RequestOptions({ headers: headers });
 
