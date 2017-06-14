@@ -58,7 +58,6 @@ public register(username: string, password: string) {
 
   let headers = new Headers({
     'Content-Type': 'application/json',
-    "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
   });
   let options = new RequestOptions({ headers: headers });
 
@@ -86,7 +85,7 @@ public register(username: string, password: string) {
       "Authorization": "Basic " + window.localStorage.getItem(currentUser)
     });
     console.log("derzeitiger User " + currentUser);
-    console.log("vorhandenere key :" + window.localStorage.getItem(currentUser));
+    console.log("vorhandener key :" + window.localStorage.getItem(currentUser));
     let options = new RequestOptions({headers: headers});
     return new Promise((resolve) => {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
