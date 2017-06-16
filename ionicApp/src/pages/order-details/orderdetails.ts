@@ -15,7 +15,7 @@ export class OrderDetailsPage {
         items: Offer[],
         donation: number
     };
-
+    public amount: number;
 
     constructor(
         private http: Http,
@@ -28,11 +28,53 @@ export class OrderDetailsPage {
             items: cartService.getCart(navParams.get("restaurant_id")),
             donation: 0
         };
-        this.reservation.totalPrice = this.reservation.items
-            .map(offer => offer.price)
-            .reduce((prevPrice: number, price: number) => {
-                return prevPrice + price
-            });
+        this.amount = 1;
+        this.calcTotalPrice();
+    }
+
+    calcTotalPrice(){
+      this.reservation.totalPrice = this.reservation.items
+        .map(offer => offer.price)
+        .reduce((prevPrice: number, price: number) => {
+          return (prevPrice + price) * this.amount
+        });
+    }
+
+    incrAmount(event, offer){
+      if(this.amount === 999){
+        console.log("Maxmimum amount of Product reached");
+      }else{
+        this.amount ++;
+        offer.amount ++;
+        this.calcTotalPrice();
+        let idItem = this.reservation
+          .items
+          .find( (item, i) => {
+            item.amount = offer.amount;
+            return item.id === offer.id;
+          })
+      }
+    }
+
+    decreaseAmount(event, offer){
+      if(this.amount === 1){
+        this.reservation.items = this.reservation
+          .items
+          .splice(this.findItemIndex(offer) ,1)
+        this.calcTotalPrice();
+      }else {
+        this.amount --;
+        offer.amount --;
+        this.calcTotalPrice();
+      }
+    }
+
+    findItemIndex(offer){
+      return this.reservation
+        .items
+        .findIndex( (item, i) => {
+          return item.id === offer.id;
+        })
     }
 
     incrementDonation() {
