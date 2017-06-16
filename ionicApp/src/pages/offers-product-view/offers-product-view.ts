@@ -1,6 +1,5 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
-import {OffersService} from "../offers/OffersService";
 import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
@@ -16,31 +15,28 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
   selector: 'page-offers-product-view',
   templateUrl: 'offers-product-view.html',
 })
-export class OffersProductViewPage implements OnInit {
+export class OffersProductViewPage {
 
-  public offers: Offer[];
   public cart: Array<Object>;
   private _restaurantId: number;
+  public offer: Offer;
 
   constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
-      private offerService: OffersService,
       private cartService: CartService
   ) {
     this._restaurantId = navParams.get("restaurant_id");
+    this.offer = navParams.get("offer");
+    console.debug(this.offer);
+
+    // get cart for this restaurant
     let cart = cartService.getCart(this._restaurantId);
     if (cart === null || cart === undefined) {
       this.cart = cartService.createCart(this._restaurantId);
     } else {
       this.cart = cart;
     }
-  }
-
-  ngOnInit() {
-    this.offerService.getOffers(this._restaurantId).subscribe(offers => {
-      this.offers = offers;
-    })
   }
 
   addToCart(offer: Offer) {

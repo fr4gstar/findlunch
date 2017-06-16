@@ -15,25 +15,51 @@
 </ion-header>
 
 
-<ion-content padding>
-    <ion-list>
-        <ion-card *ngFor="let offer of offers" id="{{offer.id}}" padding>
-            <ion-card-title>{{offer.title}}</ion-card-title>
-            <ion-card-content>
-                <p>{{offer.description}}</p>
-                <div>Preis: {{offer.price}}</div>
-                <div>Zubereitungszeit: {{offer.preparationTime}}</div>
-                <div>Punkte: {{offer.neededPoints}}</div>
-            </ion-card-content>
+<ion-content>
+    <ion-grid style="font-size: 17px;">
+        <ion-row *ngIf="offer.defaultPhoto">
+            <img [src]="'data:image/jpg;base64,' + offer.defaultPhoto.thumbnail" style="max-width: 100%; width: auto; height: auto; margin: auto">
+        </ion-row>
+        <ion-row>
+            <h1>{{offer.title}}</h1>
+        </ion-row>
+        <ion-row>
+            <p>{{offer.description}}</p>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-row>
+                <ion-icon name="pricetag" ios="ios-pricetag-outline" class="icon"></ion-icon>
+                {{offer.price | currency:'EUR':true}}
+                </ion-row>
+                <ion-row class="icon-subtext">
+                    Preis
+                </ion-row>
+            </ion-col>
+            <ion-col>
+                <ion-row>
+                <ion-icon name="heart-outline" class="icon"></ion-icon>
+                {{offer.neededPoints}}
+                </ion-row>
+                <ion-row class="icon-subtext">
+                    Preis in Treuepunkten
+                </ion-row>
+            </ion-col>
+            <ion-col>
+                <ion-row>
+                <ion-icon name="time" ios="ios-time-outline" class="icon"></ion-icon>
+                {{offer.preparationTime}}
+                </ion-row>
+                <ion-row class="icon-subtext">
+                    Zubereitungszeit
+                </ion-row>
+            </ion-col>
+        </ion-row>
 
-            <ion-row>
-                <ion-col>
-                    <button ion-button icon-left clear small (click)="addToCart(offer)">
-                        <ion-icon name="add-circle"></ion-icon>
-                        <div>In den Warenkorb</div>
-                    </button>
-                </ion-col>
-            </ion-row>
-        </ion-card>
-    </ion-list>
+        <ion-row margin-top>
+            <button ion-button block (click)="addToCart(offer)">
+                zum Warenkorb hinzufügen
+            </button>
+        </ion-row>
+    </ion-grid>
 </ion-content>
