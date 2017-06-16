@@ -1,6 +1,5 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
-import {OffersService} from "../offers/OffersService";
 import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
@@ -17,12 +16,11 @@ import {AuthService} from "../../providers/auth-service";
   selector: 'page-offers-product-view',
   templateUrl: 'offers-product-view.html',
 })
-export class OffersProductViewPage implements OnInit {
+export class OffersProductViewPage {
 
-  public offers: Offer[];
   public cart: Array<Object>;
   private _restaurantId: number;
-  private loggedIn;
+  public offer: Offer;
 
   constructor(
       public navCtrl: NavController,
@@ -32,6 +30,9 @@ export class OffersProductViewPage implements OnInit {
       private auth : AuthService
   ) {
     this._restaurantId = navParams.get("restaurant_id");
+    this.offer = navParams.get("offer");
+
+    // get cart for this restaurant
     let cart = cartService.getCart(this._restaurantId);
     if (cart === null || cart === undefined) {
       this.cart = cartService.createCart(this._restaurantId);
@@ -40,15 +41,10 @@ export class OffersProductViewPage implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.offerService.getOffers(this._restaurantId).subscribe(offers => {
-      this.offers = offers;
-    })
+  addToCart(offer: Offer) {
+    this.cartService.addItemToCart(this._restaurantId, offer);
   }
 
-  addToCart(offer: Offer) {
-    this.cart.push(offer);
-  }
 
   goToCheckout() {
     this.navCtrl.push(OrderDetailsPage, {

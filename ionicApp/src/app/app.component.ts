@@ -22,7 +22,7 @@ import {Firebase} from "@ionic-native/firebase";
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = RestaurantsPage;
+    rootPage: any = HomePage;
 
     pages: Array<{ title: string, component: any }>;
 
