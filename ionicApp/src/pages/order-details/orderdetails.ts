@@ -15,66 +15,50 @@ export class OrderDetailsPage {
         items: Offer[],
         donation: number
     };
-    public amount: number;
 
-    constructor(
-        private http: Http,
-        navParams: NavParams,
-        private toastCtrl: ToastController,
-        private navCtrl: NavController,
-        private cartService: CartService
-    ) {
+
+    constructor(private http: Http,
+                navParams: NavParams,
+                private toastCtrl: ToastController,
+                private navCtrl: NavController,
+                private cartService: CartService) {
         this.reservation = {
             items: cartService.getCart(navParams.get("restaurant_id")),
             donation: 0
         };
-        this.amount = 1;
         this.calcTotalPrice();
     }
 
-    calcTotalPrice(){
-      this.reservation.totalPrice = this.reservation.items
-        .map(offer => offer.price)
-        .reduce((prevPrice: number, price: number) => {
-          return (prevPrice + price) * this.amount
-        });
+    calcTotalPrice() {
+        this.reservation.totalPrice = this.reservation.items
+            .map(offer => offer.price * offer.amount)
+            .reduce((prevOfferSum, offerSum) => prevOfferSum + offerSum);
     }
 
-    incrAmount(event, offer){
-      if(this.amount === 999){
-        console.log("Maxmimum amount of Product reached");
-      }else{
-        this.amount ++;
-        offer.amount ++;
-        this.calcTotalPrice();
-        let idItem = this.reservation
-          .items
-          .find( (item, i) => {
-            item.amount = offer.amount;
-            return item.id === offer.id;
-          })
-      }
+    incrAmount(offer) {
+        if (offer.amount >= 999) {
+            console.log("Maxmimum amount of Product reached");
+        } else {
+            offer.amount++;
+            this.calcTotalPrice();
+            this.reservation.donation = 0;
+        }
     }
 
-    decreaseAmount(event, offer){
-      if(this.amount === 1){
-        this.reservation.items = this.reservation
-          .items
-          .splice(this.findItemIndex(offer) ,1)
+    decreaseAmount(offer) {
+        if (offer.amount <= 1) {
+            this.reservation.items.splice(this.findItemIndex(offer), 1);
+        } else {
+            offer.amount--;
+        }
         this.calcTotalPrice();
-      }else {
-        this.amount --;
-        offer.amount --;
-        this.calcTotalPrice();
-      }
+        this.reservation.donation = 0;
+
     }
 
-    findItemIndex(offer){
-      return this.reservation
-        .items
-        .findIndex( (item, i) => {
-          return item.id === offer.id;
-        })
+    findItemIndex(offer) {
+        return this.reservation.items
+            .findIndex((item, i) => item.id === offer.id)
     }
 
     incrementDonation() {
@@ -98,15 +82,15 @@ export class OrderDetailsPage {
     }
 
     sendOrder() {
-      let user = window.localStorage.getItem("userName");
-      let token = window.localStorage.getItem(user);
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic " +token
+        let user = window.localStorage.getItem("userName");
+        let token = window.localStorage.getItem(user);
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            "Authorization": "Basic " + token
         });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({headers: headers});
 
-        this.http.post(SERVER_URL+"/api/register_reservation", JSON.stringify(this.reservation), options).subscribe(
+        this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(this.reservation), options).subscribe(
             (res) => {
                 const toast = this.toastCtrl.create({
                     message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",

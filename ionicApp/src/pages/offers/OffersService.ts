@@ -18,6 +18,5 @@ export class OffersService {
         return this.http.get(`${SERVER_URL}/api/offers?restaurant_id=${restaurantId}`)
             .map(res => res.json())
             .do(offers => this._cache.set(restaurantId, offers))
-            .do(console.log)
     }
 }

@@ -8,5 +8,5 @@ export interface Offer {
     price: number
     sold_out: boolean
     title: string
-    amount?: number
+    amount: number
 }

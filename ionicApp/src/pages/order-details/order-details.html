@@ -15,10 +15,10 @@
           <span item-left>{{item.title}}</span>
 
           <span item-right>
-            <ion-icon name="add" (click)="incrAmount($event, item)"></ion-icon>
-            {{amount}}
-            <ion-icon name="remove" (click)="decreaseAmount($event, item)"></ion-icon>
-            {{item.price * amount | currency:'EUR':true}}
+            <ion-icon name="add" (click)="incrAmount(item)"></ion-icon>
+            {{item.amount}}
+            <ion-icon name="remove" (click)="decreaseAmount(item)"></ion-icon>
+            {{item.price * item.amount | currency:'EUR':true}}
           </span>
         </ion-item>
         <div style="border: 1px solid black"></div>
