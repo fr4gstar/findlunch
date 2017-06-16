@@ -56,9 +56,11 @@ export class OrderDetailsPage {
     }
 
     sendOrder() {
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+      let user = window.localStorage.getItem("userName");
+      let token = window.localStorage.getItem(user);
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        "Authorization": "Basic " +token
         });
         let options = new RequestOptions({ headers: headers });
 

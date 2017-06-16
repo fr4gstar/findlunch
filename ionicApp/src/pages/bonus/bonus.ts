@@ -5,6 +5,7 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {SERVER_URL} from "../../app/app.module";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import {OffersPage} from "../offers/offers";
+import {AuthService} from "../../providers/auth-service";
 
 //export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
@@ -17,13 +18,15 @@ export class BonusPage implements OnInit {
 
   public points: Object[];
 
-    constructor(private barcodeScanner: BarcodeScanner, private toastCtrl: ToastController, navParams: NavParams, private http: Http, private navCtrl: NavController) {
+    constructor(private barcodeScanner: BarcodeScanner, private toastCtrl: ToastController, navParams: NavParams, private http: Http, private navCtrl: NavController, private auth: AuthService) {
     }
 
     ngOnInit() {
+      let user = window.localStorage.getItem("userName");
+      let token = window.localStorage.getItem(user);
       let headers = new Headers({
         'Content-Type': 'application/json',
-        "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+        "Authorization": "Basic " +token
       });
 
       let options = new RequestOptions({
@@ -43,9 +46,11 @@ export class BonusPage implements OnInit {
     }
 
     onQRClicked(event) {
+      let user = window.localStorage.getItem("userName");
+      let token = window.localStorage.getItem(user);
       let headers = new Headers({
         'Content-Type': 'application/json',
-        "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+        "Authorization": "Basic " + token
       });
 
       let options = new RequestOptions({
