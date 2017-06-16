@@ -14,7 +14,9 @@
         <ion-input #distance type="number"></ion-input>
       </ion-item>
     <button ion-button full (click)="showRestaurants(distance.value);"> Restaurants im Radius anzeigen</button>
-
+    <button ion-button (click)="showRestaurants(500);">Umkreis 500m</button>
+    <button ion-button (click)="showRestaurants(1000);">Umkreis 1000m</button>
+    <button ion-button (click)="showRestaurants(2000);">Umkreis 2000m</button>
   </ion-list>
 
   <div style = "visibility: hidden" hidden>
@@ -25,7 +27,7 @@
   </div>
 
   <ion-list>
-    <div *ngIf="restaurants!=null"><h3>Restaurants in der Nähe</h3></div>
+    <div *ngIf="restaurants"><h3>Restaurants in der Nähe</h3></div>
     <button ion-item *ngFor="let restaurant of restaurants" (click)="showOffers(restaurant.id)">
       <div>{{restaurant.name}}</div>
     </button>
