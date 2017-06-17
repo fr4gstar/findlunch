@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
-import {Http} from "@angular/http";
-import {OrderDetailsPage} from "../order-details/orderdetails";
-import {SERVER_URL} from "../../app/app.module";
+import {OffersService} from "./OffersService";
+import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
+
 
 export const FL_NAVPARAM_OFFER_ID = "offer_id";
 
@@ -12,23 +12,30 @@ export const FL_NAVPARAM_OFFER_ID = "offer_id";
 })
 
 export class OffersPage implements OnInit {
-    private _restaurant_id: String;
-    public offers: Object[];
+    private _restaurant_id: number;
+    public offers: any;
+    public arrayOfKeys;
 
-    constructor(navParams: NavParams, private http: Http, private navCtrl: NavController) {
-        this._restaurant_id = navParams.get("restaurant_id");
+    constructor(
+        navParams: NavParams,
+        private offerService: OffersService,
+        private navCtrl: NavController
+    ) {
+        this._restaurant_id = parseInt(navParams.get("restaurant_id"));
     }
 
     ngOnInit() {
+        this.offerService.getOffers(this._restaurant_id).subscribe(
 
-        this.http.get(`${SERVER_URL}/api/offers?restaurant_id=${this._restaurant_id}`)
-         .subscribe(
-         res => this.offers = res.json(),
-         err => console.error(err)
-         )
+            offers => {
+              this.offers = offers;
+              this.arrayOfKeys = Object.keys(offers);
+                      },
+            err => console.error(err)
+        )
     }
 
     public onOfferClicked(event, offer) {
-        this.navCtrl.push(OrderDetailsPage, {offer})
+        this.navCtrl.push(OffersProductViewPage, {offer, restaurant_id: this._restaurant_id})
     }
 }
