@@ -21,16 +21,17 @@ export class OffersProductViewPage {
   public cart: Array<Object>;
   private _restaurantId: number;
   public offer: Offer;
+  private loggedIn;
 
   constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
-      private offerService: OffersService,
       private cartService: CartService,
       private auth : AuthService
   ) {
     this._restaurantId = navParams.get("restaurant_id");
     this.offer = navParams.get("offer");
+    console.debug(this.offer);
 
     // get cart for this restaurant
     let cart = cartService.getCart(this._restaurantId);
