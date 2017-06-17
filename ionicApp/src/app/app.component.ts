@@ -7,12 +7,8 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {ToastController} from "ionic-angular";
-
-
 import {HomePage} from '../pages/home/home';
-import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {ListPage} from '../pages/list/list';
-import {Firebase} from "@ionic-native/firebase";
 
 
 
@@ -31,134 +27,19 @@ export class MyApp {
         public statusBar: StatusBar,
         private http: Http,
         public splashScreen: SplashScreen,
-        private firebase: Firebase,
         private events: Events,
         private auth: AuthService,
         public menu: MenuService,
         private toastCtrl: ToastController
     ) {
 
-      this.initializeApp();
-
       this.auth.verifyUser();
-
-
-
 
   //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
       document.addEventListener('resume', () => {
         this.auth.verifyUser();
       })
 
-    }
-
-    initializeApp() {
-      console.log("zuletzt eingeloggter user aus app.module " + window.localStorage.getItem("username") +
-        "\n dazugehöriges token " + window.localStorage.getItem(window.localStorage.getItem("username")) );
-
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
-      });
-      let options = new RequestOptions({
-        headers: headers,
-        method: RequestMethod.Put
-      });
-
-        this.platform.ready().then(() => {
-            // Okay, so the platform is ready and our plugins are available.
-            // Here you can do any higher level native things you might need.
-            this.statusBar.styleDefault();
-            this.splashScreen.hide();
-
-            if (this.platform.is("cordova")) {
-                // we are not in the web, but on a native platform
-                this.firebase.getToken()
-                  .then(token =>
-                    this.http.get(`${SERVER_URL}/api/submitToken/${token}`, options)
-                      .subscribe(
-                        res => console.log(res),
-                        err => console.error(err)
-                      ))
-                  .catch(error => console.error('Error getting token', error));
-
-                this.firebase.onTokenRefresh()
-                    .subscribe((token: string) => console.log(`Got a new token ${token}`));
-            }
-            else {
-                // we are in the web
-                const msg = (<any>window).firebase.messaging();
-                msg.useServiceWorker((<any>window).firebaseSWRegistration);
-
-                msg.getToken()
-                  .then(token =>
-                    this.http.get(`${SERVER_URL}/api/submitToken/${token}`, options)
-                      .subscribe(
-                        res => console.log(res),
-                        err => console.error(err)
-                      )
-                  )
-                  .then(function (currentToken) {
-                    if (currentToken) {
-                       msg.onMessage(function (payload) {
-                       console.log("Message received. ", payload);
-                       });
-                    } else {
-                      // Show permission request.
-                      console.log('No Instance ID token available. Request permission to generate one.');
-                      // Show permission UI.
-                      // updateUIForPushPermissionRequired();
-                      // setTokenSentToServer(false);
-                      return "No Instance ID";
-                    }
-                  })
-                  .catch(function (err) {
-                    console.log('An error occurred while retrieving token. ', err);
-                    // showToken('Error retrieving Instance ID token. ', err);
-                    // setTokenSentToServer(false);
-                  });
-
-
-                /*
-                msg.requestPermission()
-                      .then(function () {
-                        console.log('Notification permission granted.');
-                        msg.getToken()
-                          .then(function (currentToken) {
-                                if (currentToken) {
-                                    token = currentToken;
-                                    console.log("token 1: "+token);
-                                    // sendTokenToServer(currentToken);
-                                    // updateUIForPushEnabled(currentToken);
-
-                                    /*
-                                    msg.onMessage(function (payload) {
-                                        console.log("Message received. ", payload);
-                                    });
-
-                                } else {
-                                    // Show permission request.
-                                    console.log('No Instance ID token available. Request permission to generate one.');
-                                    // Show permission UI.
-                                    // updateUIForPushPermissionRequired();
-                                    // setTokenSentToServer(false);
-                                  return "No Instance ID";
-                                }
-                            })
-                            .catch(function (err) {
-                                console.log('An error occurred while retrieving token. ', err);
-                                // showToken('Error retrieving Instance ID token. ', err);
-                                // setTokenSentToServer(false);
-                            });
-
-                    })
-                    .catch(function (err) {
-                        console.log('Unable to get permission to notify.', err);
-                    });
-                */
-            }
-
-        });
     }
 
     openPage(page) {

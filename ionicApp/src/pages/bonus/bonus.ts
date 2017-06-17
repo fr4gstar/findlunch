@@ -19,7 +19,7 @@ export class BonusPage implements OnInit {
       navParams: NavParams,
       private http: Http,
       private navCtrl: NavController,
-      private qr: QRService,) {
+      private qr: QRService) {
     }
 
     ngOnInit() {

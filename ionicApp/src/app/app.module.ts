@@ -17,7 +17,6 @@ import {OffersService} from "../pages/offers/OffersService";
 
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {Firebase} from "@ionic-native/firebase";
 import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
@@ -81,7 +80,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     ],
     providers: [
         StatusBar,
-        Firebase,
         Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},

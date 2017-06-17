@@ -81,7 +81,6 @@
     <engine name="android" spec="^6.2.3" />
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
-    <plugin name="cordova-plugin-firebase" spec="^0.1.21" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
     <plugin name="cordova-plugin-googlemaps" spec="git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g" />

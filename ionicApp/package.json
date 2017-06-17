@@ -21,7 +21,6 @@
         "@angular/platform-browser-dynamic": "4.0.0",
         "@ionic-native/barcode-scanner": "^3.12.1",
         "@ionic-native/core": "^3.6.1",
-        "@ionic-native/firebase": "^3.5.0",
         "@ionic-native/geolocation": "^3.6.1",
         "@ionic-native/google-maps": "^3.9.2",
         "@ionic-native/native-geocoder": "^3.10.3",
@@ -33,7 +32,6 @@
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.7",
         "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-firebase": "^0.1.21",
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git",
         "cordova-plugin-nativegeocoder": "^1.0.2",
@@ -71,7 +69,6 @@
         "plugins": {
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
-            "cordova-plugin-firebase": {},
             "cordova-plugin-geolocation": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-statusbar": {},
