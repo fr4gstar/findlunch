@@ -13,8 +13,7 @@ export class MenuService {
   customerPages = [
     {title: 'Restaurants', component: RestaurantsPage},
     {title: 'Home', component: HomePage},
-    {title: 'Profil', component: RestaurantsPage},//TODO: Profil Bonus und Logout zeigen alle auf Restaurants-page
-    {title: 'Bonus', component: BonusPage}, //TODO: umschreiben sobald seiten da
+    {title: 'Bonus', component: BonusPage},
     {title: 'Bestellungen', component: RestaurantsPage},
 
   ];

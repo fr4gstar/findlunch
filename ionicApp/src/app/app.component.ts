@@ -7,7 +7,7 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {ToastController} from "ionic-angular";
-
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 import {HomePage} from '../pages/home/home';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
@@ -25,7 +25,6 @@ export class MyApp {
     rootPage: any = HomePage;
 
     pages: Array<{ title: string, component: any }>;
-
     constructor(
         public platform: Platform,
         public statusBar: StatusBar,
@@ -35,12 +34,14 @@ export class MyApp {
         private events: Events,
         private auth: AuthService,
         public menu: MenuService,
-        private toastCtrl: ToastController
+        private toastCtrl: ToastController,
+        private iab: InAppBrowser
     ) {
 
       this.initializeApp();
 
       this.auth.verifyUser();
+
 
 
 
@@ -182,4 +183,9 @@ export class MyApp {
     onMenuOpened() {
         this.events.publish("menu", "open");
     }
+  openUrl(url){
+    this.platform.ready().then(() => {
+      let browser = this.iab.create(url);
+    });
+  }
 }

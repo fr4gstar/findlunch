@@ -15,6 +15,7 @@ import {AuthService} from "../providers/auth-service.ts";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
 
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Firebase} from "@ionic-native/firebase";
@@ -57,6 +58,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OffersProductViewPage,
         LoginPage,
         RegistryPage
+
     ],
     imports: [
         CommonModule,
@@ -92,7 +94,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         CartService,
         AuthService,
-        MenuService
+        MenuService,
+        InAppBrowser
     ]
 
 })
