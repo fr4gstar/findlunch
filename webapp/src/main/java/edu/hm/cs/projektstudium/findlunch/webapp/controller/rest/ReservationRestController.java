@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.mail.MailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
@@ -79,6 +79,13 @@ public class ReservationRestController {
 	@Autowired
 	private PushTokenRepository tokenRepository;
 	
+	@Autowired
+	private MailService mailService;
+	
+	private static final String HTTP = "http://";
+	
+	private static final String HTTPS= "https://";
+	
 	/** The Logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(ReservationRestController.class);
 	
@@ -100,6 +107,8 @@ public class ReservationRestController {
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		authenticatedUser = userRepository.findOne(authenticatedUser.getId());	
 		
+		
+		
 		List<ReservationOffers> reservation_Offers = reservation.getReservation_offers();
 		
 		Restaurant restaurant = null;
@@ -114,21 +123,21 @@ public class ReservationRestController {
 			
 			// Bestellte Menge des Angebots ist 0 oder kleiner
 			if(reservation_offer.getAmount() <= 0){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation has no amount for offer "+reservation_offer.getOffer_id()));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation has no amount for offer "+reservation_offer.getOffer().getId()));
 				return new ResponseEntity<Integer>(2, HttpStatus.CONFLICT);
 			}
-			
-			Offer offer = offerRepository.findOne(reservation_offer.getOffer_id());
+
+			Offer offer = offerRepository.getOne(reservation_offer.getOffer().getId());
 			
 			// Angebots ID ist nicht in der DB
 			if(offer==null){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No Offer for ID "+reservation_offer.getOffer_id()));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No Offer for ID "+reservation_offer.toString()));
 				return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 			}
 			
 			// Angebot ist ausverkauft
 			if(offer.getSold_out()){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Das Offer "+reservation_offer.getOffer_id()+" is sold out"));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Das Offer "+reservation_offer.getOffer().getId()+" is sold out"));
 				return new ResponseEntity<Integer>(5, HttpStatus.CONFLICT);
 			}
 			
@@ -140,10 +149,12 @@ public class ReservationRestController {
 			}
 			restaurant = offer.getRestaurant();
 			
-			reservation_offer.setReservation(reservation);;
+			reservation_offer.setReservation(reservation);
 			
 			calculatedPrice += reservation_offer.getAmount() * offer.getPrice();
+			
 		}
+		
 		
 		// Der Gesamtpreis, welcher in der Customer App berechnet wurde stimmt nicht
 		if(calculatedPrice!=reservation.getTotalPrice()){
@@ -171,8 +182,9 @@ public class ReservationRestController {
 		
 		reservationRepository.save(reservation);
 		
-		//confirmPush(reservation);
+		String url = getProtocol(request.isSecure()) + request.getServerName()+":"+request.getServerPort() + "/reservations";
 		
+		mailService.sendNewReservationMail(authenticatedUser, reservation, url);
 		
 		if(reservation.isUsedPoints()){
 			//Restaurant restaurant = restaurantRepository.findById(reservation.getRestaurant().getId());
@@ -260,26 +272,6 @@ public class ReservationRestController {
 		}
 	}
 	
-	/**
-	 * Sendet eine Push Notification über die neue Bestellung an das Restaurant.
-	 * @param reservation
-	 */
-	private void confirmPush(Reservation reservation) {
-		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
-		push.generateReservationConfirm(reservation);
-		
-		Restaurant restaurant = reservation.getRestaurant();
-		
-		
-		PushToken userToken = tokenRepository.findByUserId(restaurant.getId());
-		
-		push.setFcmToken(userToken.getFcm_token());
-		pushManager.sendFcmNotification(push);
-		
-	}
-	
 	
 	
     /**
@@ -300,10 +292,15 @@ public class ReservationRestController {
 		int neededPoints = 0;
 		
 		for(ReservationOffers reOffers : reservation_Offers){
-			Offer offer = offerRepository.findOne(reOffers.getOffer_id());
+			Offer offer = reOffers.getOffer();
 			neededPoints += reOffers.getAmount() * offer.getNeededPoints();
 		}
 		
 		return neededPoints;
+	}
+	
+	//get Protocol for the email
+	private String getProtocol(boolean https){
+		return https ? HTTPS : HTTP;
 	}
 }

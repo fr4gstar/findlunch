@@ -8,6 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * The class ReservationOffers
+ * The class represnets a list of offers within a reservation
+ * 
+ * @author Niklas Klotz
+ *
+ */
 @Entity
 public class ReservationOffers {
 	
@@ -15,37 +22,31 @@ public class ReservationOffers {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
-
-	//private int reservationId;
 	
+	/** The Reservation */
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="reservation_id")
 	private Reservation reservation;
 	
-	private int offer_id;
+	/** The Offer */
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="offer_id")
+	private Offer offer;
 	
+	/** The amount */
 	private int amount;
 
-	/*
-	public int getReservation_id() {
-		return reservationId;
-	}
-
-	public void setReservation_id(int reservation_id) {
-		this.reservationId = reservation_id;
-	}
-	*/
-
-	public int getOffer_id() {
-		return offer_id;
-	}
-
-	public void setOffer_id(int offer_id) {
-		this.offer_id = offer_id;
-	}
 
 	public int getAmount() {
 		return amount;
+	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
 	}
 
 	public void setAmount(int amount) {

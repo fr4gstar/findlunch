@@ -87,8 +87,8 @@ public class SecurityConfig {
 					// Add an elementary Content-Security-Policy-Report-Only-header with a reporting URL.
 					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only",
 					"default-src 'self' script-src 'self' 'unsafe-inline' " +
-							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.gstatic.com/firebasejs/ https://fcm.googleapis.com/ ;" +
-							"; report-uri /api/csp-report-uri"+ "; https://localost" + "; /js/**"))
+							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ ;" +
+							"; report-uri /api/csp-report-uri"+ "; /js/**"))
 					.and()
 					.csrf().disable().requestMatchers()
 					// Add a Content-Security-Policy-violation-report-endpoint
@@ -107,6 +107,8 @@ public class SecurityConfig {
 					.antMatchers(HttpMethod.POST, "/api/register_reservation")
 					.antMatchers(HttpMethod.PUT, "/api/confirm_reservation/**")
 					.antMatchers(HttpMethod.GET, "/api/get_points")
+					.antMatchers(HttpMethod.POST, "/api/get_reset_token")
+					.antMatchers(HttpMethod.PUT, "/api/reset_password/**")
 				.and().httpBasic().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}
@@ -177,7 +179,7 @@ public class SecurityConfig {
 					// See: https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website-how-can-i-configure-it-to-work-with-recaptcha
 					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy",
 							"default-src 'self' data:; script-src 'self' 'unsafe-inline' " +
-									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.gstatic.com/firebasejs/ https://localhost:8443/ https://fcm.googleapis.com/;" +
+									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ ;" +
 									"; /js/**"+"child-src https://www.google.com/recaptcha/;"+
 									"style-src 'self' data: 'unsafe-inline'" +
 									"; report-uri /api/csp-report-uri")).and()
@@ -186,7 +188,7 @@ public class SecurityConfig {
 					.authorizeRequests()
 					.antMatchers("/", "/login", "/home", "/register", "/privacy", "/terms", "/faq_customer",
 							"/faq_restaurant", "/about_findlunch", "/css/**", "/api/**", "/js/**", "/fonts/**",
-							"/images/**", "/course_type/**", "coursetype/**")
+							"/images/**", "/course_type/**", "coursetype/**","/resetpassword/**")
 					.permitAll()
 					.antMatchers("/booking/**").hasAuthority("Betreiber")
 					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()

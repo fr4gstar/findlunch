@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.mail.MailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.push.EmailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
-import edu.hm.cs.projektstudium.findlunch.webapp.push.SseSend;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationRepository;;
 
 /**
  * The class is responsible for handling http calls related to the main page (home) of the website..
@@ -42,6 +43,12 @@ public class HomeController {
 	
 	@Autowired
 	PushTokenRepository tokenRepo;
+	
+	@Autowired
+	private MailService mailService;
+	
+	@Autowired
+	private ReservationRepository repo;
 
 	/**
 	 * Gets the the "home" page for a request with the path "/home".
@@ -66,32 +73,4 @@ public class HomeController {
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		return "redirect:/home";
 	}
-	
-	@RequestMapping(path="/home", method = RequestMethod.POST, params={"sse"})
-	public void sendPushAtHome(Principal principal) throws AddressException, MessagingException  {
-		
-		User authenticatedUser = (User)((Authentication)principal).getPrincipal();
-		/** TEST FÜR SSE */
-		EmailService service = new EmailService();
-		
-		/*
-		try{
-		service.sendSimpleMessage(authenticatedUser.getUsername(), "oder", "Sie haben neue Bestellungen");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		*/
-		
-		service.mimMessage(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
-		
-		/*
-		try{
-		service.mailSend(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
-		}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		*/
-	}
-
 }

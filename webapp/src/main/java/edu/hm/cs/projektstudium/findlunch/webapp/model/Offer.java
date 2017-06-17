@@ -94,15 +94,14 @@ public class Offer {
 	@JsonView(OfferView.OfferRest.class)
 	private OfferPhoto defaultPhoto;
 	
-	/*
-	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
-	List<Reservation> reservation;
-	*/
-	
 	/** The needed point*/
 	@JsonView(OfferView.OfferRest.class)
 	@Min(value=1, message="{offer.neededPoints.invalidMinValue}")
 	private int neededPoints;
+	
+	/** The offers within the reservation */
+	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
+	private List<ReservationOffers> reservation_offers;
 	
 	/**
 	 * Gets the default photo.
@@ -140,6 +139,34 @@ public class Offer {
 		)
 	private List<DayOfWeek> dayOfWeeks;
 
+	/** Additives. */
+	//bi-directional many-to-many association to additives
+	@ManyToMany
+	@JoinTable(
+		name="offer_has_additives"
+		, joinColumns={
+			@JoinColumn(name="offer_id")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="additives_id")
+			}
+		)
+	private List<Additives> additives;
+
+	/** Allergenic. */
+	//bi-directional many-to-many association to additives
+	@ManyToMany
+	@JoinTable(
+		name="offer_has_allergenic"
+		, joinColumns={
+			@JoinColumn(name="offer_id")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="allergenic_id")
+			}
+		)
+	private List<Allergenic> allergenic;
+
 	/** The restaurant. */
 	//bi-directional many-to-one association to Restaurant
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -153,9 +180,11 @@ public class Offer {
 	private OfferCourse offerCourse;
 	*/
 	
+	/** The coursetype */
 	@Column(name="course_type")
 	private int courseType;
 	
+	/** The order of the offer within the coursetype */
 	@Column(name="sort_by")
 	private int order;
 	
@@ -319,6 +348,42 @@ public class Offer {
 	 */
 	public void setDayOfWeeks(List<DayOfWeek> dayOfWeeks) {
 		this.dayOfWeeks = dayOfWeeks;
+	}
+
+	/**
+	 * Gets the additives.
+	 *
+	 * @return additives
+	 */
+	public List<Additives> getAdditives() {
+		return this.additives;
+	}
+
+	/**
+	 * Sets the additives.
+	 *
+	 * @param additives the new additives
+	 */
+	public void setAdditives(List<Additives> additives) {
+		this.additives = additives;
+	}
+
+	/**
+	 * Gets the allergenic.
+	 *
+	 * @return allergenic
+	 */
+	public List<Allergenic> getAllergenic() {
+		return this.allergenic;
+	}
+
+	/**
+	 * Sets the allergenic.
+	 *
+	 * @param additives the new allergenic
+	 */
+	public void setAllergenic(List<Allergenic> allergenic) {
+		this.allergenic = allergenic;
 	}
 
 	/**
