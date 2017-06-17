@@ -82,7 +82,7 @@ export class OrderDetailsPage {
     }
 
     sendOrder() {
-        let user = window.localStorage.getItem("userName");
+        let user = window.localStorage.getItem("username");
         let token = window.localStorage.getItem(user);
         let headers = new Headers({
             'Content-Type': 'application/json',
