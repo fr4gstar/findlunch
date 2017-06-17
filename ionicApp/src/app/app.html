@@ -14,6 +14,9 @@
         <button color="findlunch" menuClose ion-item *ngFor="let p of this.menu.customerPages" (click)="openPage(p)">
          {{p.title}}
         </button>
+        <button color="findlunch" menuClose ion-item> <!--(click)="Barcodescanner aktivieren"-->
+          Abholcode scannen
+        </button>
       </div>
 
       <div class="menu" *ngIf="!this.auth.getLoggedIn()">
@@ -21,13 +24,12 @@
           {{p.title}}
         </button>
       </div>
-<!--
--->
+
+        <button color="findlunch"  ion-item (click)="openUrl('https://shrouded-dusk-87807.herokuapp.com/about_findlunch')">
+          Impressum
+        </button>
         <button color="findlunch"  ion-item (click)="openUrl('https://shrouded-dusk-87807.herokuapp.com/faq_customer')">
           FAQ
-        </button>
-        <button color="findlunch"  ion-item (click)="openUrl('https://shrouded-dusk-87807.herokuapp.com/about_findlunch')">
-          Über Findlunch
         </button>
 
       <button id="logout" ion-button block menuClose *ngIf="this.auth.getLoggedIn()" (click)="this.logout()">Logout</button>

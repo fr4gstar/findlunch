@@ -11,19 +11,19 @@ import {BonusPage} from "../pages/bonus/bonus";
 @Injectable()
 export class MenuService {
   customerPages = [
-    {title: 'Restaurants', component: RestaurantsPage},
     {title: 'Home', component: HomePage},
-    {title: 'Bonus', component: BonusPage},
-    {title: 'Bestellungen', component: RestaurantsPage},
+    {title: 'Meine Bestellungen', component: RestaurantsPage},//TODO: noch anzulegen
+    {title: 'Meine Bonuspunkte', component: BonusPage},
+    {title: 'Restaurants', component: RestaurantsPage}, //TODO: noch rauszunehmen, gerade nur für debugging
 
   ];
 
   guestPages = [
-    {title: 'Restaurants', component: RestaurantsPage},
     {title: 'Home', component: HomePage},
     {title: 'Login', component: LoginPage},
     {title: 'Registrieren', component: RegistryPage},
-    {title: 'Password Vergessen', component: RestaurantsPage} //TODO: Entsprechende Page etc anzeigen
+    {title: 'Password Vergessen', component: RestaurantsPage}, //TODO: Entsprechende Page etc anzeigen
+    {title: 'Restaurants', component: RestaurantsPage} //TODO: noch rauszunehmen, gerade nur für debugging
 
 
   ];
