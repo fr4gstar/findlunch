@@ -49,7 +49,7 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`booking_reason` (`id`,`reason`) VALUES (1
 INSERT IGNORE INTO `uioa1joiho1k4tdv`.`booking_reason` (`id`,`reason`) VALUES (2, 'Einzahlung');
 
 -- Account Data
-INSERT IGNORE INTO `findlunch`.`account` (`id`, `account_number`, `account_type_id`) VALUES
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`account` (`id`, `account_number`, `account_type_id`) VALUES
 (1, 1, 1),
 (2, 728666923, 2),
 (3, 656553911, 2),
@@ -251,7 +251,7 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`time_schedule` (`id`, `restaurant_id`, `o
 (106, 101, '1970-01-01 00:00:00', '1970-01-01 23:59:00', 6),
 (107, 101, '1970-01-01 00:00:00', '1970-01-01 23:59:00', 7);
 
-INSERT IGNORE INTO `findlunch`.`additives` (`id`, `name`, `description`, `short`) VALUES 
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`additives` (`id`, `name`, `description`, `short`) VALUES 
 (1, 'Farbstoffe E 100 - E 180', 'mit Farbstoff', 'a'), 
 (2, 'Konservierungsstoffe E 200 - E 219, E 230 - E 235, E 239, E 249 - E 252, E 280 - E 285, E 1105', 'mit Konservierungsstoff', 'b'),
 (3, 'Geschmacksverstärker E 620 - E 635', 'mit Geschmacksverstärker', 'c'), 
@@ -267,7 +267,7 @@ INSERT IGNORE INTO `findlunch`.`additives` (`id`, `name`, `description`, `short`
 (13, 'Zutaten mit gentechnisch veränderten Organismen', 'gentechnisch verändert', 'm'), 
 (14, 'Gentechnisch veränderte Organismen', 'enthält Sojaöl, aus gentechnisch veränderter Soja hergestellt', 'n');
 
-INSERT IGNORE INTO `findlunch`.`allergenic` (`id`, `name`, `description`, `short`) VALUES 
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`allergenic` (`id`, `name`, `description`, `short`) VALUES 
 (1, 'Getreideprodukte (Glutenhaltig)', 'Weizen, Roggen, Gerste, Hafer, Dinkel, Kamut und daraus hergestellte Erzeugnisse, also Stärke, Brot, Nudeln, Panaden, Wurstwaren, Desserts etc.. Ausgenommen sind Glukosesirup auf Weizen- und Gerstenbasis. ', '1'), 
 (2, 'Fisch', 'Betroffen sind alle Süß- und Salzwasserfischarten, Kaviar, Fischextrakte, Würzpasten, Saucen etc.. Ganz genau genommen müsste auch ausgewiesen werden, wenn Produkte von Tieren verarbeitet werden, die mit Fischmehl gefüttert wurden.', '2'), 
 (3, 'Krebstiere', 'Garnelen, Hummer, Krebse, Scampi, Shrimps, Langusten und sämtliche daraus gewonnenen Erzeugnisse. Wer also in seinen Gerichten asiatische Gewürzmischung oder Paste mit Extrakten aus Krebstieren verwendet, muss das deklarieren. ', '3'), 
@@ -284,7 +284,7 @@ INSERT IGNORE INTO `findlunch`.`allergenic` (`id`, `name`, `description`, `short
 (14, 'Weichtiere', 'Schnecken, Tintenfisch, Austern, Muscheln und alle Erzeugnisse, in denen Weichtiere oder Spuren von ihnen enthalten sind, also Gewürzmischungen, Saucen, asiatische Spezialitäten, Salate oder Pasten.', '14');
 
 -- offer has additives
-INSERT IGNORE INTO `findlunch`.`offer_has_additives` (`offer_id`, `additives_id`) VALUES
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`offer_has_additives` (`offer_id`, `additives_id`) VALUES
 (1, 1),
 (1, 2),
 (1, 3),
@@ -364,7 +364,7 @@ INSERT IGNORE INTO `findlunch`.`offer_has_additives` (`offer_id`, `additives_id`
 (101, 7);
 
 -- offer has allergenic
-INSERT IGNORE INTO `findlunch`.`offer_has_allergenic` (`offer_id`, `allergenic_id`) VALUES
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`offer_has_allergenic` (`offer_id`, `allergenic_id`) VALUES
 (1, 1),
 (1, 2),
 (1, 3),

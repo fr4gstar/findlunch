@@ -658,9 +658,9 @@ CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`bill_counter` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`reset_password`
+-- Table `ou7pojgz8l7rkgda`.`reset_password`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`reset_password` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`reset_password` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `token` VARCHAR(45) NOT NULL,
   `date` DATETIME NULL,
@@ -669,18 +669,18 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reset_password` (
   INDEX `fk_reset_password_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_reset_password_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `findlunch`.`user` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`allergenic`
+-- Table `ou7pojgz8l7rkgda`.`allergenic`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `findlunch`.`offer_has_allergenic` ;
-DROP TABLE IF EXISTS `findlunch`.`allergenic` ;
+DROP TABLE IF EXISTS `ou7pojgz8l7rkgda`.`offer_has_allergenic` ;
+DROP TABLE IF EXISTS `ou7pojgz8l7rkgda`.`allergenic` ;
 
-CREATE TABLE IF NOT EXISTS `findlunch`.`allergenic` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`allergenic` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255) NULL,
@@ -690,10 +690,10 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`offer_has_allergenic`
+-- Table `ou7pojgz8l7rkgda`.`offer_has_allergenic`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_allergenic` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`offer_has_allergenic` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `offer_id` INT(11) NOT NULL,
   `allergenic_id` INT NOT NULL,
@@ -702,24 +702,24 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_allergenic` (
   INDEX `fk_offer_has_allergenic_allergenic1_idx` (`allergenic_id` ASC),
   CONSTRAINT `fk_offer_has_allergenic_offer1`
     FOREIGN KEY (`offer_id`)
-    REFERENCES `findlunch`.`offer` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`offer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_offer_has_allergenic_allergenic1`
     FOREIGN KEY (`allergenic_id`)
-    REFERENCES `findlunch`.`allergenic` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`allergenic` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`additives`
+-- Table `ou7pojgz8l7rkgda`.`additives`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `findlunch`.`offer_has_additives` ;
-DROP TABLE IF EXISTS `findlunch`.`additives` ;
+DROP TABLE IF EXISTS `ou7pojgz8l7rkgda`.`offer_has_additives` ;
+DROP TABLE IF EXISTS `ou7pojgz8l7rkgda`.`additives` ;
 
-CREATE TABLE IF NOT EXISTS `findlunch`.`additives` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`additives` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255) NULL,
@@ -729,10 +729,10 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `findlunch`.`offer_has_additives`
+-- Table `ou7pojgz8l7rkgda`.`offer_has_additives`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_additives` (
+CREATE TABLE IF NOT EXISTS `ou7pojgz8l7rkgda`.`offer_has_additives` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `additives_id` INT NOT NULL,
   `offer_id` INT(11) NOT NULL,
@@ -741,12 +741,12 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_additives` (
   INDEX `fk_offer_has_additives_offer1_idx` (`offer_id` ASC),
   CONSTRAINT `fk_offer_has_additives_additives1`
     FOREIGN KEY (`additives_id`)
-    REFERENCES `findlunch`.`additives` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`additives` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_offer_has_additives_offer1`
     FOREIGN KEY (`offer_id`)
-    REFERENCES `findlunch`.`offer` (`id`)
+    REFERENCES `ou7pojgz8l7rkgda`.`offer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
