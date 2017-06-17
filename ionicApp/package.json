@@ -19,6 +19,7 @@
         "@angular/http": "4.0.0",
         "@angular/platform-browser": "4.0.0",
         "@angular/platform-browser-dynamic": "4.0.0",
+        "@ionic-native/barcode-scanner": "^3.12.1",
         "@ionic-native/core": "^3.6.1",
         "@ionic-native/firebase": "^3.5.0",
         "@ionic-native/geolocation": "^3.6.1",
