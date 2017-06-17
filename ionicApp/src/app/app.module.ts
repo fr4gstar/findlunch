@@ -17,6 +17,7 @@ import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import {QRService} from "../providers/QRService";
 
 // online Server:
 // export const SERVER_URL = "https://findlunch.biz.tm:8444";
@@ -60,6 +61,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         Geolocation,
         SplashScreen,
         BarcodeScanner,
+        QRService,
         {provide: ErrorHandler, useClass: IonicErrorHandler}
     ]
 
