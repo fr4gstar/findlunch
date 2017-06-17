@@ -6,180 +6,116 @@ import {SERVER_URL} from "../app/app.module";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
-import {ToastController} from "ionic-angular";
-
+import {ToastController, AlertController} from "ionic-angular";
+import {Push, PushObject, PushOptions} from '@ionic-native/push';
 
 import {HomePage} from '../pages/home/home';
 import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {ListPage} from '../pages/list/list';
-import {Firebase} from "@ionic-native/firebase";
 
 
-
+declare var FCMPlugin;
 @Component({
-    templateUrl: 'app.html'
+  templateUrl: 'app.html'
 })
 export class MyApp {
-    @ViewChild(Nav) nav: Nav;
+  @ViewChild(Nav) nav: Nav;
 
-    rootPage: any = RestaurantsPage;
+  rootPage: any = RestaurantsPage;
 
-    pages: Array<{ title: string, component: any }>;
+  pages: Array<{ title: string, component: any }>;
 
-    constructor(
-        public platform: Platform,
-        public statusBar: StatusBar,
-        private http: Http,
-        public splashScreen: SplashScreen,
-        private firebase: Firebase,
-        private events: Events,
-        private auth: AuthService,
-        public menu: MenuService,
-        private toastCtrl: ToastController
-    ) {
+  constructor(public platform: Platform,
+              public statusBar: StatusBar,
+              private http: Http,
+              public splashScreen: SplashScreen,
+              private events: Events,
+              private auth: AuthService,
+              public menu: MenuService,
+              private toastCtrl: ToastController,
+              public push: Push,
+              public alertCtrl: AlertController) {
 
-      this.initializeApp();
+    this.auth.verifyUser();
 
+    this.pushsetup();
+
+    //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
+    document.addEventListener('resume', () => {
       this.auth.verifyUser();
+    })
 
+  }
 
+  pushsetup() {
+    const options: PushOptions = {
+      android: {
+        senderID: '343682752512',
+        icon: '',
+        vibrate: true
+      },
+      ios: {
+        alert: 'false',
+        badge: true,
+        sound: 'false'
+      },
+      windows: {}
+    };
 
+    const pushObject: PushObject = this.push.init(options);
 
-  //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
-      document.addEventListener('resume', () => {
-        this.auth.verifyUser();
-      })
+    pushObject.on('notification')
+      .subscribe((notification: any) => {
 
-    }
-
-    initializeApp() {
-      console.log("zuletzt eingeloggter user aus app.module " + window.localStorage.getItem("username") +
-        "\n dazugehöriges token " + window.localStorage.getItem(window.localStorage.getItem("username")) );
-
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
+        // Foreground handling
+        if (notification.additionalData.foreground) {
+          let youralert = this.alertCtrl.create({
+            title: notification.title,
+            message: notification.message,
+            buttons: [{
+              text: 'Okay',
+              role: 'cancel'
+            }],
+          });
+          youralert.present();
+        }
+        //console.log("Notification", notification);
       });
-      let options = new RequestOptions({
-        headers: headers,
-        method: RequestMethod.Put
+
+    pushObject.on('registration')
+      .subscribe((registration: any) => {
+        console.log("Registration Firebase Token", registration.registrationId);
+        this.http.get(`${SERVER_URL}/api/submitToken/${registration.registrationId}`, options)
+          .subscribe(
+            res => console.log(res),
+            err => console.error(err)
+          )
       });
 
-        this.platform.ready().then(() => {
-            // Okay, so the platform is ready and our plugins are available.
-            // Here you can do any higher level native things you might need.
-            this.statusBar.styleDefault();
-            this.splashScreen.hide();
-
-            if (this.platform.is("cordova")) {
-                // we are not in the web, but on a native platform
-                this.firebase.getToken()
-                  .then(token =>
-                    this.http.get(`${SERVER_URL}/api/submitToken/${token}`, options)
-                      .subscribe(
-                        res => console.log(res),
-                        err => console.error(err)
-                      ))
-                  .catch(error => console.error('Error getting token', error));
-
-                this.firebase.onTokenRefresh()
-                    .subscribe((token: string) => console.log(`Got a new token ${token}`));
-            }
-            else {
-                // we are in the web
-                const msg = (<any>window).firebase.messaging();
-                msg.useServiceWorker((<any>window).firebaseSWRegistration);
-
-                msg.getToken()
-                  .then(token =>
-                    this.http.get(`${SERVER_URL}/api/submitToken/${token}`, options)
-                      .subscribe(
-                        res => console.log(res),
-                        err => console.error(err)
-                      )
-                  )
-                  .then(function (currentToken) {
-                    if (currentToken) {
-                       msg.onMessage(function (payload) {
-                       console.log("Message received. ", payload);
-                       });
-                    } else {
-                      // Show permission request.
-                      console.log('No Instance ID token available. Request permission to generate one.');
-                      // Show permission UI.
-                      // updateUIForPushPermissionRequired();
-                      // setTokenSentToServer(false);
-                      return "No Instance ID";
-                    }
-                  })
-                  .catch(function (err) {
-                    console.log('An error occurred while retrieving token. ', err);
-                    // showToken('Error retrieving Instance ID token. ', err);
-                    // setTokenSentToServer(false);
-                  });
+    pushObject.on('error').subscribe(error => console.log('Error with Push plugin' + error));
+  }
 
 
-                /*
-                msg.requestPermission()
-                      .then(function () {
-                        console.log('Notification permission granted.');
-                        msg.getToken()
-                          .then(function (currentToken) {
-                                if (currentToken) {
-                                    token = currentToken;
-                                    console.log("token 1: "+token);
-                                    // sendTokenToServer(currentToken);
-                                    // updateUIForPushEnabled(currentToken);
+  openPage(page) {
+    // Reset the content nav to have just this page
+    // we wouldn't want the back button to show in this scenario
+    this.nav.setRoot(page.component);
+  }
 
-                                    /*
-                                    msg.onMessage(function (payload) {
-                                        console.log("Message received. ", payload);
-                                    });
+  public logout() {
+    this.auth.logout();
+    const toast = this.toastCtrl.create({
+      message: "Logout erfolgt",
+      duration: 3000
+    });
+    toast.present();
+  }
 
-                                } else {
-                                    // Show permission request.
-                                    console.log('No Instance ID token available. Request permission to generate one.');
-                                    // Show permission UI.
-                                    // updateUIForPushPermissionRequired();
-                                    // setTokenSentToServer(false);
-                                  return "No Instance ID";
-                                }
-                            })
-                            .catch(function (err) {
-                                console.log('An error occurred while retrieving token. ', err);
-                                // showToken('Error retrieving Instance ID token. ', err);
-                                // setTokenSentToServer(false);
-                            });
+  onMenuClosed() {
+    this.events.publish("menu", "close");
+  }
 
-                    })
-                    .catch(function (err) {
-                        console.log('Unable to get permission to notify.', err);
-                    });
-                */
-            }
-
-        });
-    }
-
-    openPage(page) {
-        // Reset the content nav to have just this page
-        // we wouldn't want the back button to show in this scenario
-        this.nav.setRoot(page.component);
-    }
-
-    public logout (){
-      this.auth.logout();
-      const toast = this.toastCtrl.create({
-        message: "Logout erfolgt",
-        duration: 3000});
-      toast.present();
-    }
-
-    onMenuClosed() {
-        this.events.publish("menu", "close");
-    }
-
-    onMenuOpened() {
-        this.events.publish("menu", "open");
-    }
+  onMenuOpened() {
+    this.events.publish("menu", "open");
+  }
 }
