@@ -8,6 +8,8 @@ import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {ToastController, AlertController} from "ionic-angular";
 import {Push, PushObject, PushOptions} from '@ionic-native/push';
+import {QRService} from "../providers/QRService";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 import {HomePage} from '../pages/home/home';
 import {ListPage} from '../pages/list/list';
@@ -33,10 +35,14 @@ export class MyApp {
               public menu: MenuService,
               private toastCtrl: ToastController,
               public push: Push,
+              public qr: QRService,
+              public iab: InAppBrowser,
               public alertCtrl: AlertController) {
 
 
     this.pushsetup();
+      this.auth.verifyUser();
+
 
     //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
     document.addEventListener('resume', () => {
@@ -126,4 +132,10 @@ export class MyApp {
   onMenuOpened() {
     this.events.publish("menu", "open");
   }
+   openUrl(url){
+    this.platform.ready().then(() => {
+      let browser = this.iab.create(url);
+    });
+  }
+
 }

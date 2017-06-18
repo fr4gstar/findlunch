@@ -25,6 +25,7 @@
         "@ionic-native/push": "^3.12.1",
         "@ionic-native/geolocation": "^3.6.1",
         "@ionic-native/google-maps": "^3.9.2",
+        "@ionic-native/in-app-browser": "^3.12.1",
         "@ionic-native/native-geocoder": "^3.10.3",
         "@ionic-native/splash-screen": "3.4.2",
         "@ionic-native/status-bar": "3.4.2",
@@ -36,6 +37,7 @@
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git",
+        "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-nativegeocoder": "^1.0.2",
         "cordova-plugin-splashscreen": "^4.0.3",
         "cordova-plugin-statusbar": "^2.2.3",
@@ -86,7 +88,8 @@
             "phonegap-plugin-barcodescanner": {},
             "phonegap-plugin-push": {
                 "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
-            }
+            },
+            "cordova-plugin-inappbrowser": {}
         },
         "platforms": [
             "android"

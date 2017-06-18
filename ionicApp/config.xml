@@ -86,6 +86,7 @@
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyCVHpbnWxIqaHLF6xkaV69kmM5RKUv2lQ4" />
     </plugin>
+    <plugin name="cordova-plugin-inappbrowser" spec="^1.7.1" />
     <plugin name="cordova-plugin-nativegeocoder" spec="^1.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />

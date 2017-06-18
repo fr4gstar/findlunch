@@ -16,6 +16,7 @@ import {AuthService} from "../providers/auth-service.ts";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
 
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geolocation} from "@ionic-native/geolocation";
@@ -60,6 +61,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         RestaurantViewPage,
         LoginPage,
         RegistryPage
+
     ],
     imports: [
         CommonModule,
@@ -97,7 +99,8 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         CartService,
         Push,
         AuthService,
-        MenuService
+        MenuService,
+        InAppBrowser
     ]
 
 })
