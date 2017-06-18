@@ -48,7 +48,19 @@ export class MyApp {
   }
 
   pushsetup() {
-    const options: PushOptions = {
+    let user = window.localStorage.getItem("username");
+    let token = window.localStorage.getItem(user);
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      "Authorization": "Basic " +token
+    });
+
+    let options = new RequestOptions({
+      headers: headers,
+      method: RequestMethod.Put
+    });
+
+    const pushOptions: PushOptions = {
       android: {
         senderID: '343682752512',
         icon: '',
@@ -62,7 +74,7 @@ export class MyApp {
       windows: {}
     };
 
-    const pushObject: PushObject = this.push.init(options);
+    const pushObject: PushObject = this.push.init(pushOptions);
 
     pushObject.on('notification')
       .subscribe((notification: any) => {
@@ -79,15 +91,13 @@ export class MyApp {
           });
           youralert.present();
         }
-        //console.log("Notification", notification);
       });
 
     pushObject.on('registration')
       .subscribe((registration: any) => {
-        console.log("Registration Firebase Token", registration.registrationId);
         this.http.get(`${SERVER_URL}/api/submitToken/${registration.registrationId}`, options)
           .subscribe(
-            res => console.log(res),
+            res => res,
             err => console.error(err)
           )
       });
