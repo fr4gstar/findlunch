@@ -3,23 +3,42 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Ionic Café</ion-title>
+      <ion-title>{{restaurantName}}</ion-title>
+      <ion-buttons end>
+
+        <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
+          <ion-icon name="star-outline" *ngIf="this.auth.getLoggedIn()&& !restaurantIsFavourite"></ion-icon>
+          <ion-icon name="star" *ngIf="this.auth.getLoggedIn()&&restaurantIsFavourite"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-buttons end>
+        <button ion-button icon-only>
+          <ion-icon name="cart"></ion-icon>
+         </button>
+       </ion-buttons>
     </ion-navbar>
+
+
 </ion-header>
 
 <ion-content>
     <ion-list>
-      <ion-toolbar color="light">
-        <h2>Produkte</h2>
-      </ion-toolbar>
-
-            <div *ngFor="let category of arrayOfKeys">
-              <ion-list-header>
-                {{category}}
-              </ion-list-header>
+          <ion-item *ngFor="let category of arrayOfKeys;" text-wrap (click)="toggleGroup(category)" [ngClass]="{active: isGroupShown(category)}">
+            <ion-list-header>
+              {{category}}
+              <ion-icon color="success" item-right [name]="isGroupShown(category) ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+            </ion-list-header>
+            <div *ngIf="isGroupShown(category)">
               <div *ngFor='let offer of offers[category]'>
-                  <ion-item (click)="onOfferClicked($event, offer)">{{offer.title}} {{offer.price | currency:'EUR':true}}</ion-item>
+                <ion-item (click)="onOfferClicked($event, offer)">{{offer.title}} <div item-right>{{offer.price | currency:'EUR':true}}</div></ion-item>
               </div>
             </div>
+
+          </ion-item>
+          <ion-item id="allergene">Allergene & Zusatzstoffe
+            <div *ngFor="let allergen of allergene">
+              {{allergen}}
+            </div>
+          </ion-item>
     </ion-list>
 </ion-content>
