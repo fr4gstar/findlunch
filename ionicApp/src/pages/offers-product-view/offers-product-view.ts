@@ -3,15 +3,13 @@ import {NavController, NavParams} from "ionic-angular";
 import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
-import {AuthService} from "../../providers/auth-service";
+import {Restaurant} from "../../model/Restaurant";
 
 /**
- * Generated class for the OffersProductViewPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
+ * Page for showing the details of a specific offer.
+ * Offer and restaurant-id must be provided via navParams ("restaurant", "offer").
+ * This view enables adding the item to the cart and shows the number of items in cart in the header.
  */
-
 @Component({
   selector: 'page-offers-product-view',
   templateUrl: 'offers-product-view.html',
@@ -19,35 +17,33 @@ import {AuthService} from "../../providers/auth-service";
 export class OffersProductViewPage {
 
   public cart: Array<Object>;
-  private _restaurantId: number;
+  private _restaurant: Restaurant;
   public offer: Offer;
-  private loggedIn;
 
   constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
       private cartService: CartService,
-      private auth : AuthService
   ) {
-    this._restaurantId = navParams.get("restaurant_id");
+    this._restaurant = navParams.get("restaurant");
     this.offer = navParams.get("offer");
 
     // get cart for this restaurant
-    this.cart = cartService.getCart(this._restaurantId);
+    this.cart = cartService.getCart(this._restaurant.id);
   }
 
   addToCart(offer: Offer) {
-    this.cartService.addItemToCart(this._restaurantId, offer);
+    this.cartService.addItemToCart(this._restaurant.id, offer);
   }
 
   getCartItemCount() {
-    return this.cartService.getCartItemCount(this._restaurantId);
+    return this.cartService.getCartItemCount(this._restaurant.id);
   }
 
 
-  goToCheckout() {
+  goToOrderDetailsPage() {
     this.navCtrl.push(OrderDetailsPage, {
-      restaurant_id: this._restaurantId
+      restaurant_id: this._restaurant
     });
   }
 
