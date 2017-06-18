@@ -29,6 +29,7 @@ import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import {CartService} from "../services/CartService";
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 
 
@@ -91,6 +92,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         QRService,
         CartService,
+        Push,
         AuthService,
         MenuService
     ]
