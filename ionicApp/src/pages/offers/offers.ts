@@ -3,6 +3,7 @@ import {NavController, NavParams} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 import {Restaurant} from "../../model/Restaurant";
+import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 
 
 /**
@@ -36,4 +37,8 @@ export class OffersPage implements OnInit {
     public onOfferClicked(event, offer) {
         this.navCtrl.push(OffersProductViewPage, {offer, restaurant: this.restaurant})
     }
+
+  public onRestaurantClicked(event) {
+    this.navCtrl.push(RestaurantViewPage, {restaurant: this.restaurant})
+  }
 }

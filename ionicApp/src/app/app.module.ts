@@ -11,6 +11,7 @@ import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
 import {OffersProductViewPage} from "../pages/offers-product-view/offers-product-view";
+import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
 import {AuthService} from "../providers/auth-service.ts";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
@@ -56,6 +57,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         FilterPopoverComponent,
         AddressInputComponent,
         OffersProductViewPage,
+        RestaurantViewPage,
         LoginPage,
         RegistryPage
     ],
@@ -76,6 +78,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         FilterPopoverComponent,
         AddressInputComponent,
         OffersProductViewPage,
+        RestaurantViewPage,
         LoginPage,
         RegistryPage
     ],
