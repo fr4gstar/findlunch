@@ -24,6 +24,7 @@ import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import {QRService} from "../providers/QRService";
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
@@ -92,6 +93,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OffersService,
         BarcodeScanner,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
+        QRService,
         CartService,
         AuthService,
         MenuService,
