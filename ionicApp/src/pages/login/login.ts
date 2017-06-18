@@ -21,12 +21,11 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 export class LoginPage {
 
   constructor(public platform: Platform,
-              private modCtrl: ModalController,
               private http: Http,
               private navCtrl: NavController,
               private firebase: Firebase,
               private auth: AuthService,
-              private toastCtrl: ToastController) { //TODO: Modalcontroller für Registerpage
+              private toastCtrl: ToastController) {
   }
 
 
