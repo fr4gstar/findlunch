@@ -150,7 +150,7 @@ Telefon: ${restaurant.phone}
 Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}
 Entfernung: ${restaurant.distance}m`,
         infoClick: () => {
-          this.navCtrl.push(OffersPage,{restaurant_id: restaurant.id});
+          this.navCtrl.push(OffersPage,{restaurant: restaurant});
         }
       }).then(marker => {
         this._mapMarkers.push(marker);

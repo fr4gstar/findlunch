@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Ionic Café</ion-title>
+        <ion-title>{{restaurant.name}}</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -13,7 +13,7 @@
         <h2>Produkte</h2>
       </ion-toolbar>
 
-            <div *ngFor="let category of arrayOfKeys">
+            <div *ngFor="let category of categories">
               <ion-list-header>
                 {{category}}
               </ion-list-header>

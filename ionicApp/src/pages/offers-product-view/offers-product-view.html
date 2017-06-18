@@ -3,11 +3,11 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Aktuelle Angebote</ion-title>
+        <ion-title>{{restaurant.name}}</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="goToCheckout()">
+            <button ion-button icon-only (click)="goToOrderDetailsPage()">
                 <ion-icon name="cart">
-                    <ion-badge class="cartBadge">{{cart.length}}</ion-badge>
+                    <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
                 </ion-icon>
             </button>
         </ion-buttons>
