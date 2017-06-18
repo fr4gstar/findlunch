@@ -11,15 +11,17 @@
   <ion-list >
       <ion-item>
         <ion-label floating>E-Mail</ion-label>
-        <ion-input #userName type="text"></ion-input>
+        <ion-input #userName type="text" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Passwort</ion-label>
-        <ion-input #password type="password"></ion-input>
+        <ion-input #password type="password" required></ion-input>
       </ion-item>
     <button ion-button full (click)="login(userName.value,password.value);">Einloggen</button>
     <button ion-button full (click)="goToRegisterPage();">Registrieren</button>
 
+    <h5>Passwort Vergessen</h5>
+    <button ion-button full color="danger" [disabled]="isEmptyUser(userName.value)" (click)="sendPasswordReset();">Sicherheitstoken anfordern</button>
   </ion-list>
 
 
