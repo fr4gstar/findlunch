@@ -3,17 +3,23 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Bestelldetails</ion-title>
+        <ion-title>Warenkorb</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <h2 padding-left>Ihre Bestellung</h2>
+    <h2 padding-left>Ihr Warenkorb für {{restaurant.name}}</h2>
 
     <ion-list>
         <ion-item *ngFor="let item of reservation.items">
-            <span item-left>{{item.title}}</span>
-            <span item-right>{{item.price | currency:'EUR':true}}</span>
+          <span item-left>{{item.title}}</span>
+
+          <span item-right>
+            <ion-icon name="add" (click)="incrAmount(item)"></ion-icon>
+            {{item.amount}}
+            <ion-icon name="remove" (click)="decreaseAmount(item)"></ion-icon>
+            {{item.price * item.amount | currency:'EUR':true}}
+          </span>
         </ion-item>
         <div style="border: 1px solid black"></div>
         <ion-item>

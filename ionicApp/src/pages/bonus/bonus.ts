@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams, ToastController} from "ionic-angular";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {QRService} from "../../providers/QRService";
@@ -50,7 +50,7 @@ export class BonusPage implements OnInit {
     this.qr.onQRClicked(event);
   }
 
-  showOffers(restaurant_id: String) {
-    this.navCtrl.push(OffersPage,{restaurant_id: restaurant_id});
+  showOffers(restaurant: String) {
+    this.navCtrl.push(OffersPage,{restaurant: restaurant});
   }
 }
