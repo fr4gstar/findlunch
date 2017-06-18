@@ -54,6 +54,15 @@ export class CartService {
         }
     }
 
+
+    /**
+     * Convenience-method for removing all items from a given cart (mostly after sending the order).
+     * @param restaurantId
+     */
+    emptyCart(restaurantId: number) {
+        this.createCart(restaurantId);
+    }
+
     /**
      * Creates a new cart for the provided restaurant and returns it.
      * @param restaurantId

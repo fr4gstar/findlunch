@@ -17,7 +17,7 @@ import {Restaurant} from "../../model/Restaurant";
 export class OffersProductViewPage {
 
   public cart: Array<Object>;
-  private _restaurant: Restaurant;
+  public restaurant: Restaurant;
   public offer: Offer;
 
   constructor(
@@ -25,25 +25,25 @@ export class OffersProductViewPage {
       public navParams: NavParams,
       private cartService: CartService,
   ) {
-    this._restaurant = navParams.get("restaurant");
+    this.restaurant = navParams.get("restaurant");
     this.offer = navParams.get("offer");
 
     // get cart for this restaurant
-    this.cart = cartService.getCart(this._restaurant.id);
+    this.cart = cartService.getCart(this.restaurant.id);
   }
 
   addToCart(offer: Offer) {
-    this.cartService.addItemToCart(this._restaurant.id, offer);
+    this.cartService.addItemToCart(this.restaurant.id, offer);
   }
 
   getCartItemCount() {
-    return this.cartService.getCartItemCount(this._restaurant.id);
+    return this.cartService.getCartItemCount(this.restaurant.id);
   }
 
 
   goToOrderDetailsPage() {
     this.navCtrl.push(OrderDetailsPage, {
-      restaurant_id: this._restaurant
+      restaurant: this.restaurant
     });
   }
 

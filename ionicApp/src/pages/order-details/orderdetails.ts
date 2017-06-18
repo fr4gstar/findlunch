@@ -4,6 +4,7 @@ import {SERVER_URL} from "../../app/app.module";
 import {NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
+import {Restaurant} from "../../model/Restaurant";
 
 /**
  * Page for showing an overview of the cart and the amount of items in it.
@@ -20,15 +21,18 @@ export class OrderDetailsPage {
         donation: number,
         usedPoints: number
     };
+    public restaurant: Restaurant;
 
 
     constructor(private http: Http,
                 navParams: NavParams,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
-                private cartService: CartService) {
+                private cartService: CartService)
+    {
+        this.restaurant = navParams.get("restaurant");
         this.reservation = {
-            items: cartService.getCart(navParams.get("restaurant")),
+            items: cartService.getCart(this.restaurant.id),
             donation: 0,
             usedPoints: 0,
             totalPrice: 0
@@ -130,6 +134,11 @@ export class OrderDetailsPage {
                     duration: 3000
                 });
                 toast.present();
+
+                // empty the cart for this restaurant
+                this.cartService.emptyCart(this.restaurant.id);
+
+                // go back to restaurants-overview
                 this.navCtrl.popToRoot();
             }, (err) => {
                 console.error(err)
@@ -145,7 +154,7 @@ export class OrderDetailsPage {
     private calcTotalPrice(items: Offer[]) {
         return this.reservation.items
             .map(offer => offer.price * offer.amount)
-            .reduce((prevOfferSum, offerSum) => prevOfferSum + offerSum);
+            .reduce((prevOfferSum, offerSum) => prevOfferSum + offerSum, 0);
     }
 
     /**

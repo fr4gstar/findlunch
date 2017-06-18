@@ -3,12 +3,12 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Bestelldetails</ion-title>
+        <ion-title>Warenkorb</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <h2 padding-left>Ihre Bestellung</h2>
+    <h2 padding-left>Ihr Warenkorb für {{restaurant.name}}</h2>
 
     <ion-list>
         <ion-item *ngFor="let item of reservation.items">

@@ -13,18 +13,18 @@ import {Restaurant} from "../../model/Restaurant";
     templateUrl: 'offers.html'
 })
 export class OffersPage implements OnInit {
-    private _restaurant: Restaurant;
+    public restaurant: Restaurant;
     public offers: any;
     public categories;
 
     constructor(navParams: NavParams,
                 private offerService: OffersService,
                 private navCtrl: NavController) {
-        this._restaurant = navParams.get("restaurant");
+        this.restaurant = navParams.get("restaurant");
     }
 
     ngOnInit() {
-        this.offerService.getOffers(this._restaurant.id).subscribe(
+        this.offerService.getOffers(this.restaurant.id).subscribe(
             offers => {
                 this.offers = offers;
                 this.categories = Object.keys(offers);
@@ -34,6 +34,6 @@ export class OffersPage implements OnInit {
     }
 
     public onOfferClicked(event, offer) {
-        this.navCtrl.push(OffersProductViewPage, {offer, restaurant_id: this._restaurant})
+        this.navCtrl.push(OffersProductViewPage, {offer, restaurant: this.restaurant})
     }
 }
