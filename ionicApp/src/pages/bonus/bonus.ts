@@ -22,7 +22,7 @@ export class BonusPage implements OnInit {
     }
 
     ngOnInit() {
-      let user = window.localStorage.getItem("userName");
+      let user = window.localStorage.getItem("username");
       let token = window.localStorage.getItem(user);
       let headers = new Headers({
         'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export class BonusPage implements OnInit {
     }
 
     onQRClicked(event) {
-      let user = window.localStorage.getItem("userName");
+      let user = window.localStorage.getItem("username");
       let token = window.localStorage.getItem(user);
       let headers = new Headers({
         'Content-Type': 'application/json',
