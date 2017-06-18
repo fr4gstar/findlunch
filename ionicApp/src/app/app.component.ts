@@ -10,9 +10,9 @@ import {ToastController} from "ionic-angular";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 import {HomePage} from '../pages/home/home';
-import {RestaurantsPage} from '../pages/restaurants/restaurants';
 import {ListPage} from '../pages/list/list';
 import {Firebase} from "@ionic-native/firebase";
+import {QRService} from "../providers/QRService";
 
 
 
@@ -35,7 +35,8 @@ export class MyApp {
         private auth: AuthService,
         public menu: MenuService,
         private toastCtrl: ToastController,
-        private iab: InAppBrowser
+        private iab: InAppBrowser,
+        public qr: QRService
     ) {
 
       this.initializeApp();
