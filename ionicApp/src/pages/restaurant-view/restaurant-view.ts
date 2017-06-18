@@ -16,7 +16,6 @@ import {Observable} from "rxjs/Observable";
 export class RestaurantViewPage {
 
   public restaurant: Restaurant;
-  public openingTime;
 
   constructor(
     public navCtrl : NavController,
@@ -24,8 +23,5 @@ export class RestaurantViewPage {
     private platform: Platform) {
 
     this.restaurant = navParams.get("restaurant");
-    this.openingTime = this.restaurant.timeSchedules;
-    console.log("Restaurant", this.restaurant);
   }
-
 }
