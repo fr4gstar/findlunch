@@ -3,6 +3,7 @@ import {NavController, NavParams} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 import {AuthService} from "../../providers/auth-service";
+import {OrderDetailsPage} from "../order-details/orderdetails";
 
 
 export const FL_NAVPARAM_OFFER_ID = "offer_id";
@@ -13,13 +14,15 @@ export const FL_NAVPARAM_OFFER_ID = "offer_id";
 })
 
 export class OffersPage implements OnInit {
-    private _restaurant_id: number;
+    private _restaurantId: number;
     public offers: any;
     public arrayOfKeys;
     public restaurantIsFavourite = false; //TODO Info ob Restaurant zu favoriten gehört holen
     public restaurantName = "RestaurantXY"; //TODO Namen des angeklickten restaurants
     public allergene = [1,2,3,4,5,6,7,8];
     shownGroup = null;
+    public cartlength = "nA"; //TODO Anzahl der Produkte im warenkorbanzeigen
+
 
   constructor(
         navParams: NavParams,
@@ -27,11 +30,11 @@ export class OffersPage implements OnInit {
         private navCtrl: NavController,
         private auth: AuthService
     ) {
-        this._restaurant_id = parseInt(navParams.get("restaurant_id"));
+        this._restaurantId = parseInt(navParams.get("restaurant_id"));
     }
 
     ngOnInit() {
-        this.offerService.getOffers(this._restaurant_id).subscribe(
+        this.offerService.getOffers(this._restaurantId).subscribe(
 
             offers => {
               this.offers = offers;
@@ -42,7 +45,7 @@ export class OffersPage implements OnInit {
     }
 
     public onOfferClicked(event, offer) {
-        this.navCtrl.push(OffersProductViewPage, {offer, restaurant_id: this._restaurant_id})
+        this.navCtrl.push(OffersProductViewPage, {offer, restaurant_id: this._restaurantId})
     }
 
     //TODO: Info ob restaurantIsFavourite muss bei toggle an Server geschickt werden.
@@ -73,5 +76,10 @@ export class OffersPage implements OnInit {
       return this.shownGroup === group;
     }
 
+   public goToCheckout() {
+      this.navCtrl.push(OrderDetailsPage, {
+        restaurant_id: this._restaurantId
+      });
+    }
 }
 

@@ -12,8 +12,10 @@
         </button>
       </ion-buttons>
       <ion-buttons end>
-        <button ion-button icon-only>
-          <ion-icon name="cart"></ion-icon>
+        <button ion-button icon-only (click)="goToCheckout()">
+          <ion-icon name="cart">
+            <ion-badge class="cartBadge">{{cartlength}}</ion-badge>
+          </ion-icon>
          </button>
        </ion-buttons>
     </ion-navbar>
