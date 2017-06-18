@@ -11,7 +11,13 @@ export class CartService {
     }
 
     getCart(restaurantId: number): Array<Offer> {
-        return this._carts.get(restaurantId);
+        return this._carts.get(restaurantId) || this.createCart(restaurantId);
+    }
+
+    getCartItemCount(restaurantId: number) {
+        return this.getCart(restaurantId)
+            .map(offer => offer.amount)
+            .reduce((prevAmount, amount) => prevAmount + amount, 0)
     }
 
     addItemToCart(restaurantId: number, offer: Offer) {
@@ -33,6 +39,6 @@ export class CartService {
 
     createCart(restaurantId: number): Array<Offer> {
         this._carts.set(restaurantId, []);
-        return this.getCart(restaurantId);
+        return this._carts.get(restaurantId);
     }
 }

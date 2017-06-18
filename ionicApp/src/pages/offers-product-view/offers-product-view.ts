@@ -31,19 +31,17 @@ export class OffersProductViewPage {
   ) {
     this._restaurantId = navParams.get("restaurant_id");
     this.offer = navParams.get("offer");
-    console.debug(this.offer);
 
     // get cart for this restaurant
-    let cart = cartService.getCart(this._restaurantId);
-    if (cart === null || cart === undefined) {
-      this.cart = cartService.createCart(this._restaurantId);
-    } else {
-      this.cart = cart;
-    }
+    this.cart = cartService.getCart(this._restaurantId);
   }
 
   addToCart(offer: Offer) {
     this.cartService.addItemToCart(this._restaurantId, offer);
+  }
+
+  getCartItemCount() {
+    return this.cartService.getCartItemCount(this._restaurantId);
   }
 
 

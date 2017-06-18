@@ -13,7 +13,8 @@ export class OrderDetailsPage {
     public reservation: {
         totalPrice?: number,
         items: Offer[],
-        donation: number
+        donation: number,
+        usedPoints: number
     };
 
 
@@ -24,7 +25,8 @@ export class OrderDetailsPage {
                 private cartService: CartService) {
         this.reservation = {
             items: cartService.getCart(navParams.get("restaurant_id")),
-            donation: 0
+            donation: 0,
+            usedPoints: 0
         };
         this.calcTotalPrice();
     }
@@ -90,7 +92,21 @@ export class OrderDetailsPage {
         });
         let options = new RequestOptions({headers: headers});
 
-        this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(this.reservation), options).subscribe(
+        let payload = {
+            ...this.reservation,
+            reservation_offers: []
+        };
+        payload.items.forEach((item) => {
+            payload.reservation_offers.push({
+                offer: {
+                    id: item.id
+                },
+                amount: item.amount
+            });
+        });
+        delete payload.items;
+
+        this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
             (res) => {
                 const toast = this.toastCtrl.create({
                     message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
