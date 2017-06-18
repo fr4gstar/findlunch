@@ -9,6 +9,7 @@ import {HomePage} from "../pages/home/home";
 @Injectable()
 export class AuthService {
       private loggedIn: boolean;
+      private userName: string;
 
   constructor(private http: Http) {
 
@@ -30,6 +31,7 @@ export class AuthService {
           console.log("lgoin api-call erfolgreich");
           window.localStorage.setItem("username", username);
           window.localStorage.setItem(username, encodedCredentials);
+          this.userName = window.localStorage.getItem("username");
           console.log("user und token gesetzt");
           this.loggedIn = true;
           resolve(true);
@@ -79,28 +81,35 @@ public register(username: string, password: string) {
   public verifyUser() {
     //zuletzt eingeloggter user
     let currentUser = window.localStorage.getItem("username");
+    let token = window.localStorage.getItem(currentUser);
     let headers = new Headers({
       'Content-Type': 'application/json',
       //token zum zuletzt eingeloggten user, gespeichert als value zum key der Variable currentuser
-      "Authorization": "Basic " + window.localStorage.getItem(currentUser)
+      "Authorization": "Basic " + token
     });
     console.log("derzeitiger User " + currentUser);
-    console.log("vorhandener key :" + window.localStorage.getItem(currentUser));
+    console.log("vorhandener key :" + token);
     let options = new RequestOptions({headers: headers});
     return new Promise((resolve) => {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
           console.log("user verifiziert");
           this.loggedIn = true;
+          this.userName =currentUser;
         }, (err) => {
           console.log("user konnte nicht verifiziert werden \n automatischer Logout")
           this.logout();
+
         })
     })
   }
 
   public getLoggedIn(){
     return this.loggedIn;
+  }
+
+  public getUserName(){
+    return this.userName;
   }
 
   public logout(){
@@ -110,6 +119,7 @@ public register(username: string, password: string) {
     //lösche den zuletzt eingeloggten usernamen gesetzt unter dem key-String "username"
     window.localStorage.removeItem("username");
     this.loggedIn = false;
+    this.userName = "";
     console.log("logout erfolgt");
   }
 }
