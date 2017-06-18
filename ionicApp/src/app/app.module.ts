@@ -17,18 +17,19 @@ import {OffersService} from "../pages/offers/OffersService";
 
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {Firebase} from "@ionic-native/firebase";
 import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import {QRService} from "../providers/QRService";
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import {CartService} from "../services/CartService";
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 
 
@@ -80,7 +81,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     ],
     providers: [
         StatusBar,
-        Firebase,
         Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
@@ -90,7 +90,9 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OffersService,
         BarcodeScanner,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
+        QRService,
         CartService,
+        Push,
         AuthService,
         MenuService
     ]
