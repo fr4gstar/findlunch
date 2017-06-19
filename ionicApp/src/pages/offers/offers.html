@@ -23,7 +23,7 @@
 
 <ion-content>
     <ion-list>
-          <ion-item *ngFor="let category of arrayOfKeys;" text-wrap (click)="toggleGroup(category)" [ngClass]="{active: isGroupShown(category)}">
+          <ion-item *ngFor="let category of categories;" text-wrap (click)="toggleGroup(category)" [ngClass]="{active: isGroupShown(category)}">
             <ion-list-header>
               {{category}}
               <ion-icon color="success" item-right [name]="isGroupShown(category) ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>

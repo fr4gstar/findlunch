@@ -19,11 +19,13 @@ export class OffersPage implements OnInit {
     public restaurant: Restaurant;
     public offers: any;
     public categories;
+    shownGroup = null;
 
     constructor(navParams: NavParams,
         private offerService: OffersService,
         private navCtrl: NavController,
-        private auth: AuthService
+        private auth: AuthService)
+    {
         this.restaurant = navParams.get("restaurant");
     }
 
@@ -47,8 +49,9 @@ export class OffersPage implements OnInit {
 
     //TODO: Info ob restaurantIsFavourite muss bei toggle an Server geschickt werden.
     public toggleIsFavourite(){
-      this.restaurantIsFavourite= !this.restaurantIsFavourite;
+    /*  this.restaurantIsFavourite= !this.restaurantIsFavourite;
       console.log(this.restaurantIsFavourite);
+      */
     }
 
     toggleDetails(data) {
@@ -74,9 +77,9 @@ export class OffersPage implements OnInit {
     }
 
    public goToCheckout() {
-      this.navCtrl.push(OrderDetailsPage, {
-        restaurant_id: this._restaurantId
-      });
+     this.navCtrl.push(OrderDetailsPage, {
+       restaurant: this.restaurant
+     });
     }
 }
 

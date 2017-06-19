@@ -22,11 +22,11 @@
       <ion-col col-3>
         <span item-right>
         <ion-icon name="ios-remove-circle-outline" (click)="decreaseAmount(item)"></ion-icon>
-              {{amount}}
+              {{item.amount}}
         <ion-icon name="ios-add-circle-outline" (click)="incrAmount(item)"></ion-icon>
         </span>
       </ion-col>
-      <ion-col col-2>{{item.price * amount | currency:'EUR':true}}</ion-col>
+      <ion-col col-2>{{item.price * item.amount | currency:'EUR':true}}</ion-col>
     </ion-row>
     <ion-row id="spende">
       <ion-col col-7 color="primary" text-wrap>

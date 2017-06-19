@@ -31,6 +31,7 @@ export class OrderDetailsPage {
                 private cartService: CartService,
                 private auth: AuthService)
     {
+        this.restaurant = navParams.get("restaurant");
         this.reservation = {
             items: cartService.getCart(this.restaurant.id),
             donation: 0,
