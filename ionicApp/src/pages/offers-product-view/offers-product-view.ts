@@ -1,9 +1,12 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
+import {Http} from "@angular/http";
+import {SERVER_URL} from "../../app/app.module";
+import {Observable} from "rxjs/Observable";
 
 /**
  * Page for showing the details of a specific offer.
@@ -14,7 +17,8 @@ import {Restaurant} from "../../model/Restaurant";
   selector: 'page-offers-product-view',
   templateUrl: 'offers-product-view.html',
 })
-export class OffersProductViewPage {
+export class OffersProductViewPage implements OnInit {
+  product_allergenics$: Observable<any>;
 
   public cart: Array<Object>;
   public restaurant: Restaurant;
@@ -24,12 +28,17 @@ export class OffersProductViewPage {
       public navCtrl: NavController,
       public navParams: NavParams,
       private cartService: CartService,
+      private http: Http
   ) {
     this.restaurant = navParams.get("restaurant");
     this.offer = navParams.get("offer");
 
     // get cart for this restaurant
     this.cart = cartService.getCart(this.restaurant.id);
+  }
+
+  ngOnInit() {
+    this.product_allergenics$ = this.http.get(SERVER_URL + "/api/allergenicForOfferId/" + this.offer.id).map(res => res.json());
   }
 
   addToCart(offer: Offer) {
