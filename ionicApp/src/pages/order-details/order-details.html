@@ -13,28 +13,31 @@
 
   <ion-grid>
     <ion-row id="überschrift">
-      <ion-col item-right col-7>Bezeichnung</ion-col>
-      <ion-col>Menge</ion-col>
-      <ion-col>Preis</ion-col>
+      <ion-col col-7>Bezeichnung</ion-col>
+      <ion-col col-3>Menge</ion-col>
+      <ion-col col-2>Preis</ion-col>
     </ion-row>
     <ion-row id="gericht" *ngFor="let item of reservation.items">
       <ion-col col-7>{{item.title}}</ion-col>
-      <ion-col col-2>
+      <ion-col col-3>
         <span item-right>
-          <ion-icon name="add" (click)="incrAmount($event, item)"></ion-icon>
+        <ion-icon name="ios-remove-circle-outline" (click)="decreaseAmount($event, item)"></ion-icon>
               {{amount}}
-          <ion-icon name="remove" (click)="decreaseAmount($event, item)"></ion-icon>
+        <ion-icon name="ios-add-circle-outline" (click)="incrAmount($event, item)"></ion-icon>
         </span>
       </ion-col>
-      <ion-col col-3>{{item.price * amount | currency:'EUR':true}}</ion-col>
+      <ion-col col-2>{{item.price * amount | currency:'EUR':true}}</ion-col>
     </ion-row>
     <ion-row id="spende">
       <ion-col col-7 color="primary" text-wrap>
-        <span item-left color="primary">Freiwillige Spende</span>
-        <ion-icon name="remove" (click)="decrementDonation()"></ion-icon>
-        <span item-right color="primary">{{this.reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
-        <ion-icon name="add" (click)="incrementDonation()"></ion-icon>      </ion-col>
+        <span item-left color="primary">
+          Freiwillige Spende <ion-icon class="info-icon" name="ios-information-circle-outline"></ion-icon>
+        </span>
+      </ion-col>
       <ion-col col-5 text-wrap>
+        <ion-icon name="ios-remove-circle-outline" (click)="decrementDonation()"></ion-icon>
+        <span item-right color="primary">{{this.reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
+        <ion-icon name="ios-add-circle-outline" (click)="incrementDonation()"></ion-icon>
       </ion-col>
     </ion-row>
     <ion-row id="gesamt">
@@ -49,12 +52,12 @@
     </ion-row>
   </ion-grid>
 
-
-    <ion-list>
+<!--
+    <ion-list class="details">
         <ion-item *ngFor="let item of reservation.items">
           <span item-left>{{item.title}}</span>
 
-          <span item-right>
+          <span item-right class="gericht">
             <ion-icon name="add" (click)="incrAmount($event, item)"></ion-icon>
             {{amount}}
             <ion-icon name="remove" (click)="decreaseAmount($event, item)"></ion-icon>
@@ -63,16 +66,36 @@
         </ion-item>
         <div style="border: 1px solid black"></div>
         <ion-item>
-            <span item-left color="primary">Spende</span>
-            <ion-icon name="remove" (click)="decrementDonation()"></ion-icon>
-            <span item-right color="primary">{{this.reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
-            <ion-icon name="add" (click)="incrementDonation()"></ion-icon>
+            <span class="spende" item-left color="primary">Freiwillige Spende</span>
+            <ion-icon class="info-icon" name="ios-information-circle-outline"></ion-icon>
+            <span item-right>
+              <ion-icon name="remove" (click)="decrementDonation()"></ion-icon>
+              <span item-right color="primary">{{this.reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
+              <ion-icon name="add" (click)="incrementDonation()"></ion-icon>
+            </span>
         </ion-item>
         <ion-item>
             <span item-left color="primary">Gesamtpreis</span>
             <span item-right color="primary">{{reservation.totalPrice.toFixed(2) | currency:'EUR':true}}</span>
         </ion-item>
     </ion-list>
+-->
+      <ion-item>
+        <ion-label>Mit Treuepunkten bezahlen</ion-label>
+        <ion-toggle checked="false"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label >Abholen Um</ion-label>
+        <ion-input id="pickUpTime" item-right  type="text"></ion-input>
+        <span item-right>Uhr</span>
+      </ion-item>
 
-    <button ion-button full (click)="sendOrder()">Bestellen</button>
+
+
+    <button *ngIf="this.auth.getLoggedIn()" ion-button full (click)="sendOrder()">Bestellen</button>
+    <div id="notLoggedIn" *ngIf="!this.auth.getLoggedIn()">
+      <button  ion-button full (click)="sendOrder()">Login</button>
+      <button  ion-button full (click)="sendOrder()">Registrieren</button>
+    </div>
+
 </ion-content>

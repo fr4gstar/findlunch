@@ -4,6 +4,7 @@ import {SERVER_URL} from "../../app/app.module";
 import {NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
+import {AuthService} from "../../providers/auth-service";
 
 @Component({
     selector: 'order-details',
@@ -22,7 +23,8 @@ export class OrderDetailsPage {
         navParams: NavParams,
         private toastCtrl: ToastController,
         private navCtrl: NavController,
-        private cartService: CartService
+        private cartService: CartService,
+        private auth: AuthService
     ) {
         this.reservation = {
             items: cartService.getCart(navParams.get("restaurant_id")),

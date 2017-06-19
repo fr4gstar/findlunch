@@ -1,0 +1,46 @@
+
+.gericht, .spende {
+  font-size:  1.4rem;
+}
+
+#überschrift {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
+#gesamt {
+  border-top: 1px solid black;
+}
+
+ion-col:not(:first-child) {
+  text-align : right;
+}
+
+ion-col:first-child {
+  font-size: 1.7rem;
+}
+
+#pickUpTime{
+  max-width : 100%;
+  text-align: right;
+
+  & .text-input {
+    float: right;
+    margin: 0;
+    padding: 8px;
+    border-radius: 4px;
+    border : 1px solid black;
+    max-width: 35%;
+  }
+}
+
+#notLoggedIn > button{
+  width: calc(50% - 5px);
+  float: left;
+  border-radius: 4px;
+
+  &:first-child {
+    margin-right: 10px;
+  }
+}
+
