@@ -1,56 +1,66 @@
 import {Component, OnInit} from "@angular/core";
-import {NavController, NavParams, ToastController} from "ionic-angular";
+import {ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {OffersPage} from "../offers/offers";
 import {QRService} from "../../providers/QRService";
 
+/**
+ * This pages loads and shows the points of an user per restaurant.
+ * Also shows the barcode scanner (qr scanner) function.
+ */
 @Component({
     selector: 'bonus',
     templateUrl: 'bonus.html'
 })
 
-export class BonusPage implements OnInit {
-
+export class BonusPage {
+  /**
+   * Object with restaurant and user points
+   */
   public points: Object[];
 
+  /**
+   *  Initialize modules and loadPoints for an user.
+   *
+   * @param toastCtrl for displaying messages
+   * @param http for requests
+   * @param qr for using barcode functions
+   */
     constructor(
       private toastCtrl: ToastController,
-      navParams: NavParams,
       private http: Http,
-      private navCtrl: NavController,
       private qr: QRService) {
+    this.loadPoints();
     }
 
-    ngOnInit() {
-      let user = window.localStorage.getItem("username");
-      let token = window.localStorage.getItem(user);
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic " +token
-      });
-
-      let options = new RequestOptions({
-        headers: headers,
-        method: RequestMethod.Get
-      });
-
-        this.http.get(`${SERVER_URL}/api/get_points`, options)
-         .subscribe(
-         res => this.points =
-          //console.log(
-           res.json()
-         //)
-          ,
-         err => console.error(err)
-         )
-    }
-
+  /**
+   * Opens the barcode scanner(camera) of the device via service
+   * @param event
+   */
   onQRClicked(event) {
     this.qr.onQRClicked(event);
   }
 
-  showOffers(restaurant: String) {
-    this.navCtrl.push(OffersPage,{restaurant: restaurant});
+  /**
+   * Loads available points of an authorized user per restaurant
+   */
+  loadPoints(){
+    let user = window.localStorage.getItem("username");
+    let token = window.localStorage.getItem(user);
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      "Authorization": "Basic " +token
+    });
+
+    let options = new RequestOptions({
+      headers: headers,
+      method: RequestMethod.Get
+    });
+
+    this.http.get(`${SERVER_URL}/api/get_points`, options)
+    .subscribe(
+      res => this.points = res.json(),
+      err => console.error(err)
+    )
   }
 }

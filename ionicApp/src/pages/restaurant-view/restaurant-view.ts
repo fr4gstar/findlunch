@@ -1,26 +1,27 @@
 import {Component} from "@angular/core";
-import {NavController, NavParams, Platform} from "ionic-angular";
-import {Http} from "@angular/http";
-import {Coordinates, Geolocation} from "@ionic-native/geolocation";
-import {SERVER_URL} from "../../app/app.module";
-import {OffersPage} from "../offers/offers";
+import {NavParams} from "ionic-angular";
 import {Restaurant} from "../../model/Restaurant";
-import {Observable} from "rxjs/Observable";
 
-
+/**
+ * This pages displays the information of a restaurant.
+ */
 @Component({
   selector: 'restaurant-view-page',
   templateUrl: 'restaurant-view.html'
 
 })
 export class RestaurantViewPage {
-
+  /**
+   * Restaurant, which should be displayed on page
+   */
   public restaurant: Restaurant;
 
+  /**
+   * Initialize modules and gets restaurant from previous page.
+   * @param navParams to get restaurant
+   */
   constructor(
-    public navCtrl : NavController,
-    private navParams:NavParams,
-    private platform: Platform) {
+    private navParams:NavParams) {
 
     this.restaurant = navParams.get("restaurant");
   }
