@@ -3,12 +3,52 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Bestelldetails</ion-title>
+        <ion-title>Warenkorb</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <h2 padding-left>Ihre Bestellung</h2>
+    <h2 padding-left>Ihr Warenkorb für RestaurantXY</h2>
+
+
+  <ion-grid>
+    <ion-row id="überschrift">
+      <ion-col item-right col-7>Bezeichnung</ion-col>
+      <ion-col>Menge</ion-col>
+      <ion-col>Preis</ion-col>
+    </ion-row>
+    <ion-row id="gericht" *ngFor="let item of reservation.items">
+      <ion-col col-7>{{item.title}}</ion-col>
+      <ion-col col-2>
+        <span item-right>
+          <ion-icon name="add" (click)="incrAmount($event, item)"></ion-icon>
+              {{amount}}
+          <ion-icon name="remove" (click)="decreaseAmount($event, item)"></ion-icon>
+        </span>
+      </ion-col>
+      <ion-col col-3>{{item.price * amount | currency:'EUR':true}}</ion-col>
+    </ion-row>
+    <ion-row id="spende">
+      <ion-col col-7 color="primary" text-wrap>
+        <span item-left color="primary">Freiwillige Spende</span>
+        <ion-icon name="remove" (click)="decrementDonation()"></ion-icon>
+        <span item-right color="primary">{{this.reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
+        <ion-icon name="add" (click)="incrementDonation()"></ion-icon>      </ion-col>
+      <ion-col col-5 text-wrap>
+      </ion-col>
+    </ion-row>
+    <ion-row id="gesamt">
+      <ion-col col-7 color="primary">
+        Gesamtpreis
+      </ion-col>
+      <ion-col col-2>
+      </ion-col>
+      <ion-col col-3 color="primary">
+        {{reservation.totalPrice.toFixed(2) | currency:'EUR':true}}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 
     <ion-list>
         <ion-item *ngFor="let item of reservation.items">
