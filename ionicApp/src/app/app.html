@@ -6,31 +6,35 @@
   </ion-header>
 
   <ion-content>
+    <ion-list>
     <ion-list-header color="findlunch" *ngIf="this.auth.getLoggedIn()">
       {{this.auth.getUserName()}}
     </ion-list-header>
-    <ion-list>
-      <div class="menu" *ngIf="this.auth.getLoggedIn()">
-        <button color="findlunch" menuClose ion-item *ngFor="let p of this.menu.customerPages" (click)="openPage(p)">
-         {{p.title}}
-        </button>
-        <button color="findlunch" menuClose ion-item> <!--(click)="Barcodescanner aktivieren"-->
-          Abholcode scannen
-        </button>
-      </div>
+      <ion-item-group>
+        <div class="menu" *ngIf="this.auth.getLoggedIn()">
+          <button color="findlunch" menuClose ion-item *ngFor="let p of this.menu.customerPages" (click)="openPage(p)">
+           {{p.title}}
+          </button>
+          <button color="findlunch" menuClose ion-item (click)="this.qr.onQRClicked(event)">
+            Abholcode scannen
+          </button>
+        </div>
 
-      <div class="menu" *ngIf="!this.auth.getLoggedIn()">
-        <button color="findlunch" menuClose ion-item *ngFor="let p of this.menu.guestPages" (click)="openPage(p)">
-          {{p.title}}
-        </button>
-      </div>
+        <div class="menu" *ngIf="!this.auth.getLoggedIn()">
+          <button color="findlunch" menuClose ion-item *ngFor="let p of this.menu.guestPages" (click)="openPage(p)">
+            {{p.title}}
+          </button>
+        </div>
+      </ion-item-group>
 
+      <ion-item-group>
         <button color="findlunch"  ion-item (click)="openUrl('https://shrouded-dusk-87807.herokuapp.com/about_findlunch')">
           Impressum
         </button>
         <button color="findlunch"  ion-item (click)="openUrl('https://shrouded-dusk-87807.herokuapp.com/faq_customer')">
           FAQ
         </button>
+      </ion-item-group>
 
       <button id="logout" ion-button block menuClose *ngIf="this.auth.getLoggedIn()" (click)="this.logout()">Logout</button>
     </ion-list>

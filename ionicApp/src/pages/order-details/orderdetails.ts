@@ -5,86 +5,88 @@ import {NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
+import {Restaurant} from "../../model/Restaurant";
 
+/**
+ * Page for showing an overview of the cart and the amount of items in it.
+ * It calculates and shows the total price to pay and provides a way to donate.
+ */
 @Component({
     selector: 'order-details',
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage {
     public reservation: {
-        totalPrice?: number,
+        totalPrice: number,
         items: Offer[],
-        donation: number
+        donation: number,
+        usedPoints: number
     };
-    public amount: number;
+    public restaurant: Restaurant;
 
-    constructor(
-        private http: Http,
-        navParams: NavParams,
-        private toastCtrl: ToastController,
-        private navCtrl: NavController,
-        private cartService: CartService,
-        private auth: AuthService
-    ) {
+    constructor(private http: Http,
+                navParams: NavParams,
+                private toastCtrl: ToastController,
+                private navCtrl: NavController,
+                private cartService: CartService,
+                private auth: AuthService)
+    {
         this.reservation = {
-            items: cartService.getCart(navParams.get("restaurant_id")),
-            donation: 0
+            items: cartService.getCart(this.restaurant.id),
+            donation: 0,
+            usedPoints: 0,
+            totalPrice: 0
         };
-        this.amount = 1;
-        this.calcTotalPrice();
+        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
     }
 
-    calcTotalPrice(){
-      this.reservation.totalPrice = this.reservation.items
-        .map(offer => offer.price)
-        .reduce((prevPrice: number, price: number) => {
-          return (prevPrice + price) * this.amount
-        });
+    /**
+     * Increases the amount of one given offer. Also checks for the max-limit.
+     * The donation is reset if this method gets executed.
+     * @param offer
+     */
+    incrAmount(offer) {
+        if (offer.amount >= 999) {
+            console.log("Maxmimum amount of Product reached");
+        } else {
+            offer.amount++;
+            this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+            this.reservation.donation = 0;
+        }
     }
 
-    incrAmount(event, offer){
-      if(this.amount === 999){
-        console.log("Maxmimum amount of Product reached");
-      }else{
-        this.amount ++;
-        offer.amount ++;
-        this.calcTotalPrice();
-        let idItem = this.reservation
-          .items
-          .find( (item, i) => {
-            item.amount = offer.amount;
-            return item.id === offer.id;
-          })
-      }
+    /**
+     * Decreases the amount of one given offer. Removes item from orders if amount will be 0.
+     * The donation is reset if this method gets executed.
+     * @param offer
+     */
+    decreaseAmount(offer) {
+        if (offer.amount <= 1) {
+            this.reservation.items.splice(this.findItemIndex(offer), 1);
+        } else {
+            offer.amount--;
+        }
+        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+        this.reservation.donation = 0;
+
     }
 
-    decreaseAmount(event, offer){
-      if(this.amount === 1){
-        this.reservation.items = this.reservation
-          .items
-          .splice(this.findItemIndex(offer) ,1)
-        this.calcTotalPrice();
-      }else {
-        this.amount --;
-        offer.amount --;
-        this.calcTotalPrice();
-      }
-    }
-
-    findItemIndex(offer){
-      return this.reservation
-        .items
-        .findIndex( (item, i) => {
-          return item.id === offer.id;
-        })
-    }
-
+    /**
+     * Raises the donation by the following rules:
+     *  - increase to next 10 Cents (1,12 -> 1,20)
+     *  - then increase by 10 Cents (1,20 -> 1,30)
+     */
     incrementDonation() {
         let newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
         this.reservation.donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toPrecision(2));
         this.reservation.totalPrice = newTotalPrice;
     }
 
+    /**
+     * Decreases the donation by the following rules:
+     *  - if donation >= 10 Cents, decrease by 10 Cents
+     *  - else decrease to the total price of the items (no donation)
+     */
     decrementDonation() {
         let newTotalPrice, donation;
         if (this.reservation.donation > 0.10) {
@@ -99,25 +101,70 @@ export class OrderDetailsPage {
         this.reservation.totalPrice = newTotalPrice;
     }
 
+    /**
+     * Sends the current order to the server. This requires authentication.
+     */
     sendOrder() {
-      let user = window.localStorage.getItem("username");
-      let token = window.localStorage.getItem(user);
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic " +token
+        let user = window.localStorage.getItem("username");
+        let token = window.localStorage.getItem(user);
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            "Authorization": "Basic " + token
         });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({headers: headers});
 
-        this.http.post(SERVER_URL+"/api/register_reservation", JSON.stringify(this.reservation), options).subscribe(
+        let payload = {
+            ...this.reservation,
+            reservation_offers: []
+        };
+        payload.items.forEach((item) => {
+            payload.reservation_offers.push({
+                offer: {
+                    id: item.id
+                },
+                amount: item.amount
+            });
+        });
+        delete payload.items;
+
+        this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
             (res) => {
                 const toast = this.toastCtrl.create({
                     message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
                     duration: 3000
                 });
                 toast.present();
+
+                // empty the cart for this restaurant
+                this.cartService.emptyCart(this.restaurant.id);
+
+                // go back to restaurants-overview
                 this.navCtrl.popToRoot();
             }, (err) => {
                 console.error(err)
             })
     }
+
+
+    /**
+     * Calculates the total price of a given Array of Offer-items.
+     * @param items
+     * @returns {number} the total price of all items respecting their amounts.
+     */
+    private calcTotalPrice(items: Offer[]) {
+        return this.reservation.items
+            .map(offer => offer.price * offer.amount)
+            .reduce((prevOfferSum, offerSum) => prevOfferSum + offerSum, 0);
+    }
+
+    /**
+     * Finds the index of this offer in the items-array of the reservation.
+     * @param offer
+     * @returns {number}
+     */
+    private findItemIndex(offer) {
+        return this.reservation.items
+            .findIndex((item, i) => item.id === offer.id)
+    }
+
 }

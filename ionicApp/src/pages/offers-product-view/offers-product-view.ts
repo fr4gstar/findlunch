@@ -4,14 +4,13 @@ import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {AuthService} from "../../providers/auth-service";
+import {Restaurant} from "../../model/Restaurant";
 
 /**
- * Generated class for the OffersProductViewPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
+ * Page for showing the details of a specific offer.
+ * Offer and restaurant-id must be provided via navParams ("restaurant", "offer").
+ * This view enables adding the item to the cart and shows the number of items in cart in the header.
  */
-
 @Component({
   selector: 'page-offers-product-view',
   templateUrl: 'offers-product-view.html',
@@ -19,7 +18,7 @@ import {AuthService} from "../../providers/auth-service";
 export class OffersProductViewPage {
 
   public cart: Array<Object>;
-  private _restaurantId: number;
+  public restaurant: Restaurant;
   public offer: Offer;
   private loggedIn;
 
@@ -29,27 +28,26 @@ export class OffersProductViewPage {
       private cartService: CartService,
       private auth : AuthService
   ) {
-    this._restaurantId = navParams.get("restaurant_id");
+    this.restaurant = navParams.get("restaurant");
     this.offer = navParams.get("offer");
     console.debug(this.offer);
 
     // get cart for this restaurant
-    let cart = cartService.getCart(this._restaurantId);
-    if (cart === null || cart === undefined) {
-      this.cart = cartService.createCart(this._restaurantId);
-    } else {
-      this.cart = cart;
-    }
+    this.cart = cartService.getCart(this.restaurant.id);
   }
 
   addToCart(offer: Offer) {
-    this.cartService.addItemToCart(this._restaurantId, offer);
+    this.cartService.addItemToCart(this.restaurant.id, offer);
+  }
+
+  getCartItemCount() {
+    return this.cartService.getCartItemCount(this.restaurant.id);
   }
 
 
-  goToCheckout() {
+  goToOrderDetailsPage() {
     this.navCtrl.push(OrderDetailsPage, {
-      restaurant_id: this._restaurantId
+      restaurant: this.restaurant
     });
   }
 

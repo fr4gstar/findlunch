@@ -3,14 +3,12 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-      <ion-title>{{restaurantName}}</ion-title>
-      <ion-buttons end>
 
-        <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
-          <ion-icon name="star-outline" *ngIf="this.auth.getLoggedIn()&& !restaurantIsFavourite"></ion-icon>
-          <ion-icon name="star" *ngIf="this.auth.getLoggedIn()&&restaurantIsFavourite"></ion-icon>
-        </button>
-      </ion-buttons>
+        <ion-title (click)="onRestaurantClicked($event)">
+              <img [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
+                   style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
+          {{restaurant.name}}
+        </ion-title>
       <ion-buttons end>
         <button ion-button icon-only (click)="goToCheckout()">
           <ion-icon name="cart">

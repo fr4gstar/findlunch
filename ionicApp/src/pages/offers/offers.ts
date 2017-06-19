@@ -4,49 +4,46 @@ import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 import {AuthService} from "../../providers/auth-service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
+import {Restaurant} from "../../model/Restaurant";
+import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 
 
-export const FL_NAVPARAM_OFFER_ID = "offer_id";
-
+/**
+ * Page for showing the offers of a specific restaurant in a list.
+ * If the user clicks on an offer, she will get to the detail view of this offer.
+ */
 @Component({
-    selector: 'offers',
     templateUrl: 'offers.html'
 })
-
 export class OffersPage implements OnInit {
-    private _restaurantId: number;
+    public restaurant: Restaurant;
     public offers: any;
-    public arrayOfKeys;
-    public restaurantIsFavourite = false; //TODO Info ob Restaurant zu favoriten gehört holen
-    public restaurantName = "RestaurantXY"; //TODO Namen des angeklickten restaurants
-    public allergene = [1,2,3,4,5,6,7,8];
-    shownGroup = null;
-    public cartlength = "nA"; //TODO Anzahl der Produkte im warenkorbanzeigen
+    public categories;
 
-
-  constructor(
-        navParams: NavParams,
+    constructor(navParams: NavParams,
         private offerService: OffersService,
         private navCtrl: NavController,
         private auth: AuthService
-    ) {
-        this._restaurantId = parseInt(navParams.get("restaurant_id"));
+        this.restaurant = navParams.get("restaurant");
     }
 
     ngOnInit() {
-        this.offerService.getOffers(this._restaurantId).subscribe(
-
+        this.offerService.getOffers(this.restaurant.id).subscribe(
             offers => {
-              this.offers = offers;
-              this.arrayOfKeys = Object.keys(offers);
-                      },
+                this.offers = offers;
+                this.categories = Object.keys(offers);
+            },
             err => console.error(err)
         )
     }
 
     public onOfferClicked(event, offer) {
-        this.navCtrl.push(OffersProductViewPage, {offer, restaurant_id: this._restaurantId})
+        this.navCtrl.push(OffersProductViewPage, {offer, restaurant: this.restaurant})
     }
+
+  public onRestaurantClicked(event) {
+    this.navCtrl.push(RestaurantViewPage, {restaurant: this.restaurant})
+  }
 
     //TODO: Info ob restaurantIsFavourite muss bei toggle an Server geschickt werden.
     public toggleIsFavourite(){
