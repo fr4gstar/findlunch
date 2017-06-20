@@ -6,6 +6,7 @@ import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
+import { AlertController } from 'ionic-angular';
 
 /**
  * Page for showing an overview of the cart and the amount of items in it.
@@ -29,7 +30,8 @@ export class OrderDetailsPage {
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
                 private cartService: CartService,
-                private auth: AuthService)
+                private auth: AuthService,
+                private alertCtrl: AlertController)
     {
         this.restaurant = navParams.get("restaurant");
         this.reservation = {
@@ -172,8 +174,14 @@ export class OrderDetailsPage {
    * Shows explanation alert for Donation option
    */
     public showDonationInfo(){
-      alert("Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
+      let alert = this.alertCtrl.create({
+        title: 'Info',
+        subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
         "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom" +
-        "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.");
+          "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.",
+        buttons: ['Ok']
+      });
+      alert.present();
+
   }
 }
