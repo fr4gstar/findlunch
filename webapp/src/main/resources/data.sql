@@ -437,3 +437,33 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`offer_has_allergenic` (`offer_id`, `aller
 (101, 5),
 (101, 6),
 (101, 7);
+
+-- reservation_status
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_status` (`id`, `status`, `statusKey`) VALUES
+(0, 'neu angelegt', 0),
+(1, 'bestätigt', 1),
+(2, 'abgelehnt, Der Anbieter hat die Bestellung abgelehnt.', 2),
+(3, 'abgelehnt, Die gewünschte Wartezeit kann nicht eingehalten werden.', 2),
+(4, 'abgelehnt, Das Produkt ist leider ausverkauft.', 2),
+(5, 'abgelehnt, Der Anbieter hat momentan geschlossen. ', 2),
+(6, 'abgelehnt, Der Anbieter ist bereits ausgebucht.', 2),
+(7, 'abgelehnt, Der Anbieter ist im Urlaub.', 2),
+(8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2);
+
+-- reservation --
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`max_waitingtime_customer`,`timestamp_received`,`reservation_status_id`) VALUES
+(1, 1, 4.90, 0.00, 0, 2, 1, 101, 20, DATE_ADD(now(), INTERVAL -3 MINUTE), 0),
+(2, 2, 9.30, 0.00, 0, 9, 1, 101, 25, DATE_ADD(now(), INTERVAL -2 MINUTE), 0),
+(3, 3, 9.30, 0.00, 0, 2, 1, 101, 15, DATE_ADD(now(), INTERVAL -1 MINUTE), 0),
+(4, 4, 1.00, 0.00, 0, 9, 1, 101, 25, DATE_ADD(now(), INTERVAL -0.5 MINUTE), 0);
+  
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_offers` (`id`,`reservation_id`,`offer_id`,`amount`) VALUES
+(1, 1, 101, 2),
+(2, 1, 102, 1),
+(3, 2, 101, 1),
+(4, 2, 102, 2),
+(5, 2, 103, 1),
+(6, 3, 101, 3),
+(7, 3, 102, 2),
+(8, 3, 103, 1),
+(9, 4, 101, 1);
