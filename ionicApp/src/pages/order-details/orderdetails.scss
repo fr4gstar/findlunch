@@ -20,18 +20,28 @@ ion-col:first-child {
   font-size: 1.7rem;
 }
 
+#mehrwertsteuer > ion-col{
+  font-size: 1rem;
+}
+
 #pickUpTime{
   max-width : 100%;
   text-align: right;
 
-  & .text-input {
+  & .datetime-text{
     float: right;
     margin: 0;
     padding: 8px;
     border-radius: 4px;
     border : 1px solid black;
-    max-width: 35%;
   }
+}
+
+#bestellen{
+  width: 80%;
+  float:left;
+  border-radius: 4px;
+  margin: 10%;
 }
 
 #notLoggedIn > button{

@@ -7,6 +7,8 @@ import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
 import { AlertController } from 'ionic-angular';
+import { DatePicker } from '@ionic-native/date-picker';
+
 
 /**
  * Page for showing an overview of the cart and the amount of items in it.
@@ -24,6 +26,7 @@ export class OrderDetailsPage {
         usedPoints: number
     };
     public restaurant: Restaurant;
+    public pickUpTime;
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -31,7 +34,9 @@ export class OrderDetailsPage {
                 private navCtrl: NavController,
                 private cartService: CartService,
                 private auth: AuthService,
-                private alertCtrl: AlertController)
+                private alertCtrl: AlertController,
+                private datePicker: DatePicker
+)
     {
         this.restaurant = navParams.get("restaurant");
         this.reservation = {
@@ -41,6 +46,7 @@ export class OrderDetailsPage {
             totalPrice: 0
         };
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+        this.pickUpTime = new Date().getTime().toString();
     }
 
     /**
@@ -182,6 +188,24 @@ export class OrderDetailsPage {
         buttons: ['Ok']
       });
       alert.present();
-
   }
+
+  /**
+   * Lets the user enter his desired pick up time
+   */
+  public enterPickUpTime(){
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'time',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    }).then(
+
+      date => {
+        console.log('Got date: ', date)
+        this.pickUpTime = date;
+      },
+          err => console.log('Error occurred while getting date: ', err)
+    );
+  }
+
 }
