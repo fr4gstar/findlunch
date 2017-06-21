@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {NavController, ToastController} from "ionic-angular";
-import {Platform} from "ionic-angular";
+import {NavController, ToastController, NavParams} from "ionic-angular";
+import {ModalController} from "ionic-angular";
 
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
@@ -16,10 +16,12 @@ import {AuthService} from "../../providers/auth-service";
 })
 export class LoginPage {
 
-  constructor(public platform: Platform,
-              private navCtrl: NavController,
-              private auth: AuthService,
-              private toastCtrl: ToastController) {
+  toPop : boolean
+
+  constructor(private navCtrl: NavController, private toastCtrl: ToastController,
+              private auth: AuthService, private navParams: NavParams) {
+
+    this.toPop = navParams.get("comeback");
   }
 
 
@@ -31,9 +33,13 @@ export class LoginPage {
           duration: 3000
         });
         toast.present();
-        this.navCtrl.setRoot(HomePage);
-      } else {
-        alert("E-Mail und/oder Passwort nicht bekannt");
+        if(this.toPop){
+          this.navCtrl.pop();
+        }else {
+          this.navCtrl.setRoot(HomePage);
+        }
+      } else{
+      alert("E-Mail und/oder Passwort nicht bekannt");
       }
     });
 

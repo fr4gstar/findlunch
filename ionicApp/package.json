@@ -22,6 +22,7 @@
         "@angular/platform-browser-dynamic": "4.0.0",
         "@ionic-native/barcode-scanner": "^3.12.1",
         "@ionic-native/core": "^3.6.1",
+        "@ionic-native/date-picker": "^3.12.1",
         "@ionic-native/geolocation": "^3.6.1",
         "@ionic-native/google-maps": "^3.9.2",
         "@ionic-native/in-app-browser": "^3.12.1",
@@ -32,11 +33,15 @@
         "@ionic/storage": "2.0.1",
         "@types/googlemaps": "^3.26.11",
         "cordova-android": "^6.2.3",
+        "cordova-ios": "^4.4.0",
+        "cordova-plugin-add-swift-support": "^1.6.0",
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.7",
+        "cordova-plugin-datepicker": "^0.9.3",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git",
+        "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
         "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-nativegeocoder": "^1.0.2",
         "cordova-plugin-splashscreen": "^4.0.3",
@@ -89,10 +94,11 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
             },
-            "cordova-plugin-inappbrowser": {}
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-datepicker": {}
         },
         "platforms": [
-            "android"
+            "ios"
         ]
     }
 }
