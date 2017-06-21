@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams, ToastController} from "ionic-angular";
-import {ModalController} from "ionic-angular";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
@@ -14,7 +13,8 @@ import {SERVER_URL} from "../../app/app.module";
 })
 export class LoginPage {
 
-  toPop : boolean
+  toPop : boolean;
+  private counterPasswordWrong: number = 0;
 
   constructor(
       private navCtrl: NavController,
@@ -28,6 +28,7 @@ export class LoginPage {
 
 
   public login(userName: string, password: string) {
+    this.counterPasswordWrong ++;
     this.auth.login(userName, password).then(data => {
       if (data) {
         const toast = this.toastCtrl.create({
@@ -50,18 +51,37 @@ export class LoginPage {
   public goToRegisterPage() {
     this.navCtrl.push(RegistryPage);
   }
-  public sendPasswordReset(){
-    let user = window.localStorage.getItem("username");
-    let token = window.localStorage.getItem(user);
+
+  /**
+   * Checks the input username
+   * @param username = email adress of user
+   */
+  public isEmptyUser(username) {
+        if(username && this.counterPasswordWrong >=1){
+            return false;
+          }
+        return true;
+      };
+
+  /**
+   * Requesting a password reset by the backend
+   * @param username = email adress of user
+   */
+  public sendPasswordReset(username){
     let headers = new Headers({
-      'Content-Type': 'application/json',
-      "Authorization": "Basic " +token
+      'Content-Type': 'application/json'
     });
+
+    let user = {
+      username: username
+    };
 
     let options = new RequestOptions({
       headers: headers,
-      method: RequestMethod.Post
+      method: RequestMethod.Post,
+      body: JSON.stringify(user)
     });
+
     this.http.get(`${SERVER_URL}/api/api/get_reset_token`, options)
       .subscribe(
         (res) => {

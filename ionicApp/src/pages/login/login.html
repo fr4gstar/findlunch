@@ -21,7 +21,7 @@
     <button ion-button full (click)="goToRegisterPage();">Registrieren</button>
 
     <h5>Passwort Vergessen</h5>
-    <button ion-button full color="danger" [disabled]="isEmptyUser(userName.value)" (click)="sendPasswordReset();">Sicherheitstoken anfordern</button>
+    <button ion-button full color="danger" [disabled]="isEmptyUser(userName.value)" (click)="sendPasswordReset(userName.value);">Sicherheitstoken anfordern</button>
   </ion-list>
 
 
