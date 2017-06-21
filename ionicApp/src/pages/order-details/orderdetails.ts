@@ -4,7 +4,13 @@ import {SERVER_URL} from "../../app/app.module";
 import {NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
+import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
+import { AlertController } from 'ionic-angular';
+import { DatePicker } from '@ionic-native/date-picker';
+import {LoginPage} from "../login/login";
+import {RegistryPage} from "../registry/registry";
+
 
 /**
  * Page for showing an overview of the cart and the amount of items in it.
@@ -22,13 +28,19 @@ export class OrderDetailsPage {
         usedPoints: number
     };
     public restaurant: Restaurant;
+    public pickUpTime;
 
+    public morePointsThanNeeded = true; //TODO: Info auslesen lassen
 
     constructor(private http: Http,
                 navParams: NavParams,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
-                private cartService: CartService)
+                private cartService: CartService,
+                private auth: AuthService,
+                private alertCtrl: AlertController,
+                private datePicker: DatePicker
+)
     {
         this.restaurant = navParams.get("restaurant");
         this.reservation = {
@@ -38,6 +50,7 @@ export class OrderDetailsPage {
             totalPrice: 0
         };
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+        this.pickUpTime = new Date().getTime().toString();
     }
 
     /**
@@ -166,5 +179,42 @@ export class OrderDetailsPage {
         return this.reservation.items
             .findIndex((item, i) => item.id === offer.id)
     }
+
+  /**
+   * Shows explanation alert for donation option in the view
+   */
+    public showDonationInfo(){
+      let alert = this.alertCtrl.create({
+        title: 'Info',
+        subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
+        "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom" +
+          "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.",
+        buttons: ['Ok']
+      });
+      alert.present();
+  }
+
+  /**
+   * Lets the user enter his desired pickup time.
+   * /TODO: Only valid times should be able to be chosen.
+   */
+  public enterPickUpTime(){
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'time',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
+    }).then(
+
+      date => {
+        console.log('Got date: ', date)
+        this.pickUpTime = date;
+      },
+          err => console.log('Error occurred while getting date: ', err)
+    );
+  }
+
+  public goToLogin(){
+    this.navCtrl.push(LoginPage, {comeBack: true});
+  }
 
 }
