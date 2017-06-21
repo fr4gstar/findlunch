@@ -38,7 +38,6 @@ export class OffersPage implements OnInit {
     this.offerService.getOffers(this.restaurant.id).subscribe(
       offers => {
         this.offers = offers;
-        console.debug(offers);
         this.categories = Object.keys(offers);
       },
       err => console.error(err)
