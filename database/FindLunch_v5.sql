@@ -592,7 +592,7 @@ CREATE TABLE IF NOT EXISTS `uioa1joiho1k4tdv`.`reservation` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `uioa1joiho1k4tdv`.`reservation`
+-- Table `uioa1joiho1k4tdv`.`reservation_offers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uioa1joiho1k4tdv`.`reservation_offers` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
