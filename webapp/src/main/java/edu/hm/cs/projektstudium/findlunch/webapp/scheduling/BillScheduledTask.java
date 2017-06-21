@@ -52,6 +52,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.BookingReason;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DonationPerMonth;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.MinimumProfit;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationStatus;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
@@ -235,20 +236,20 @@ public class BillScheduledTask {
 						doc.add(new Paragraph(billspace+nL+nL, boldFont));
 						doc.add(new Paragraph(messages.getString("bill.introduction") + nL +nL));
 						
-				        PdfPTable table = new PdfPTable(9);
+				        PdfPTable table = new PdfPTable(6);
 				        table.setWidthPercentage(100);
-				        int[] columnWidths = new int[]{8, 13, 16, 12, 20, 6, 8, 8, 9};
+				        int[] columnWidths = new int[]{4, 8, 12, 20,  8, 15};
 				        table.getDefaultCell().setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
 				        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 			
 						Font font = new Font(Font.DEFAULTSIZE, 11, Font.BOLD);
 				        table.addCell(new Phrase(messages.getString("bill.pos"), font));
 				        table.addCell(new Phrase(messages.getString("bill.bestNr"), font));
-				        table.addCell(new Phrase(messages.getString("bill.product"), font));
+				        //table.addCell(new Phrase(messages.getString("bill.product"), font));
 				        table.addCell(new Phrase(messages.getString("bill.date"), font));
 				        table.addCell(new Phrase(messages.getString("bill.customerString"), font));
-				        table.addCell(new Phrase(messages.getString("bill.unit"), font));
-				        table.addCell(new Phrase(messages.getString("bill.price"), font));
+				        //table.addCell(new Phrase(messages.getString("bill.unit"), font));
+				        //table.addCell(new Phrase(messages.getString("bill.price"), font));
 				        table.addCell(new Phrase(messages.getString("bill.totalPrice"), font));
 				        table.addCell(new Phrase(messages.getString("bill.customerDonation"), font));
 				        table.setHeaderRows(1);
@@ -264,11 +265,8 @@ public class BillScheduledTask {
 							font = new Font(Font.DEFAULTSIZE, 11, Font.NORMAL);
 							table.addCell(new Phrase(Integer.toString(i), font));
 							table.addCell(new Phrase(Integer.toString(reservation.getReservationNumber()), font));
-							//table.addCell(new Phrase(reservation.getOffer().getTitle(), font));
 							table.addCell(new Phrase(sdf.format(reservation.getTimestampReceived()), font));
 							table.addCell(new Phrase(reservation.getUser().getUsername(), font));
-							//table.addCell(new Phrase(Integer.toString(reservation.getAmount()), font));
-							//table.addCell(new Phrase(floatToString(reservation.getOffer().getPrice()), font));
 							table.addCell(new Phrase(floatToString(reservation.getTotalPrice()), font));
 							table.addCell(new Phrase(floatToString(reservation.getDonation()), font));
 						}

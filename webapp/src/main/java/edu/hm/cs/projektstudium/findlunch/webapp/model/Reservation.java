@@ -39,6 +39,10 @@ public class Reservation {
 	@JsonView({ReservationView.ReservationRest.class})
 	private boolean usedPoints;
 	
+	/** Points are Collected by the cusomer */
+	@Column(name="points_collected")
+	private boolean pointsCollected;
+	
 	/** The reservation number*/
 	@JsonView({ReservationView.ReservationRest.class})
 	private int reservationNumber;
@@ -75,15 +79,10 @@ public class Reservation {
 	@JoinColumn(name="reservation_status_id")
 	private ReservationStatus reservationStatus;
 	
-	/** The max_waitingtime_customer. */
+	/** The collect_time. */
 	@JsonView({ReservationView.ReservationRest.class})
-	@Column(name="max_waitingtime_customer")
-	private int maxWaitingtimeCustomer;
-	
-	/** The max_waitingtime_restaurant. */
-	@JsonView({ReservationView.ReservationRest.class})
-	@Column(name="max_waitingtime_restaurant")
-	private int maxWaitingtimeRestaurant;
+	@Column(name="collect_time")
+	private Date collectTime;
 	
 	/** The reservation time. */
 	@JsonView({ReservationView.ReservationRest.class})
@@ -264,31 +263,17 @@ public class Reservation {
 	}
 	
 	/**
-	 * @return the maxWaitingtimeCustomer
+	 * @return the collectTime
 	 */
-	public int getMaxWaitingtimeCustomer() {
-		return maxWaitingtimeCustomer;
+	public Date getCollectTime() {
+		return collectTime;
 	}
 
 	/**
-	 * @param maxWaitingtimeCustomer the maxWaitingtimeCustomer to set
+	 * @param collectTime the collectTime to set
 	 */
-	public void setMaxWaitingtimeCustomer(int maxWaitingtimeCustomer) {
-		this.maxWaitingtimeCustomer = maxWaitingtimeCustomer;
-	}
-
-	/**
-	 * @return the maxWaitingtimeRestaurant
-	 */
-	public int getMaxWaitingtimeRestaurant() {
-		return maxWaitingtimeRestaurant;
-	}
-
-	/**
-	 * @param maxWaitingtimeRestaurant the maxWaitingtimeRestaurant to set
-	 */
-	public void setMaxWaitingtimeRestaurant(int maxWaitingtimeRestaurant) {
-		this.maxWaitingtimeRestaurant = maxWaitingtimeRestaurant;
+	public void setCollectTime(Date collectTime) {
+		this.collectTime = collectTime;
 	}
 
 	/**
@@ -332,5 +317,12 @@ public class Reservation {
 	public boolean isRejected(){
 		return reservationStatus.getKey() == 2;
 	}
-	
+
+	public boolean isPointsCollected() {
+		return pointsCollected;
+	}
+
+	public void setPointsCollected(boolean pointsCollected) {
+		this.pointsCollected = pointsCollected;
+	}
 }
