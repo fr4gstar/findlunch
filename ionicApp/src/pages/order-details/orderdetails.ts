@@ -8,6 +8,8 @@ import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
 import { AlertController } from 'ionic-angular';
 import { DatePicker } from '@ionic-native/date-picker';
+import {LoginPage} from "../login/login";
+import {RegistryPage} from "../registry/registry";
 
 
 /**
@@ -27,6 +29,8 @@ export class OrderDetailsPage {
     };
     public restaurant: Restaurant;
     public pickUpTime;
+
+    public morePointsThanNeeded = true; //TODO: Info auslesen lassen
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -177,7 +181,7 @@ export class OrderDetailsPage {
     }
 
   /**
-   * Shows explanation alert for Donation option
+   * Shows explanation alert for donation option in the view
    */
     public showDonationInfo(){
       let alert = this.alertCtrl.create({
@@ -191,7 +195,8 @@ export class OrderDetailsPage {
   }
 
   /**
-   * Lets the user enter his desired pick up time
+   * Lets the user enter his desired pickup time.
+   * /TODO: Only valid times should be able to be chosen.
    */
   public enterPickUpTime(){
     this.datePicker.show({
@@ -206,6 +211,10 @@ export class OrderDetailsPage {
       },
           err => console.log('Error occurred while getting date: ', err)
     );
+  }
+
+  public goToLogin(){
+    this.navCtrl.push(LoginPage, {comeBack: true});
   }
 
 }

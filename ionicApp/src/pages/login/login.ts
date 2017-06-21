@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NavController, ToastController} from "ionic-angular";
+import {NavController, ToastController, NavParams} from "ionic-angular";
 import {ModalController} from "ionic-angular";
 
 import {HomePage} from "../home/home";
@@ -14,8 +14,12 @@ import {AuthService} from "../../providers/auth-service";
 })
 export class LoginPage {
 
+  toPop : boolean
+
   constructor(private navCtrl: NavController, private toastCtrl: ToastController,
-              private auth: AuthService, private modCtrl: ModalController) { //TODO: Modalcontroller für Registerpage
+              private auth: AuthService, private navParams: NavParams) {
+
+    this.toPop = navParams.get("comeback");
   }
 
 
@@ -26,7 +30,11 @@ export class LoginPage {
           message: "Login Erfolgreich",
           duration: 3000});
         toast.present();
-        this.navCtrl.setRoot(HomePage);
+        if(this.toPop){
+          this.navCtrl.pop();
+        }else {
+          this.navCtrl.setRoot(HomePage);
+        }
       } else{
       alert("E-Mail und/oder Passwort nicht bekannt");
       }
