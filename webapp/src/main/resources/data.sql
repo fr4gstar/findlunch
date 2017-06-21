@@ -74,7 +74,7 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`user` (`id`, `username`, `password`, `res
 (100, 'ionic@ionic.com', '$2a$10$AM5MLDZLCINLkGqWSQdIkeI/RR2DzlIWXP8UMLmJTNfjnrBFO7meu', NULL, 2, NULL);
 
 -- offer
-INSERT IGNORE INTO `uioa1joiho1k4tdv`.`offer` (`id`, `restaurant_id`, `title`, `description`, `price`, `preparation_time`, `start_date`, `end_date`, `needed_points`, `sold_out`, `course_type`, `sort_by`) VALUES
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`offer` (`id`, `restaurant_id`, `title`, `description`, `price`, `preparation_time`, `start_date`, `end_date`, `needed_points`, `sold_out`, `course_type`, `sort`) VALUES
 (1, 11,'Champignonreispfanne (Tg1) ', 'vegan', '1.00', 2, '2017-01-08', '2019-03-31', 30, FALSE, 3, 1),
 (2, 11, 'Hackbällchen mit Paprikasauce (Tg3)', 'Rindfleisch und Schweinefleisch', '1.90', 4, '2017-01-08', '2019-04-30', 35, FALSE, 3, 1),
 (3, 11, 'Pfannkuchen mit Schokosauce (Tg2)', 'fleischlos', '1.59', 3, '2017-01-08', '2019-05-01', 25, FALSE, 3, 1),
@@ -439,7 +439,7 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`offer_has_allergenic` (`offer_id`, `aller
 (101, 7);
 
 -- reservation_status
-INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_status` (`id`, `status`, `statusKey`) VALUES
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_status` (`id`, `status`, `statkey`) VALUES
 (0, 'neu angelegt', 0),
 (1, 'bestätigt', 1),
 (2, 'abgelehnt, Der Anbieter hat die Bestellung abgelehnt.', 2),
