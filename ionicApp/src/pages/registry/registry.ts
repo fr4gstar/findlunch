@@ -5,6 +5,7 @@ import {NavController, NavParams, ToastController} from "ionic-angular";
 import {LoginPage} from "../login/login";
 import {AuthService} from "../../providers/auth-service";
 import {HomePage} from "../home/home";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 
 
 @Component({
@@ -13,8 +14,14 @@ import {HomePage} from "../home/home";
 })
 export class RegistryPage {
 
+  termsAndConditions : boolean;
 
-  constructor(private http: Http, private auth: AuthService, private toastCtrl: ToastController, private navCtrl: NavController) {
+  constructor(private http: Http,
+              private auth: AuthService,
+              private toastCtrl: ToastController,
+              private navCtrl: NavController,
+              private iab: InAppBrowser)
+{
 
   }
 
@@ -56,6 +63,10 @@ export class RegistryPage {
     }
     else
       return true;
+  }
+
+  public goToTermsAndConditions(){
+    let browser = this.iab.create("https://youtube.com");
   }
 }
 
