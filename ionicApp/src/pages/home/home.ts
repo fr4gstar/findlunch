@@ -148,7 +148,9 @@ export class HomePage {
         snippet: `Adresse: ${restaurant.street} ${restaurant.streetNumber}
 Telefon: ${restaurant.phone}
 Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}
-Entfernung: ${restaurant.distance}m`,
+Entfernung: ${restaurant.distance}m
+Jetzt geöffnet`,
+
         infoClick: () => {
           this.navCtrl.push(OffersPage,{restaurant: restaurant});
         }
