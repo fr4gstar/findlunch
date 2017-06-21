@@ -1,12 +1,9 @@
-import { Component } from '@angular/core';
-import {NavController, ToastController, NavParams} from "ionic-angular";
-import {ModalController} from "ionic-angular";
+import {Component} from "@angular/core";
+import {NavController, NavParams, ToastController} from "ionic-angular";
 
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../providers/auth-service";
-
-
 
 
 @Component({

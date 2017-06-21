@@ -2,7 +2,6 @@ import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
-import {AuthService} from "../../providers/auth-service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
@@ -28,7 +27,7 @@ export class OffersPage implements OnInit {
   additives$: Observable<any>;
 
   constructor(navParams: NavParams,
-              private offerService: OffersService,
+              public offerService: OffersService,
               private navCtrl: NavController,
               private http: Http
   ) {
