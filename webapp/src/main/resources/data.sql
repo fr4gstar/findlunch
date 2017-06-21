@@ -469,5 +469,5 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_offers` (`id`,`reservation_id
 (8, 3, 103, 1),
 (9, 4, 101, 1);
 
-INSERT IGNORE INTO `findlunch`.`user_pushtoken` (`id`, `user_id`, `fcm_token`) VALUES
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`user_pushtoken` (`id`, `user_id`, `fcm_token`) VALUES
 ('1', '100', 'eVvkYMnfv5s:APA91bHpUqLqwBXwaJlkqVQLRPA8Dbj8Hms2DaVWBhlbhbl20dpkTmpdEVBSggddg6ALNdEMfagoSOzYIA1zrBxAhTWSn5ipIKxDTlmItjE55OEwCk7F8Ve6hSBx6c7ITFG_vltwK-db');
