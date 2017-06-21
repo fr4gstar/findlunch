@@ -9,4 +9,6 @@ export interface Offer {
     sold_out: boolean
     title: string
     amount: number
+    allergenic: Array<any>
+    additives: Array<any>
 }

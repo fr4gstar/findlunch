@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
-import {HomePage} from "../pages/home/home";
-
-
 
 
 @Injectable()

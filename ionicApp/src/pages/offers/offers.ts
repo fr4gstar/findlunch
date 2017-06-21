@@ -2,10 +2,12 @@ import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
-import {AuthService} from "../../providers/auth-service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
+import {Observable} from "rxjs/Observable";
+import {Http} from "@angular/http";
+import {SERVER_URL} from "../../app/app.module";
 
 
 /**
@@ -21,23 +23,30 @@ export class OffersPage implements OnInit {
     public categories;
     shownGroup = null;
 
-    constructor(navParams: NavParams,
-        private offerService: OffersService,
-        private navCtrl: NavController,
-        private auth: AuthService)
-    {
-        this.restaurant = navParams.get("restaurant");
-    }
+  allergenics$: Observable<any>;
+  additives$: Observable<any>;
 
-    ngOnInit() {
-        this.offerService.getOffers(this.restaurant.id).subscribe(
-            offers => {
-                this.offers = offers;
-                this.categories = Object.keys(offers);
-            },
-            err => console.error(err)
-        )
-    }
+  constructor(navParams: NavParams,
+              public offerService: OffersService,
+              private navCtrl: NavController,
+              private http: Http
+  ) {
+    this.restaurant = navParams.get("restaurant");
+  }
+
+  ngOnInit() {
+    this.offerService.getOffers(this.restaurant.id).subscribe(
+      offers => {
+        this.offers = offers;
+        console.debug(offers);
+        this.categories = Object.keys(offers);
+      },
+      err => console.error(err)
+    );
+
+    this.allergenics$ = this.http.get(SERVER_URL + "/api/all_allergenic").map(res => res.json());
+    this.additives$ = this.http.get(SERVER_URL + "/api/all_additives").map(res => res.json());
+  }
 
     public onOfferClicked(event, offer) {
         this.navCtrl.push(OffersProductViewPage, {offer, restaurant: this.restaurant})
