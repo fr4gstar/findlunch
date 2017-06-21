@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {NavController, ToastController} from "ionic-angular";
+import {Component} from "@angular/core";
+import {NavController, NavParams, ToastController} from "ionic-angular";
 import {ModalController} from "ionic-angular";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {HomePage} from "../home/home";
@@ -14,41 +14,42 @@ import {SERVER_URL} from "../../app/app.module";
 })
 export class LoginPage {
 
-  constructor(private navCtrl: NavController,
-              private toastCtrl: ToastController,
-              private auth: AuthService,
-              private modCtrl: ModalController,
-              private http: Http) { //TODO: Modalcontroller für Registerpage
+  toPop : boolean
 
+  constructor(
+      private navCtrl: NavController,
+      private toastCtrl: ToastController,
+      private auth: AuthService,
+      private http: Http,
+      private navParams: NavParams) {
 
+    this.toPop = navParams.get("comeback");
   }
 
 
   public login(userName: string, password: string) {
-    this.auth.login(userName,password).then(data => {
-      if(data) {
+    this.auth.login(userName, password).then(data => {
+      if (data) {
         const toast = this.toastCtrl.create({
           message: "Login Erfolgreich",
-          duration: 3000});
+          duration: 3000
+        });
         toast.present();
-        this.navCtrl.setRoot(HomePage);
+        if(this.toPop){
+          this.navCtrl.pop();
+        }else {
+          this.navCtrl.setRoot(HomePage);
+        }
       } else{
       alert("E-Mail und/oder Passwort nicht bekannt");
       }
     });
+
   }
 
-  public goToRegisterPage(){
+  public goToRegisterPage() {
     this.navCtrl.push(RegistryPage);
   }
-
-  public isEmptyUser(userName) {
-    if(userName){
-      return false;
-    }
-    return true;
-  }
-
   public sendPasswordReset(){
     let user = window.localStorage.getItem("username");
     let token = window.localStorage.getItem(user);
@@ -82,4 +83,5 @@ export class LoginPage {
         }
       )
   }
+
 }

@@ -16,13 +16,14 @@ import {AuthService} from "../providers/auth-service.ts";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
 
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
-import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import {BarcodeScanner} from "@ionic-native/barcode-scanner";
 import {QRService} from "../providers/QRService";
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
@@ -30,9 +31,8 @@ import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import {CartService} from "../services/CartService";
-import { Push, PushObject, PushOptions } from '@ionic-native/push';
-
-
+import {Push} from "@ionic-native/push";
+import {DatePicker} from "@ionic-native/date-picker";
 
 
 // online Server:
@@ -60,6 +60,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         RestaurantViewPage,
         LoginPage,
         RegistryPage
+
     ],
     imports: [
         CommonModule,
@@ -97,7 +98,9 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         CartService,
         Push,
         AuthService,
-        MenuService
+        MenuService,
+        InAppBrowser,
+        DatePicker
     ]
 
 })

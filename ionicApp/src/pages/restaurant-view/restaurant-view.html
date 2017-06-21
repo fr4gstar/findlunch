@@ -10,12 +10,9 @@
 
   <h1>{{restaurant.name}}</h1>
   <ion-row *ngIf="restaurant.defaultLogo">
-    <img [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail" style="assign: left; max-width: 100%; height: 25%; margin: auto; padding: 10px">
+    <img [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail" style="assign: left; max-width: 100%; height: 20%; margin: auto; padding: 10px">
   </ion-row>
   <ion-grid style="font-size: 17px;padding: 10px">
-    <ion-row>
-      {{restaurant.kitchenTypes}}
-    </ion-row>
     <ion-row>
       {{restaurant.street}} {{restaurant.streetNumber}}
     </ion-row>
@@ -23,6 +20,14 @@
       <ion-icon name="call"> {{restaurant.phone}}</ion-icon>
     </ion-row>
   </ion-grid>
+
+  <div style="padding: 10px">
+    Küche:
+    <div *ngFor="let kt of restaurant.kitchenTypes">
+      {{kt.name}}
+    </div>
+  </div>
+
   <div style="padding: 10px">
     <ion-icon name="time"> Öffnungszeiten:</ion-icon>
     <div *ngFor="let opened of restaurant.timeSchedules">

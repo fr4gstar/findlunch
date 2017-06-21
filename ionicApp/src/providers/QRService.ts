@@ -4,10 +4,20 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 
+/**
+ * Handles the barcode scanner function of the device.
+ * With the barcode scanner it is possible to scan qr codes
+ * and send it to the backend to confirm a reservation.
+ */
 @Injectable()
 export class QRService {
-  private loggedIn: boolean;
-
+  /**
+   *  Initialize modules
+   *
+   * @param barcodeScanner for scanning
+   * @param toastCtrl for displaying messages
+   * @param http for requests
+   */
   constructor(
     private barcodeScanner: BarcodeScanner,
     private toastCtrl: ToastController,
@@ -15,6 +25,18 @@ export class QRService {
   ) {
   }
 
+  /**
+   * Handles the barcode scanner function of the device.
+   * Sends a request with a qr code to the backend.
+   * There will displayed a message if:
+   * - succesfully confirmed an reservation
+   * - there is no restaurant(qr code unknown)
+   * - there is no offer
+   * - the request to the backend fails
+   * - the devices barcode scanner got a problem.
+   *
+   * @param event
+   */
   public onQRClicked(event) {
     let headers = new Headers({
       'Content-Type': 'application/json',

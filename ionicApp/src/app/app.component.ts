@@ -8,22 +8,46 @@ import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {ToastController, AlertController} from "ionic-angular";
 import {Push, PushObject, PushOptions} from '@ionic-native/push';
-
+import {QRService} from "../providers/QRService";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {HomePage} from '../pages/home/home';
-import {ListPage} from '../pages/list/list';
 
-
-declare var FCMPlugin;
+/**
+ * Initialize the application.
+ * 1. Verifies the user from the local storage.
+ * 2. Sets the firebase-functionality of the application up.
+ */
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-
+  /**
+   * Sets the first site of the app
+   * @type {HomePage}
+   */
     rootPage: any = HomePage;
 
   pages: Array<{ title: string, component: any }>;
 
+  /**
+   * Initialize modules.
+   * 1. Verify user
+   * 2. Push setup - firebase
+   *
+   * @param platform
+   * @param statusBar
+   * @param http
+   * @param splashScreen
+   * @param events
+   * @param auth
+   * @param menu
+   * @param toastCtrl
+   * @param push
+   * @param qr
+   * @param iab
+   * @param alertCtrl
+   */
   constructor(public platform: Platform,
               public statusBar: StatusBar,
               private http: Http,
@@ -33,10 +57,12 @@ export class MyApp {
               public menu: MenuService,
               private toastCtrl: ToastController,
               public push: Push,
+              public qr: QRService,
+              public iab: InAppBrowser,
               public alertCtrl: AlertController) {
 
-
-    this.pushsetup();
+    this.auth.verifyUser();
+    this.pushSetup();
 
     //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
     document.addEventListener('resume', () => {
@@ -45,7 +71,13 @@ export class MyApp {
 
   }
 
-  pushsetup() {
+  /**
+   * Sets the firebase push configuration up.
+   * Register the device token at the backend.
+   * If the device receives a push message,
+   * it will be displayed as a notification.
+   */
+  pushSetup() {
     let user = window.localStorage.getItem("username");
     let token = window.localStorage.getItem(user);
     let headers = new Headers({
@@ -126,4 +158,10 @@ export class MyApp {
   onMenuOpened() {
     this.events.publish("menu", "open");
   }
+   openUrl(url){
+    this.platform.ready().then(() => {
+      let browser = this.iab.create(url);
+    });
+  }
+
 }

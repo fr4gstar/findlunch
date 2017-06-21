@@ -4,6 +4,8 @@ import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
+import {Http} from "@angular/http";
+import {OffersService} from "../offers/OffersService";
 
 /**
  * Page for showing the details of a specific offer.
@@ -24,6 +26,8 @@ export class OffersProductViewPage {
       public navCtrl: NavController,
       public navParams: NavParams,
       private cartService: CartService,
+      private http: Http,
+      public offersService: OffersService
   ) {
     this.restaurant = navParams.get("restaurant");
     this.offer = navParams.get("offer");

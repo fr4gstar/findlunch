@@ -25,4 +25,11 @@ export class OffersService {
             .map(res => res.json())
             .do(offers => this._cache.set(restaurantId, offers))
     }
+
+    public getALGsAndADDsOfOffer(offer: Offer) {
+        return offer.allergenic
+                .concat(offer.additives)
+                .map(x => x.shortKey)
+                .join(",") || "";
+    }
 }
