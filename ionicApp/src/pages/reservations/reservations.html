@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Meine Bestellungen</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <div *ngFor='let reservation of reservations$;'>
+
+      <ion-item (click)="onReservationClicked($event, reservation)">
+        <span>Bestellung am {{reservation.timestampReceived | date:'dd.MM.yyyy'}}</span>
+        <span item-right style="color: blue;" *ngIf='reservation.reservationStatus.status === "Nicht Bearbeitet"'>{{reservation.reservationStatus.status}}</span>
+        <span item-right style="color: green;" *ngIf='reservation.reservationStatus.status === "Bestätigt"'>{{reservation.reservationStatus.status}}</span>
+      </ion-item>
+    </div>
+
+  </ion-list>
+</ion-content>
