@@ -3,6 +3,7 @@ import {ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "../../providers/QRService";
+import {Observable} from "rxjs/Observable";
 
 /**
  * This pages loads and shows the points of an user per restaurant.
@@ -13,11 +14,12 @@ import {QRService} from "../../providers/QRService";
     templateUrl: 'bonus.html'
 })
 
-export class BonusPage {
+export class BonusPage implements OnInit {
   /**
-   * Object with restaurant and user points
+   * Observable with restaurant and user points
    */
-  public points: Object[];
+
+  public points$: Observable<any>;
 
   /**
    *  Initialize modules and loadPoints for an user.
@@ -31,6 +33,34 @@ export class BonusPage {
       private http: Http,
       private qr: QRService) {
     this.loadPoints();
+    }
+
+    ngOnInit() {
+      let user = window.localStorage.getItem("username");
+      let token = window.localStorage.getItem(user);
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        "Authorization": "Basic " +token
+      });
+
+      let options = new RequestOptions({
+        headers: headers,
+        method: RequestMethod.Get
+      });
+
+      //this.allergenics$ = this.http.get(SERVER_URL + "/api/all_allergenic").map(res => res.json());
+
+        this.points$ = this.http.get(`${SERVER_URL}/api/get_points`, options).map(res => res.json());
+      /*
+          .subscribe(
+         res => this.points =
+          //console.log(
+           res.json()
+         //)
+          ,
+         err => console.error(err)
+         )
+         */
     }
 
   /**
