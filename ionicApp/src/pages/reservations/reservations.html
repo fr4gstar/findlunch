@@ -9,14 +9,20 @@
 
 <ion-content padding>
   <ion-list>
-    <div *ngFor='let reservation of reservations$;'>
+    <div  *ngFor='let r of reservations$;'>
+          <span>{{r.restaurant.name}} </span>
 
-      <ion-item (click)="onReservationClicked($event, reservation)">
-        <span>Bestellung am {{reservation.timestampReceived | date:'dd.MM.yyyy'}}</span>
-        <span item-right style="color: blue;" *ngIf='reservation.reservationStatus.status === "Nicht Bearbeitet"'>{{reservation.reservationStatus.status}}</span>
-        <span item-right style="color: green;" *ngIf='reservation.reservationStatus.status === "Bestätigt"'>{{reservation.reservationStatus.status}}</span>
-      </ion-item>
+           <div  *ngFor='let reservation of reservations$;'>
+             <ion-item (click)="onReservationClicked($event, reservation)" *ngIf='reservation.restaurant.id === r.restaurant.id'>
+               <span>Bestellung am {{reservation.timestampReceived | date:'dd.MM.yyyy'}}</span>
+               <span item-right style="color: blue;" *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
+               <span item-right style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
+               <span item-right style="color: yellow;" *ngIf='reservation.reservationStatus.key === 2'>{{reservation.reservationStatus.status}}</span>
+               <span item-right style="color: white;" *ngIf='reservation.reservationStatus.key === 3'>{{reservation.reservationStatus.status}}</span>
+
+             </ion-item>
+           </div>
+
     </div>
-
   </ion-list>
 </ion-content>

@@ -1,6 +1,9 @@
 import {Component} from "@angular/core";
 import {NavParams} from "ionic-angular";
 import {Reservation} from "../../model/Reservation";
+import {Restaurant} from "../../model/Restaurant";
+import {forEachToken} from "tslint";
+import {Offer} from "../../model/Offer";
 
 @Component({
   selector: 'reservation-view-page',
@@ -9,12 +12,24 @@ import {Reservation} from "../../model/Reservation";
 export class ReservationViewPage {
   public reservation: Reservation;
   public reservation_offers;
+  public restaurant: Restaurant;
+  public points = 0;
 
-  constructor(
-    private navParams: NavParams) {
+  constructor(private navParams: NavParams)
+  {
       this.reservation = navParams.get("reservation");
-      this.reservation_offers =this.reservation.reservation_offers;
-      console.log(this.reservation_offers);
+      this.reservation_offers = this.reservation.reservation_offers;
+      this.restaurant = this.reservation.restaurant;
+      this.sumPoints();
   }
 
+  /**
+   * Sums the points from all
+   */
+  sumPoints(){
+    for(let offer of this.reservation_offers) {
+      // TODO neededPoints durch eingebrachte Punkte tauschen
+      this.points = this.points + offer.offer.neededPoints;
+    }
+  }
 }

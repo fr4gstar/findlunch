@@ -1,4 +1,5 @@
 import {Offer} from "./Offer";
+import {Restaurant} from "./Restaurant";
 
 export interface Reservation {
   id: number,
@@ -7,12 +8,13 @@ export interface Reservation {
   usedPoints: boolean,
   reservationNumber: number,
   reservation_offers: Array<Offer>,
-  //bill: number,
+  restaurant: Restaurant,
+  bill: number,
   reservationStatus:
     {
       id: number, status: string, key: number
     },
   collectTime: number,
-  timestampReceived: number
-  // ,timestampResponded: number
+  timestampReceived: number,
+  timestampResponded: number
 }
