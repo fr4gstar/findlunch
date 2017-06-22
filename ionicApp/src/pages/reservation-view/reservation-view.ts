@@ -5,6 +5,9 @@ import {Restaurant} from "../../model/Restaurant";
 import {forEachToken} from "tslint";
 import {Offer} from "../../model/Offer";
 
+/**
+ * This view loads a detailed reservation page
+ */
 @Component({
   selector: 'reservation-view-page',
   templateUrl: 'reservation-view.html'
@@ -15,6 +18,10 @@ export class ReservationViewPage {
   public restaurant: Restaurant;
   public points = 0;
 
+  /**
+   * Initialize modules and sums the points
+   * @param navParams
+   */
   constructor(private navParams: NavParams)
   {
       this.reservation = navParams.get("reservation");
@@ -27,8 +34,8 @@ export class ReservationViewPage {
    * Sums the points from all
    */
   sumPoints(){
+    // TODO anpassen auf die richtige property
     for(let offer of this.reservation_offers) {
-      // TODO neededPoints durch eingebrachte Punkte tauschen
       this.points = this.points + offer.offer.neededPoints;
     }
   }
