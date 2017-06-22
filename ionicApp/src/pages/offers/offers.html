@@ -3,23 +3,50 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Ionic Café</ion-title>
+
+        <ion-title (click)="onRestaurantClicked($event)">
+            <img *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
+                 style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
+            {{restaurant.name}}
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="goToCheckout()">
+                <ion-icon name="cart">
+                    <ion-badge class="cartBadge">{{cartlength}}</ion-badge>
+                </ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
     <ion-list>
-      <ion-toolbar color="light">
-        <h2>Produkte</h2>
-      </ion-toolbar>
-
-            <div *ngFor="let category of arrayOfKeys">
-              <ion-list-header>
+        <ion-item *ngFor="let category of categories;" text-wrap (click)="toggleGroup(category)"
+                  [ngClass]="{active: isGroupShown(category)}">
+            <ion-list-header>
                 {{category}}
-              </ion-list-header>
-              <div *ngFor='let offer of offers[category]'>
-                  <ion-item (click)="onOfferClicked($event, offer)">{{offer.title}} {{offer.price | currency:'EUR':true}}</ion-item>
-              </div>
+                <ion-icon color="success" item-right
+                          [name]="isGroupShown(category) ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+            </ion-list-header>
+            <div *ngIf="isGroupShown(category)">
+                <div *ngFor='let offer of offers[category]'>
+                    <ion-item (click)="onOfferClicked($event, offer)">
+                        <span>{{offer.title}}<sup>{{offerService.getALGsAndADDsOfOffer(offer)}}</sup></span>
+                        <span item-right>{{offer.price | currency:'EUR':true}}</span>
+                    </ion-item>
+                </div>
             </div>
+        </ion-item>
     </ion-list>
+    <ion-row>
+        <ion-col style="border-top: 1px solid darkgrey">
+            <h6 class="allergenics-header">Allergene und Zusatzstoffe</h6>
+            <div *ngFor="let allerg of allergenics$ | async" class="allergenics">
+                {{allerg.shortKey}} {{allerg.name}}
+            </div>
+            <div *ngFor="let additive of additives$ | async" class="allergenics">
+                {{additive.shortKey}} {{additive.name}}
+            </div>
+        </ion-col>
+    </ion-row>
 </ion-content>

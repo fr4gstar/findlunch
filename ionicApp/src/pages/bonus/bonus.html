@@ -18,7 +18,7 @@
         <h2>Ihre Bonuspunkte betragen:</h2>
       </ion-toolbar>
 
-      <button ion-item *ngFor="let point of points" (click)="showOffers(point.compositeKey.restaurant.id)">
+      <button ion-item *ngFor="let point of points" (click)="showOffers(point.compositeKey.restaurant)">
         <div>
           {{point.compositeKey.restaurant.name}}
         </div>

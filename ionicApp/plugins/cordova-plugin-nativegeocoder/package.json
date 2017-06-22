@@ -1,0 +1,94 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-nativegeocoder@^1.0.2",
+        "scope": null,
+        "escapedName": "cordova-plugin-nativegeocoder",
+        "name": "cordova-plugin-nativegeocoder",
+        "rawSpec": "^1.0.2",
+        "spec": ">=1.0.2 <2.0.0",
+        "type": "range"
+      },
+      "/home/david/dev/findlunch/ionicApp/node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-nativegeocoder@>=1.0.2 <2.0.0",
+  "_id": "cordova-plugin-nativegeocoder@1.0.2",
+  "_inCache": true,
+  "_location": "/cordova-plugin-nativegeocoder",
+  "_nodeVersion": "6.9.1",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-nativegeocoder-1.0.2.tgz_1492358689796_0.8998836143873632"
+  },
+  "_npmUser": {
+    "name": "sebastianbaar",
+    "email": "mail@sebastianbaar.de"
+  },
+  "_npmVersion": "4.0.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-nativegeocoder@^1.0.2",
+    "scope": null,
+    "escapedName": "cordova-plugin-nativegeocoder",
+    "name": "cordova-plugin-nativegeocoder",
+    "rawSpec": "^1.0.2",
+    "spec": ">=1.0.2 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-nativegeocoder/-/cordova-plugin-nativegeocoder-1.0.2.tgz",
+  "_shasum": "0448d87ec99467831fec40ae49da7496ba62d454",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-nativegeocoder@^1.0.2",
+  "_where": "/home/david/dev/findlunch/ionicApp/node_modules",
+  "author": {
+    "name": "Sebastian Baar"
+  },
+  "bugs": {
+    "url": "https://github.com/sebastianbaar/cordova-plugin-native-geocoder/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-nativegeocoder",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "Cordova plugin for native forward and reverse geocoding",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "0448d87ec99467831fec40ae49da7496ba62d454",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-nativegeocoder/-/cordova-plugin-nativegeocoder-1.0.2.tgz"
+  },
+  "gitHead": "2b08896193e1fbbff4a91f11aca74275fb48077a",
+  "homepage": "https://github.com/sebastianbaar/cordova-plugin-native-geocoder#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "sebastianbaar",
+      "email": "seb.baar@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-nativegeocoder",
+  "optionalDependencies": {},
+  "readme": "# Cordova NativeGeocoder plugin\n\nCall `nativegeocoder.reverseGeocode()` to transform a latitude and longitude into an address or `nativegeocoder.forwardGeocode()` to transform an address into a latitude and longitude using iOS [CoreLocation](https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CoreLocation_Framework/) service and Android [Geocoder](https://developer.android.com/reference/android/location/Geocoder.html) class.\n\n> No need for creating API keys or querying external APIs\n\n## Installation\n\n```\ncordova plugin add cordova-plugin-nativegeocoder\n```\nThe iOS part is written in Swift 3 and the [Swift support plugin](https://github.com/akofman/cordova-plugin-add-swift-support) is configured as a dependency.\n\n## Ionic Native Demo\n\nHave a look at the [demo](https://github.com/sebastianbaar/cordova-plugin-nativegeocoder/tree/master/demo) project for a working demo with the [Ionic Framework](http://ionicframework.com/) and [Ionic Native](http://ionicframework.com/docs/v2/native/).\n\n## Supported Platforms\n\n- iOS\n- Android (works only on native devices)\n\n## Methods\n\n- nativegeocoder.reverseGeocode\n- nativegeocoder.forwardGeocode\n\n## nativegeocoder.reverseGeocode\n\nReverse geocode a given latitude and longitude to find location address.\n\n    nativegeocoder.reverseGeocode(successCallback, errorCallback, latitude, longitude);\n\n### Parameters\n\n- __latitude__: The latitude. (Double)\n- __longitude__: The longtitude. (Double)\n\n### Example\n\n```js\nnativegeocoder.reverseGeocode(success, failure, 52.5072095, 13.1452818);\nfunction success(result) {\n  alert(\"The address is: \\n\\n\" + result.street + \" \" + result.houseNumber + \", \" + result.postalCode + \" \" + result.city + \" \" + result.district + \" in \" + result.countryName + \" - \" + result.countryCode);\n}\nfunction failure(err) {\n  alert(JSON.stringify(err));\n}\n```\n\n## nativegeocoder.forwardGeocode\n\nForward geocode a given address to find coordinates.\n\n    nativegeocoder.forwardGeocode(successCallback, errorCallback, addressString);\n\n### Parameters\n\n- __addressString__: The address to be geocoded. (String)\n\n### Example\n\n```js\nnativegeocoder.forwardGeocode(success, failure, \"Berlin\");\nfunction success(coordinates) {\n  alert(\"The coordinates are latitude = \" + coordinates.latitude + \" and longitude = \" + coordinates.longitude);\n}\nfunction failure(err) {\n  alert(JSON.stringify(err));\n}\n```\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastianbaar/cordova-plugin-native-geocoder.git"
+  },
+  "scripts": {},
+  "version": "1.0.2"
+}
