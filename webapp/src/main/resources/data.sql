@@ -452,11 +452,22 @@ INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_status` (`id`, `status`, `sta
 (9, 'Nicht Bearbeitet', 3);
 
 -- reservation --
-INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`points_collected`, `user_id`,`euro_per_point_id`, `bill_id`, `restaurant_id`, `collect_time`, `timestamp_received`,`timestamp_responded`,`reservation_status_id`) VALUES
-(1, 1, 4.90, 10.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +20 MINUTE),DATE_ADD(now(), INTERVAL -20 MINUTE),NULL, 0),
-(2, 2, 9.30, 0.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +20 MINUTE),DATE_ADD(now(), INTERVAL -40 MINUTE),NULL, 0),
-(3, 3, 9.30, 0.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +31 MINUTE),DATE_ADD(now(), INTERVAL -2 MINUTE),NULL, 0),
-(4, 4, 1.00, 0.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +6 MINUTE),DATE_ADD(now(), INTERVAL -9 MINUTE),NULL, 0);
+INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`collect_time`,`timestamp_received`,`timestamp_responded`,`reservation_status_id`,`points_collected`) VALUES
+(1, 1, 4.90, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -3 MINUTE), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -3 MINUTE), null, 0, 0),
+(2, 2, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -2 MINUTE), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -2 MINUTE), null, 0, 0),
+(3, 3, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 MINUTE), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0, 0),
+(4, 4, 1.00, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -0.5 MINUTE), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -0.5 MINUTE), null, 0, 0),
+(5, 5, 1.00, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -0.5 DAY), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -0.5 DAY), null, 0, 0),
+(6, 6, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), null, 0, 0),
+(7, 7, 0.00, 0.00, 1, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 MINUTE), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0, 0),
+(8, 8, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), null, 2, 0),
+(9, 9, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 HOUR), INTERVAL 10 MINUTE), DATE_ADD(now(), INTERVAL -1 HOUR), DATE_ADD(DATE_ADD(now(), INTERVAL -1 HOUR), INTERVAL 10 MINUTE), 1, 1),
+(10, 10, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -2 HOUR), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -2 HOUR), DATE_ADD(DATE_ADD(now(), INTERVAL -2 HOUR), INTERVAL 15 MINUTE), 1, 1),
+(11, 11, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -3 HOUR), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -3 HOUR), DATE_ADD(DATE_ADD(now(), INTERVAL -3 HOUR), INTERVAL 10 MINUTE), 1, 1),
+(12, 12, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 30 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 5 MINUTE), 1, 0),
+(13, 13, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.2 DAY), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -1.2 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1.2 DAY), INTERVAL 10 MINUTE), 1, 0),
+(14, 14, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.4 DAY), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -1.4 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1.4 DAY), INTERVAL 15 MINUTE), 1, 0),
+(15, 15, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.6 DAY), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1.6 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1.6 DAY), INTERVAL 10 MINUTE), 1, 0);
   
 INSERT IGNORE INTO `uioa1joiho1k4tdv`.`reservation_offers` (`id`,`reservation_id`,`offer_id`,`amount`) VALUES
 (1, 1, 101, 2),
