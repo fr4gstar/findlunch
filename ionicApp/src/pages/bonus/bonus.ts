@@ -22,7 +22,7 @@ export class BonusPage implements OnInit {
   public points$: Observable<any>;
 
   /**
-   *  Initialize modules and loadPoints for an user.
+   *  Initialize modules
    *
    * @param toastCtrl for displaying messages
    * @param http for requests
@@ -32,9 +32,11 @@ export class BonusPage implements OnInit {
       private toastCtrl: ToastController,
       private http: Http,
       private qr: QRService) {
-    this.loadPoints();
     }
 
+    /**
+     * Loads available points of an authorized user per restaurant
+     */
     ngOnInit() {
       let user = window.localStorage.getItem("username");
       let token = window.localStorage.getItem(user);
@@ -48,19 +50,7 @@ export class BonusPage implements OnInit {
         method: RequestMethod.Get
       });
 
-      //this.allergenics$ = this.http.get(SERVER_URL + "/api/all_allergenic").map(res => res.json());
-
         this.points$ = this.http.get(`${SERVER_URL}/api/get_points`, options).map(res => res.json());
-      /*
-          .subscribe(
-         res => this.points =
-          //console.log(
-           res.json()
-         //)
-          ,
-         err => console.error(err)
-         )
-         */
     }
 
   /**
@@ -69,28 +59,5 @@ export class BonusPage implements OnInit {
    */
   onQRClicked(event) {
     this.qr.onQRClicked(event);
-  }
-
-  /**
-   * Loads available points of an authorized user per restaurant
-   */
-  loadPoints(){
-    let user = window.localStorage.getItem("username");
-    let token = window.localStorage.getItem(user);
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      "Authorization": "Basic " +token
-    });
-
-    let options = new RequestOptions({
-      headers: headers,
-      method: RequestMethod.Get
-    });
-
-    this.http.get(`${SERVER_URL}/api/get_points`, options)
-    .subscribe(
-      res => this.points = res.json(),
-      err => console.error(err)
-    )
   }
 }
