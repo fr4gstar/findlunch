@@ -531,7 +531,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `uioa1joiho1k4tdv`.`reservation_status`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`reservation_status` (
+CREATE TABLE IF NOT EXISTS `uioa1joiho1k4tdv`.`reservation_status` (
   `id` INT(11) NOT NULL,
   `status` VARCHAR(255) NULL DEFAULT NULL,
   `statkey` INT(11) NULL DEFAULT NULL,
