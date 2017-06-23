@@ -3,8 +3,9 @@ import {NavController, NavParams} from "ionic-angular";
 import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
-import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
+import {Http} from "@angular/http";
+import {OffersService} from "../offers/OffersService";
 
 /**
  * Page for showing the details of a specific offer.
@@ -20,17 +21,16 @@ export class OffersProductViewPage {
   public cart: Array<Object>;
   public restaurant: Restaurant;
   public offer: Offer;
-  private loggedIn;
 
   constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
       private cartService: CartService,
-      private auth : AuthService
+      private http: Http,
+      public offersService: OffersService
   ) {
     this.restaurant = navParams.get("restaurant");
     this.offer = navParams.get("offer");
-    console.debug(this.offer);
 
     // get cart for this restaurant
     this.cart = cartService.getCart(this.restaurant.id);

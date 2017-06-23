@@ -1,9 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
-import {HomePage} from "../pages/home/home";
-
-
 
 
 @Injectable()
@@ -80,28 +77,25 @@ public register(username: string, password: string) {
 
   public verifyUser() {
     //zuletzt eingeloggter user
-    let currentUser = window.localStorage.getItem("username");
-    let token = window.localStorage.getItem(currentUser);
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      //token zum zuletzt eingeloggten user, gespeichert als value zum key der Variable currentuser
-      "Authorization": "Basic " + token
-    });
-    console.log("derzeitiger User " + currentUser);
-    console.log("vorhandener key :" + token);
-    let options = new RequestOptions({headers: headers});
-    return new Promise((resolve) => {
-      this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
-        (res) => {
-          console.log("user verifiziert");
-          this.loggedIn = true;
-          this.userName =currentUser;
-        }, (err) => {
-          console.log("user konnte nicht verifiziert werden \n automatischer Logout")
-          this.logout();
+    if(window.localStorage.getItem("username")!== null){
 
-        })
-    })
+      let currentUser = window.localStorage.getItem("username");
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        //token zum zuletzt eingeloggten user, gespeichert als value zum key der Variable currentuser
+        "Authorization": "Basic " + window.localStorage.getItem(currentUser)
+      });
+
+      let options = new RequestOptions({headers: headers});
+      return new Promise((resolve) => {
+        this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
+          (res) => {
+            this.loggedIn = true;
+          }, (err) => {
+            this.logout();
+          })
+      })
+    }
   }
 
   public getLoggedIn(){

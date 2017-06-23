@@ -1,15 +1,13 @@
 import {Component} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {NavController, NavParams, ToastController} from "ionic-angular";
+import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
-import { AlertController } from 'ionic-angular';
-import { DatePicker } from '@ionic-native/date-picker';
+import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
-import {RegistryPage} from "../registry/registry";
 
 
 /**

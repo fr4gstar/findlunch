@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import {NavController, ToastController, NavParams} from "ionic-angular";
-import {ModalController} from "ionic-angular";
+import {Component} from "@angular/core";
+import {NavController, NavParams, ToastController} from "ionic-angular";
 
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
@@ -24,11 +23,12 @@ export class LoginPage {
 
 
   public login(userName: string, password: string) {
-    this.auth.login(userName,password).then(data => {
-      if(data) {
+    this.auth.login(userName, password).then(data => {
+      if (data) {
         const toast = this.toastCtrl.create({
           message: "Login Erfolgreich",
-          duration: 3000});
+          duration: 3000
+        });
         toast.present();
         if(this.toPop){
           this.navCtrl.pop();
@@ -39,9 +39,11 @@ export class LoginPage {
       alert("E-Mail und/oder Passwort nicht bekannt");
       }
     });
+
   }
 
-  public goToRegisterPage(){
+  public goToRegisterPage() {
     this.navCtrl.push(RegistryPage);
   }
+
 }
