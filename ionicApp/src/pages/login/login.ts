@@ -76,7 +76,9 @@ export class LoginPage {
     });
 
     let user = {
-      username: username
+        user: {
+            username: username
+        }
     };
 
     let options = new RequestOptions({
@@ -84,8 +86,8 @@ export class LoginPage {
       method: RequestMethod.Post,
       body: JSON.stringify(user)
     });
-
-    this.http.get(`${SERVER_URL}/api/api/get_reset_token`, options)
+    
+    this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
       .subscribe(
         (res) => {
           let msg;
