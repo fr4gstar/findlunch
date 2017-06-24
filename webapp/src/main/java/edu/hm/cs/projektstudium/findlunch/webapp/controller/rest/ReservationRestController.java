@@ -113,8 +113,6 @@ public class ReservationRestController {
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		authenticatedUser = userRepository.findOne(authenticatedUser.getId());	
 		
-		
-		
 		List<ReservationOffers> reservation_Offers = reservation.getReservation_offers();
 		
 		Restaurant restaurant = null;
@@ -123,6 +121,30 @@ public class ReservationRestController {
 		if(reservation_Offers.isEmpty()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation does not contain any offer"));
 			return new ResponseEntity<Integer>(1, HttpStatus.CONFLICT);
+		}
+		
+		// Kein Abholzeitpunkt angegeben
+		if(null == reservation.getCollectTime()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation has no CollectTime set"));
+			return new ResponseEntity<Integer>(9, HttpStatus.CONFLICT);
+		}
+		
+		// Abholzeitpunkt liegt in der Vergangenheit
+		if(reservation.getCollectTime().before(new Date())){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation CollectTime is set in past"));
+			return new ResponseEntity<Integer>(10, HttpStatus.CONFLICT);
+		}
+		
+		// Kein Abholzeitpunkt angegeben
+		if(null == reservation.getCollectTime()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation has no CollectTime set"));
+			return new ResponseEntity<Integer>(9, HttpStatus.CONFLICT);
+		}
+		
+		// Abholzeitpunkt liegt in der Vergangenheit
+		if(reservation.getCollectTime().before(new Date())){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation CollectTime is set in past"));
+			return new ResponseEntity<Integer>(10, HttpStatus.CONFLICT);
 		}
 		
 		for(ReservationOffers reservation_offer : reservation_Offers) {
@@ -242,14 +264,13 @@ public class ReservationRestController {
 		
 		LocalDateTime midnight = LocalDate.now().atStartOfDay();
 		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
-		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKeyAndPointsCollectedFalse(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_NEW);
+		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKeyAndPointsCollectedFalse(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_CONFIRMED);
 		
 		if(!reservations.isEmpty()){
 			for(Reservation reservation : reservations){
 				
-				if(reservation.getReservationStatus().getKey() == ReservationStatus.RESERVATION_KEY_CONFIRMED){
+				
 					EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-					
 					Float amountOfPoints= new Float(reservation.getTotalPrice()*euroPerPoint.getEuro());
 					PointId pointId = new PointId();
 					pointId.setUser(authenticatedUser);
@@ -264,13 +285,10 @@ public class ReservationRestController {
 					else{//add new points to the old points
 						points.setPoints(points.getPoints() +amountOfPoints.intValue());
 					}
+					reservation.setPointsCollected(true);
+					reservation.setPoints(amountOfPoints);
 					reservationRepository.save(reservation);
 					pointsRepository.save(points);
-				}
-				else {
-					//keine Reservierung
-					return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
-				}
 			}	
 			return new ResponseEntity<Integer>(0, HttpStatus.OK);
 		}
