@@ -4,19 +4,23 @@
       <ion-icon md="md-menu" name="menu"></ion-icon>
     </button>
 
-    <ion-title (click)="onRestaurantClicked($event)">
-      <img *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
-           style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
-      {{restaurant.name}}
-    </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="goToCheckout()">
-        <ion-icon name="cart">
-          <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
-        </ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
+        <ion-title (click)="onRestaurantClicked($event)">
+            <img *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
+                 style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
+            {{restaurant.name}}
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="toggleIsFavourite()">
+                <ion-icon *ngIf="auth.getLoggedIn() && restaurant.isFavorite" name="star"></ion-icon>
+                <ion-icon *ngIf="auth.getLoggedIn() && !restaurant.isFavorite" name="star-outline"></ion-icon>
+            </button>
+            <button ion-button icon-only (click)="goToCheckout()">
+                <ion-icon name="cart">
+                    <ion-badge class="cartBadge">{{cartlength}}</ion-badge>
+                </ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 <ion-content>
