@@ -12,11 +12,11 @@
   border-top: 1px solid black;
 }
 
-ion-col:not(:first-child) {
+#orderDetails ion-row ion-col:not(:first-child) {
   text-align : right;
 }
 
-ion-col:first-child {
+#orderDetails ion-col:first-child {
   font-size: 1.7rem;
 }
 

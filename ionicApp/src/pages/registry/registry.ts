@@ -31,7 +31,7 @@ export class RegistryPage {
 
     }else if(!this.termsAndConditionsChecked){
       const toast = this.toastCtrl.create({
-        message: "Um sich zu registrieren, bitte bestätigen Sie unsere allgemeinen Beschäftsbedniungenen",
+        message: "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Beschäftsbedniungenen",
         duration: 3000});
       toast.present();
 
@@ -42,6 +42,7 @@ export class RegistryPage {
           message: "Registrierung und Login erfolgreich!",
           duration: 3000});
         toast.present();
+          console.log("comeBack flag is set: " +this.popThisPage);
           if(this.popThisPage){
             this.navCtrl.pop();
           } else{

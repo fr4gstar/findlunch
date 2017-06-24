@@ -1,78 +1,91 @@
 <ion-header>
-  <ion-navbar color="dark">
-    <button ion-button menuToggle>
-      <ion-icon md="md-menu" name="menu"></ion-icon>
-    </button>
-    <ion-title>{{restaurant.name}}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="goToOrderDetailsPage()">
-        <ion-icon name="cart">
-          <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
-        </ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon md="md-menu" name="menu"></ion-icon>
+        </button>
+        <ion-title>{{restaurant.name}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="goToOrderDetailsPage()">
+                <ion-icon name="cart">
+                    <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
+                </ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 
 <ion-content>
-  <ion-grid style="font-size: 17px;">
-    <ion-row *ngIf="offer.defaultPhoto">
-      <img [src]="'data:image/jpg;base64,' + offer.defaultPhoto.thumbnail"
-           style="max-width: 100%; width: auto; height: auto; margin: auto">
-    </ion-row>
-    <ion-row>
-      <h1>{{offer.title}}<sup>{{offersService.getALGsAndADDsOfOffer(offer)}}</sup></h1>
-    </ion-row>
-    <ion-row>
-      <p>{{offer.description}}</p>
-    </ion-row>
-    <ion-row>
-      <ion-col>
+    <ion-grid style="font-size: 17px;">
+        <ion-row *ngIf="offer.defaultPhoto">
+            <img [src]="'data:image/jpg;base64,' + offer.defaultPhoto.thumbnail"
+                 style="max-width: 100%; width: auto; height: auto; margin: auto">
+        </ion-row>
         <ion-row>
-          <ion-icon name="pricetag" ios="ios-pricetag-outline" class="icon"></ion-icon>
-          {{offer.price | currency:'EUR':true}}
+            <ion-col>
+                <h1>{{offer.title}}<sup id="hochzahl">{{offersService.getALGsAndADDsOfOffer(offer)}}</sup></h1>
+            </ion-col>
         </ion-row>
-        <ion-row class="icon-subtext">
-          Preis
-        </ion-row>
-      </ion-col>
-      <ion-col>
         <ion-row>
-          <ion-icon name="heart-outline" class="icon"></ion-icon>
-          {{offer.neededPoints}}
+            <ion-col>
+                <p>{{offer.description}}</p>
+            </ion-col>
         </ion-row>
-        <ion-row class="icon-subtext">
-          Preis in Treuepunkten
-        </ion-row>
-      </ion-col>
-      <ion-col>
-        <ion-row>
-          <ion-icon name="time" ios="ios-time-outline" class="icon"></ion-icon>
-          {{offer.preparationTime}}
-        </ion-row>
-        <ion-row class="icon-subtext">
-          Zubereitungszeit
-        </ion-row>
-      </ion-col>
-    </ion-row>
+        <ion-row id="icons">
+            <ion-col>
+                <ion-icon name="pricetag" ios="ios-pricetag-outline" class="icon"></ion-icon>
+                {{offer.price | currency:'EUR':true}}
+            </ion-col>
+            <ion-col>
+                <ion-icon name="heart-outline" class="icon"></ion-icon>
+                {{offer.neededPoints}}
+            </ion-col>
 
-    <ion-row>
-      <ion-col>
-        <h6 class="allergenics-header">Allergene und Zusatzstoffe</h6>
-          <div *ngFor="let allerg of offer.allergenic"  class="allergenics">
-            {{allerg.shortKey}} {{allerg.name}}
-          </div>
-        <div *ngFor="let add of offer.additives"  class="allergenics">
-          {{add.shortKey}} {{add.name}}
-        </div>
-      </ion-col>
-    </ion-row>
+            <ion-col>
+                <ion-icon name="time" ios="ios-time-outline" class="icon"></ion-icon>
+                {{offer.preparationTime}}
+            </ion-col>
+        </ion-row>
 
-    <ion-row margin-top>
-      <button ion-button block (click)="addToCart(offer)">
-        zum Warenkorb hinzufügen
-      </button>
-    </ion-row>
-  </ion-grid>
+        <ion-row>
+            <ion-col class="icon-subtext">
+                Preis
+            </ion-col>
+            <ion-col class="icon-subtext">
+                <div class="toLeft">
+                    Preis in Treuepunkten
+                </div>
+            </ion-col>
+            <ion-col class="icon-subtext">
+                Zubereitungszeit
+            </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+            <ion-col>
+                <h6 class="allergenics-header">Enthaltene Allergene</h6>
+                <ion-row *ngFor="let allerg of offer.allergenic" class="allergenics">
+                    {{allerg.shortKey}} {{allerg.name}}
+                </ion-row>
+            </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+            <ion-col>
+                <h6 class="allergenics-header">Enthaltene Zusatzstoffe</h6>
+                <div *ngFor="let add of offer.additives" class="allergenics">
+                    {{add.shortKey}} {{add.name}}
+                </div>
+            </ion-col>
+        </ion-row>
+
+
+        <ion-row margin-top>
+            <button ion-button block (click)="addToCart(offer)">
+                zum Warenkorb hinzufügen
+            </button>
+        </ion-row>
+    </ion-grid>
 </ion-content>
