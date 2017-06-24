@@ -23,7 +23,8 @@ export class OrderDetailsPage {
         totalPrice: number,
         items: Offer[],
         donation: number,
-        usedPoints: number
+        usedPoints: number,
+        collectTime: number
     };
     public restaurant: Restaurant;
     public pickUpTime;
@@ -45,7 +46,8 @@ export class OrderDetailsPage {
             items: cartService.getCart(this.restaurant.id),
             donation: 0,
             usedPoints: 0,
-            totalPrice: 0
+            totalPrice: 0,
+            collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
         };
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         this.pickUpTime = new Date().getTime().toString();
