@@ -13,7 +13,8 @@ import {SERVER_URL} from "../../app/app.module";
 })
 export class LoginPage {
 
-  popThisPage : boolean
+  popThisPage : boolean;
+  private counterPasswordWrong: number = 0;
 
   constructor(private navCtrl: NavController,
               private toastCtrl: ToastController,
