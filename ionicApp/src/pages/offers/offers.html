@@ -10,6 +10,10 @@
             {{restaurant.name}}
         </ion-title>
         <ion-buttons end>
+            <button ion-button icon-only (click)="toggleIsFavourite()">
+                <ion-icon *ngIf="auth.getLoggedIn() && restaurant.isFavorite" name="star"></ion-icon>
+                <ion-icon *ngIf="auth.getLoggedIn() && !restaurant.isFavorite" name="star-outline"></ion-icon>
+            </button>
             <button ion-button icon-only (click)="goToCheckout()">
                 <ion-icon name="cart">
                     <ion-badge class="cartBadge">{{cartlength}}</ion-badge>
