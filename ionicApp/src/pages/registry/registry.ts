@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {NavController, ToastController} from "ionic-angular";
+import {NavController, NavParams, ToastController} from "ionic-angular";
 import {AuthService} from "../../providers/auth-service";
 import {HomePage} from "../home/home";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
@@ -12,13 +12,15 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 export class RegistryPage {
 
   termsAndConditions : boolean;
+  popThisPage : boolean;
 
   constructor(private auth: AuthService,
               private toastCtrl: ToastController,
               private navCtrl: NavController,
+              navParams: NavParams,
               private iab: InAppBrowser)
 {
-
+  this.popThisPage = navParams.get("comeBack");
   }
 
 
@@ -33,7 +35,11 @@ export class RegistryPage {
           message: "Registrierung und Login erfolgreich!",
           duration: 3000});
         toast.present();
+          if(this.popThisPage){
+            this.navCtrl.pop();
+          } else{
           this.navCtrl.setRoot(HomePage);
+          }
       })
       .catch(error => {
         switch (error) {

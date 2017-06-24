@@ -13,24 +13,30 @@ import {AuthService} from "../../providers/auth-service";
 })
 export class LoginPage {
 
-  toPop : boolean
+  popThisPage : boolean
 
-  constructor(private navCtrl: NavController, private toastCtrl: ToastController,
-              private auth: AuthService, private navParams: NavParams) {
+  constructor(private navCtrl: NavController,
+              private toastCtrl: ToastController,
+              private auth: AuthService,
+              navParams: NavParams) {
 
-    this.toPop = navParams.get("comeback");
+    this.popThisPage = navParams.get("comeBack");
   }
 
 
   public login(userName: string, password: string) {
     this.auth.login(userName, password).then(data => {
       if (data) {
+        console.log("go back to warenkorb ?: " + this.popThisPage);
+        debugger;
+
         const toast = this.toastCtrl.create({
           message: "Login Erfolgreich",
           duration: 3000
         });
         toast.present();
-        if(this.toPop){
+
+        if(this.popThisPage){
           this.navCtrl.pop();
         }else {
           this.navCtrl.setRoot(HomePage);
