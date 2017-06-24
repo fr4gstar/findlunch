@@ -12,7 +12,7 @@
         <ion-buttons end>
             <button ion-button icon-only (click)="goToCheckout()">
                 <ion-icon name="cart">
-                    <ion-badge class="cartBadge">{{cartlength}}</ion-badge>
+                    <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
                 </ion-icon>
             </button>
         </ion-buttons>
@@ -20,13 +20,13 @@
 </ion-header>
 
 <ion-content>
-    <ion-list>
+    <ion-list id="foodMenu">
         <ion-item *ngFor="let category of categories;" text-wrap (click)="toggleGroup(category)"
                   [ngClass]="{active: isGroupShown(category)}">
             <ion-list-header>
                 {{category}}
                 <ion-icon color="success" item-right
-                          [name]="isGroupShown(category) ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+                          [name]="isGroupShown(category) ? 'arrow-dropleft' : 'arrow-dropdown'"></ion-icon>
             </ion-list-header>
             <div *ngIf="isGroupShown(category)">
                 <div *ngFor='let offer of offers[category]'>

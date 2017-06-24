@@ -11,7 +11,7 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 })
 export class RegistryPage {
 
-  termsAndConditions : boolean;
+  termsAndConditionsChecked : boolean;
   popThisPage : boolean;
 
   constructor(private auth: AuthService,
@@ -21,12 +21,19 @@ export class RegistryPage {
               private iab: InAppBrowser)
 {
   this.popThisPage = navParams.get("comeBack");
+  this.termsAndConditionsChecked = false;
   }
 
 
   public onRegisterClicked(username: string, password: string, password2: string) {
     if (!this.passwordsIdentical(password, password2)) {
       alert("Passwörter stimmen nicht überein");
+
+    }else if(!this.termsAndConditionsChecked){
+      const toast = this.toastCtrl.create({
+        message: "Um sich zu registrieren, bitte bestätigen Sie unsere allgemeinen Beschäftsbedniungenen",
+        duration: 3000});
+      toast.present();
 
     } else{
 
@@ -71,7 +78,7 @@ export class RegistryPage {
   }
 
   public goToTermsAndConditions(){
-    let browser = this.iab.create("https://youtube.com");
+    let browser = this.iab.create("https://shrouded-dusk-87807.herokuapp.com/terms");
   }
 }
 

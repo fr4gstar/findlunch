@@ -8,6 +8,8 @@ import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 import {Observable} from "rxjs/Observable";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
+import {CartService} from "../../services/CartService";
+
 
 
 /**
@@ -28,6 +30,7 @@ export class OffersPage implements OnInit {
 
   constructor(navParams: NavParams,
               public offerService: OffersService,
+              private cartService: CartService,
               private navCtrl: NavController,
               private http: Http
   ) {
@@ -61,6 +64,11 @@ export class OffersPage implements OnInit {
       console.log(this.restaurantIsFavourite);
       */
     }
+
+    getCartItemCount() {
+    return this.cartService.getCartItemCount(this.restaurant.id);
+  }
+
 
     toggleDetails(data) {
       if (data.showDetails) {

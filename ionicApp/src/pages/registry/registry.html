@@ -21,8 +21,13 @@
       <ion-label floating>Passwort bestätigen</ion-label>
       <ion-input #password2 type="password"></ion-input>
     </ion-item>
-    <ion-item>
+    <ion-item id="regButton">
       <button ion-button (click)='onRegisterClicked(userName.value,password.value,password2.value)'>Registrierung absenden</button>
+    </ion-item>
+
+    <ion-item id="agb">
+      <ion-checkbox color="blue" checked="false" [(ngModel)]="termsAndConditionsChecked"></ion-checkbox>
+      <ion-label id="agb-text" text-wrap (click)="goToTermsAndConditions()">Ich habe die allgemeinen Geschäfts Bedinungen gelesen und stimme diesen zu</ion-label>
     </ion-item>
 
 
