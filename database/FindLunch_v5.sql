@@ -456,18 +456,10 @@ CREATE TABLE IF NOT EXISTS `uioa1joiho1k4tdv`.`restaurant_has_kitchen_type` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-
 -- -----------------------------------------------------
 -- Table `uioa1joiho1k4tdv`.`points`
 -- -----------------------------------------------------
-<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS `uioa1joiho1k4tdv`.`points` (
-=======
--- -----------------------------------------------------
--- Table `findlunch`.`points`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`points` (
->>>>>>> refs/heads/develop_restaurant-app
   `user_id` INT(11) NOT NULL,
   `restaurant_id` INT(11) NOT NULL,
   `points` INT(11) NOT NULL,
