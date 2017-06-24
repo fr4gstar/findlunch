@@ -8,6 +8,7 @@ import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
 import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
+import {RegistryPage} from "../registry/registry";
 
 
 /**
@@ -213,8 +214,20 @@ export class OrderDetailsPage {
     );
   }
 
+  /**
+   * Sends the user to the Loginpage. After successful Login he is automatically
+   * coming back to this order-details-page
+   */
   public goToLogin(){
     this.navCtrl.push(LoginPage, {comeBack: true});
+  }
+
+  /**
+   * Sends the user to the Registry. After successful Registry and
+   * involved Login he is automatically coming back to this order-details-page
+   */
+  public goToRegister(){
+    this.navCtrl.push(RegistryPage, {comeBack: true});
   }
 
 }

@@ -11,7 +11,7 @@
     <h2 padding-left>Ihr Warenkorb für {{restaurant.name}}</h2>
 
 
-  <ion-grid>
+  <ion-grid id="orderDetails">
     <ion-row id="überschrift">
       <ion-col col-7>Bezeichnung</ion-col>
       <ion-col col-3>Menge</ion-col>
@@ -79,7 +79,7 @@
     <button id="bestellen" *ngIf="this.auth.getLoggedIn()" ion-button (click)="sendOrder()">Bestellen</button>
     <div id="notLoggedIn" *ngIf="!this.auth.getLoggedIn()">
       <button  ion-button full (click)="goToLogin()">Login</button>
-      <button  ion-button full (click)="sendOrder()">Registrieren</button>
+      <button  ion-button full (click)="goToRegister()">Registrieren</button>
     </div>
 
 </ion-content>

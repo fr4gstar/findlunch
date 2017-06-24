@@ -5,4 +5,8 @@
       <ion-option *ngFor="let type of service.kitchenTypes" [value]="type">{{type.name}}</ion-option>
     </ion-select>
   </ion-item>
+  <ion-item>
+    <ion-label>nur Favoriten</ion-label>
+    <ion-toggle [(ngModel)]="service.showOnlyFavorites"></ion-toggle>
+  </ion-item>
 </ion-list>

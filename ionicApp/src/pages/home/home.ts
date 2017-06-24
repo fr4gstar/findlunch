@@ -64,7 +64,10 @@ export class HomePage {
         })
       });
 
-      // TODO: other filters
+      // show only favorites
+      if (this.popService.showOnlyFavorites) {
+        newRestaurants = newRestaurants.filter(res => res.isFavorite);
+      }
 
       this.setRestaurantMarkers(newRestaurants);
       this._map.setClickable(true);
