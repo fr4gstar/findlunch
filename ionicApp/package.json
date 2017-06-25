@@ -93,8 +93,8 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
             },
-            "cordova-plugin-inappbrowser": {},
-            "cordova-plugin-datepicker": {}
+            "cordova-plugin-datepicker": {},
+            "cordova-plugin-inappbrowser": {}
         },
         "platforms": [
             "android",
