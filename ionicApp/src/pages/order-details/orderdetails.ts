@@ -32,6 +32,7 @@ export class OrderDetailsPage {
 
 
     public userPoints = 0;
+    public reservationPoints = 0;
     public morePointsThanNeeded = true; //TODO: Info auslesen lassen
 
     constructor(private http: Http,
@@ -52,14 +53,21 @@ export class OrderDetailsPage {
             totalPrice: 0,
             collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
         };
+
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
             console.log("ein schritt vor get UserPoints");
             this.getUserPoints();
         }
 
-        //TODO:
+        console.log(this.reservation.items);
+        //TODO: anpassen
         this.pickUpTime = this.reservation.collectTime;
+        //TODO: Remove
+        this.reservationPoints = this.calcNeededPoints();
+        this.morePointsThanNeeded = this.userPoints >= this.reservationPoints;
+        console.log("this user has enough points to pay with them: "+this.morePointsThanNeeded);
+
     }
 
     /**
@@ -259,5 +267,13 @@ export class OrderDetailsPage {
                 },
                 err => console.error(err)
             )}
+
+    public calcNeededPoints(){
+        let totalNeededPoints = 0;
+        for(let item of this.reservation.items){
+            totalNeededPoints += (item.neededPoints * item.amount);
+        }
+        return totalNeededPoints;
+    }
 
 }

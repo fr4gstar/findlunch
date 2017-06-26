@@ -66,9 +66,10 @@
 
       <ion-item *ngIf="this.auth.getLoggedIn()">
         <ion-label>Mit Treuepunkten bezahlen</ion-label>
-        <ion-toggle checked="false" [class.toggle-disabled]="!morePointsThanNeeded"></ion-toggle>
+        <ion-toggle checked="false" disabled="{{!this.morePointsThanNeeded}}"></ion-toggle>
       </ion-item>
-      <div>Sie haben bei {{restaurant.name}} derzeit {{this.userPoints}} Punkte</div>
+      <div>Sie haben bei {{restaurant.name}} derzeit {{this.userPoints}} Punkte. Um diese Bestellung mit Treuepunkten zu bezahlen
+            benötigen Sie {{this.reservationPoints}} Punkte</div>
       <ion-item>
         <ion-label >Abholen um</ion-label>
         <ion-datetime id="pickUpTime" displayFormat ="HH:mm" (click)="enterPickUpTime()" [(ngModel)]="pickUpTime"></ion-datetime>

@@ -13,9 +13,7 @@ export class AuthService {
   }
 
   public login(username: string, password: string) {
-    console.log("in auth-service login angekommen");
     let encodedCredentials: string = btoa(username + ":" + password);
-    console.log(encodedCredentials);
     let headers = new Headers({
       'Content-Type': 'application/json',
       "Authorization": "Basic " + encodedCredentials
@@ -25,15 +23,12 @@ export class AuthService {
     return new Promise(resolve => {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
-          console.log("lgoin api-call erfolgreich");
           window.localStorage.setItem("username", username);
           window.localStorage.setItem(username, encodedCredentials);
           this.userName = window.localStorage.getItem("username");
-          console.log("user und token gesetzt");
           this.loggedIn = true;
           resolve(true);
         }, (err) => {
-          console.log("login api-call negative antwort")
           resolve(err.body);
 
 
@@ -113,6 +108,5 @@ public register(username: string, password: string) {
     window.localStorage.removeItem("username");
     this.loggedIn = false;
     this.userName = "";
-    console.log("logout erfolgt");
   }
 }
