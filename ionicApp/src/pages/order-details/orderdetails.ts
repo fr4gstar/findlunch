@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Headers, Http, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
@@ -46,6 +46,7 @@ export class OrderDetailsPage {
 )
     {
         this.restaurant = navParams.get("restaurant");
+        //TODO: ftr_reservation
         this.reservation = {
             items: cartService.getCart(this.restaurant.id),
             donation: 0,
@@ -60,7 +61,6 @@ export class OrderDetailsPage {
             this.getUserPoints();
         }
 
-        console.log(this.reservation.items);
         //TODO: anpassen
         this.pickUpTime = this.reservation.collectTime;
         //TODO: Remove
@@ -256,14 +256,15 @@ export class OrderDetailsPage {
             'Content-Type': 'application/json',
             "Authorization": "Basic " + token
         });
-        let options = new RequestOptions({headers: headers});
-        this.http.get(`${SERVER_URL}/api/get_points/` + this.restaurant.id, options)
+        let options = new RequestOptions({headers: headers,
+                                method: RequestMethod.Get});
+        this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
             .subscribe(
                 res =>{
                     console.log("ist durchgegangen");
                     let reply = res.json();
-                    console.log(reply);
-                    //this.userPoints= res.json().points
+                    console.log(reply[0].points);
+                    this.userPoints= reply[0].points;
                 },
                 err => console.error(err)
             )}
