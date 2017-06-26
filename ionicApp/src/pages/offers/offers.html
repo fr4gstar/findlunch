@@ -17,7 +17,7 @@
             </button>
         </ion-buttons>
         <ion-buttons end>
-            <button ion-button icon-only>
+            <button ion-button icon-only (click)="goToCheckout()">
                 <ion-icon name="cart">
                     <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
                 </ion-icon>

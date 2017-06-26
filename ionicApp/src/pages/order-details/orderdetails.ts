@@ -30,6 +30,8 @@ export class OrderDetailsPage {
     public restaurant: Restaurant;
     public pickUpTime;
 
+
+    public userPoints = 0;
     public morePointsThanNeeded = true; //TODO: Info auslesen lassen
 
     constructor(private http: Http,
@@ -51,7 +53,13 @@ export class OrderDetailsPage {
             collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
         };
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
-        this.pickUpTime = new Date().getTime().toString();
+        if(this.auth.getLoggedIn()){
+            console.log("ein schritt vor get UserPoints");
+            this.getUserPoints();
+        }
+
+        //TODO:
+        this.pickUpTime = this.reservation.collectTime;
     }
 
     /**
@@ -229,5 +237,27 @@ export class OrderDetailsPage {
   public goToRegister(){
     this.navCtrl.push(RegistryPage, {comeBack: true});
   }
+
+    /**
+     * Gets the Points of the user for the particular restaurant
+     */
+    public getUserPoints(){
+        let user = window.localStorage.getItem("username");
+        let token = window.localStorage.getItem(user);
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            "Authorization": "Basic " + token
+        });
+        let options = new RequestOptions({headers: headers});
+        this.http.get(`${SERVER_URL}/api/get_points/` + this.restaurant.id, options)
+            .subscribe(
+                res =>{
+                    console.log("ist durchgegangen");
+                    let reply = res.json();
+                    console.log(reply);
+                    //this.userPoints= res.json().points
+                },
+                err => console.error(err)
+            )}
 
 }

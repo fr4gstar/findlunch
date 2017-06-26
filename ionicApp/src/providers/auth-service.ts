@@ -67,7 +67,6 @@ public register(username: string, password: string) {
         this.login(username, password);
         resolve(true);
       }, (err) => {
-        console.log("registry hat nicht funktioniert \n ErrorCode:" + err._body);
         reject(err._body);
 
       })

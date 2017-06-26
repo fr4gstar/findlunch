@@ -31,7 +31,6 @@ export class LoginPage {
     this.auth.login(userName, password).then(data => {
       if (data) {
         console.log("go back to warenkorb ?: " + this.popThisPage);
-        debugger;
 
         const toast = this.toastCtrl.create({
           message: "Login Erfolgreich",
@@ -86,7 +85,7 @@ export class LoginPage {
       method: RequestMethod.Post,
       body: JSON.stringify(user)
     });
-    
+
     this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
       .subscribe(
         (res) => {
