@@ -29,6 +29,9 @@ export class OrderDetailsPage {
     };
     public restaurant: Restaurant;
     public pickUpTime;
+    public openingTime;
+    public closingTime;
+    public nowOpen;
 
 
     public userPoints = 0;
@@ -47,13 +50,14 @@ export class OrderDetailsPage {
 )
     {
         this.restaurant = navParams.get("restaurant");
-        //TODO: ftr_reservation
+
+
         this.reservation = {
             items: cartService.getCart(this.restaurant.id),
             donation: 0,
             usedPoints: 0,
             totalPrice: 0,
-            collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
+            collectTime: 0
         };
 
 
@@ -65,10 +69,11 @@ export class OrderDetailsPage {
 
         }
 
-        //TODO: anpassen
-        this.pickUpTime = this.reservation.collectTime;
+        this.calcTimings(15);
+
         //TODO: Remove
         console.log("this user has enough points to pay with them: "+ this.morePointsThanNeeded);
+
 
     }
 
@@ -283,7 +288,7 @@ export class OrderDetailsPage {
                     let reply = res.json();
                     console.log(reply[0].points);
                     this.userPoints= reply[0].points;
-                    // boolean whether enough points to pay order with points
+                    // boolean whether enough points to pay the order with points
                     // has to wait for the getUserPoints query
                     this.morePointsThanNeeded = this.userPoints > this.neededPoints;
 
@@ -300,7 +305,34 @@ export class OrderDetailsPage {
     }
 
     public hasEnoughPoints(){
-        this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+        this.morePointsThanNeeded = this.userPoints >= this.neededPoints;
+    }
+
+    public calcTimings(prepTime) {
+        let date = new Date();
+        // restaurant.timeSchedules is an Array with of Objects in the order of weekdays,
+        // e.g. timeSchedules[0] are opening times on Monday
+        this.closingTime = this.restaurant.timeSchedules[date.getDay() - 1]["offerEndTime"].split(" ")[1];
+        this.openingTime = this.restaurant.timeSchedules[date.getDay() - 1]["offerStartTime"].split(" ")[1];
+        console.log("openingtime : " + this.openingTime);
+
+
+        let openingInt = parseInt(this.openingTime.replace(":",""));
+        let closingInt = parseInt(this.closingTime.replace(":",""));
+        let nowInt = parseInt((date.getHours()) + "" + date.getMinutes());
+        console.log("offen: " + openingInt +"\n" +
+            "geschlossen: " + closingInt + "\n" +
+            "jetzt: " + nowInt);
+        this.nowOpen  = ((openingInt < nowInt) && (nowInt < closingInt));
+        console.log("geöffnet: " + this.nowOpen);
+
+
+
+        let prepTimeInMs = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
+        date.setTime(date.getTime() + prepTimeInMs);
+        console.log("heute ist der Tag der Woche :" + date.getDay());
+        this.pickUpTime = date.toISOString();
+        console.log(this.closingTime);
     }
 
 }
