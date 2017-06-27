@@ -261,7 +261,6 @@ export class OrderDetailsPage {
         this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
             .subscribe(
                 res =>{
-                    console.log("ist durchgegangen");
                     let reply = res.json();
                     console.log(reply[0].points);
                     this.userPoints= reply[0].points;
@@ -275,6 +274,10 @@ export class OrderDetailsPage {
             totalNeededPoints += (item.neededPoints * item.amount);
         }
         return totalNeededPoints;
+    }
+
+    public hasEnoughPoints() : boolean{
+        return this.userPoints > this.calcNeededPoints();
     }
 
 }
