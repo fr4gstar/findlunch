@@ -216,7 +216,7 @@ export class OrderDetailsPage {
       let alert = this.alertCtrl.create({
         title: 'Info',
         subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
-        "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom" +
+        "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom " +
           "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.",
         buttons: ['Ok']
       });
