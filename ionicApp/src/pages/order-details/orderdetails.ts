@@ -32,8 +32,9 @@ export class OrderDetailsPage {
 
 
     public userPoints = 0;
-    public reservationPoints = 0;
-    public morePointsThanNeeded = true; //TODO: Info auslesen lassen
+    public neededPoints = 0;
+    public morePointsThanNeeded;
+
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -55,23 +56,25 @@ export class OrderDetailsPage {
             collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
         };
 
+
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
             console.log("ein schritt vor get UserPoints");
+            this.calcNeededPoints();
             this.getUserPoints();
+
         }
 
         //TODO: anpassen
         this.pickUpTime = this.reservation.collectTime;
         //TODO: Remove
-        this.reservationPoints = this.calcNeededPoints();
-        this.morePointsThanNeeded = this.userPoints >= this.reservationPoints;
-        console.log("this user has enough points to pay with them: "+this.morePointsThanNeeded);
+        console.log("this user has enough points to pay with them: "+ this.morePointsThanNeeded);
 
     }
 
     /**
      * Increases the amount of one given offer. Also checks for the max-limit.
+     * Points needed to "pay with points" for entire order gets recalculated.
      * The donation is reset if this method gets executed.
      * @param offer
      */
@@ -82,11 +85,16 @@ export class OrderDetailsPage {
             offer.amount++;
             this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
             this.reservation.donation = 0;
+            this.calcNeededPoints();
+            this.hasEnoughPoints();
+
+
         }
     }
 
     /**
      * Decreases the amount of one given offer. Removes item from orders if amount will be 0.
+     * Points needed to "pay with points" for entire order gets recalculated.
      * The donation is reset if this method gets executed.
      * @param offer
      */
@@ -98,6 +106,9 @@ export class OrderDetailsPage {
         }
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         this.reservation.donation = 0;
+        this.calcNeededPoints();
+        this.hasEnoughPoints();
+
 
     }
 
@@ -129,6 +140,7 @@ export class OrderDetailsPage {
         }
         this.reservation.donation = donation;
         this.reservation.totalPrice = newTotalPrice;
+
     }
 
     /**
@@ -248,6 +260,7 @@ export class OrderDetailsPage {
 
     /**
      * Gets the Points of the user for the particular restaurant
+     * Sets the information whether its possible to pay the order with points
      */
     public getUserPoints(){
         let user = window.localStorage.getItem("username");
@@ -264,6 +277,10 @@ export class OrderDetailsPage {
                     let reply = res.json();
                     console.log(reply[0].points);
                     this.userPoints= reply[0].points;
+                    // boolean whether enough points to pay order with points
+                    // has to wait for the getUserPoints query
+                    this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+
                 },
                 err => console.error(err)
             )}
@@ -273,11 +290,11 @@ export class OrderDetailsPage {
         for(let item of this.reservation.items){
             totalNeededPoints += (item.neededPoints * item.amount);
         }
-        return totalNeededPoints;
+        this.neededPoints = totalNeededPoints;
     }
 
-    public hasEnoughPoints() : boolean{
-        return this.userPoints > this.calcNeededPoints();
+    public hasEnoughPoints(){
+        this.morePointsThanNeeded = this.userPoints > this.neededPoints;
     }
 
 }
