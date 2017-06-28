@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Headers, Http, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
@@ -30,7 +30,11 @@ export class OrderDetailsPage {
     public restaurant: Restaurant;
     public pickUpTime;
 
-    public morePointsThanNeeded = true; //TODO: Info auslesen lassen
+
+    public userPoints = 0;
+    public neededPoints = 0;
+    public morePointsThanNeeded;
+
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -43,6 +47,7 @@ export class OrderDetailsPage {
 )
     {
         this.restaurant = navParams.get("restaurant");
+        //TODO: ftr_reservation
         this.reservation = {
             items: cartService.getCart(this.restaurant.id),
             donation: 0,
@@ -50,12 +55,26 @@ export class OrderDetailsPage {
             totalPrice: 0,
             collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
         };
+
+
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
-        this.pickUpTime = new Date().getTime().toString();
+        if(this.auth.getLoggedIn()){
+            console.log("ein schritt vor get UserPoints");
+            this.calcNeededPoints();
+            this.getUserPoints();
+
+        }
+
+        //TODO: anpassen
+        this.pickUpTime = this.reservation.collectTime;
+        //TODO: Remove
+        console.log("this user has enough points to pay with them: "+ this.morePointsThanNeeded);
+
     }
 
     /**
      * Increases the amount of one given offer. Also checks for the max-limit.
+     * Points needed to "pay with points" for entire order gets recalculated.
      * The donation is reset if this method gets executed.
      * @param offer
      */
@@ -66,11 +85,16 @@ export class OrderDetailsPage {
             offer.amount++;
             this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
             this.reservation.donation = 0;
+            this.calcNeededPoints();
+            this.hasEnoughPoints();
+
+
         }
     }
 
     /**
      * Decreases the amount of one given offer. Removes item from orders if amount will be 0.
+     * Points needed to "pay with points" for entire order gets recalculated.
      * The donation is reset if this method gets executed.
      * @param offer
      */
@@ -82,6 +106,9 @@ export class OrderDetailsPage {
         }
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         this.reservation.donation = 0;
+        this.calcNeededPoints();
+        this.hasEnoughPoints();
+
 
     }
 
@@ -113,6 +140,7 @@ export class OrderDetailsPage {
         }
         this.reservation.donation = donation;
         this.reservation.totalPrice = newTotalPrice;
+
     }
 
     /**
@@ -229,5 +257,44 @@ export class OrderDetailsPage {
   public goToRegister(){
     this.navCtrl.push(RegistryPage, {comeBack: true});
   }
+
+    /**
+     * Gets the Points of the user for the particular restaurant
+     * Sets the information whether its possible to pay the order with points
+     */
+    public getUserPoints(){
+        let user = window.localStorage.getItem("username");
+        let token = window.localStorage.getItem(user);
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            "Authorization": "Basic " + token
+        });
+        let options = new RequestOptions({headers: headers,
+                                method: RequestMethod.Get});
+        this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
+            .subscribe(
+                res =>{
+                    let reply = res.json();
+                    console.log(reply[0].points);
+                    this.userPoints= reply[0].points;
+                    // boolean whether enough points to pay order with points
+                    // has to wait for the getUserPoints query
+                    this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+
+                },
+                err => console.error(err)
+            )}
+
+    public calcNeededPoints(){
+        let totalNeededPoints = 0;
+        for(let item of this.reservation.items){
+            totalNeededPoints += (item.neededPoints * item.amount);
+        }
+        this.neededPoints = totalNeededPoints;
+    }
+
+    public hasEnoughPoints(){
+        this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+    }
 
 }

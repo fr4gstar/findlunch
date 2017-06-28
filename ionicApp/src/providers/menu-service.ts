@@ -22,14 +22,12 @@ export class MenuService {
     {title: 'Home', component: HomePage},
     {title: 'Login', component: LoginPage},
     {title: 'Registrieren', component: RegistryPage},
-    {title: 'Password Vergessen', component: RestaurantsPage}, //TODO: Entsprechende Page etc anzeigen
     {title: 'Restaurants', component: RestaurantsPage} //TODO: noch rauszunehmen, gerade nur für debugging
 
 
   ];
 
   constructor() {
-    console.log('Hello MenuPages Provider');
   }
 
 }

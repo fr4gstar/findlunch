@@ -60,7 +60,7 @@ export class BonusPage {
     this.http.get(`${SERVER_URL}/api/get_points`, options)
     .subscribe(
       res => this.points = res.json(),
-      err => console.error(err)
+      err => console.error("Punkte Holen Fehlgeschlagen " + err)
     )
   }
 }

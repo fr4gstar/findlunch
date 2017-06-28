@@ -50,14 +50,6 @@
             "API_KEY_FOR_IOS": "AIzaSyCVHpbnWxIqaHLF6xkaV69kmM5RKUv2lQ4"
         }
     },
-    "cordova-plugin-inappbrowser": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-inappbrowser@^1.7.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-nativegeocoder": {
         "source": {
             "type": "registry",
@@ -115,5 +107,13 @@
         "variables": {
             "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
         }
+    },
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inappbrowser@1.7.1"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

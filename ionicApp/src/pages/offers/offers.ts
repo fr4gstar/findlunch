@@ -6,7 +6,7 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 import {Observable} from "rxjs/Observable";
-import {Http} from "@angular/http";
+import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {CartService} from "../../services/CartService";
 import {AuthService} from "../../providers/auth-service";
@@ -36,10 +36,10 @@ export class OffersPage implements OnInit {
               private http: Http,
               public auth: AuthService
   ) {
-  
+
     this.restaurant = navParams.get("restaurant");
   }
-                
+
 
     ngOnInit() {
         this.offerService.getOffers(this.restaurant.id).subscribe(
@@ -66,9 +66,21 @@ export class OffersPage implements OnInit {
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
       */
     public toggleIsFavourite() {
+
+        let user = window.localStorage.getItem("username");
+        let token = window.localStorage.getItem(user);
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            "Authorization": "Basic " +token
+        });
+
+        let options = new RequestOptions({
+            headers: headers,
+        });
+
         // unset as favorite
         if (this.restaurant.isFavorite) {
-            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id).subscribe(
+            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = false;
@@ -83,7 +95,7 @@ export class OffersPage implements OnInit {
         }
         // set as favorite
         else {
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "").subscribe(
+            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = true;

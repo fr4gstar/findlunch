@@ -20,9 +20,10 @@
   font-size: 1.7rem;
 }
 
-#mehrwertsteuer > ion-col{
+#mehrwertsteuer > ion-col:nth-child(1){
   font-size: 1rem;
 }
+
 
 #pickUpTime{
   max-width : 100%;

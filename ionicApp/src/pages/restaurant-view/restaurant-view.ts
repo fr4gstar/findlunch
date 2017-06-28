@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
-import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
+import {Headers, Http, RequestOptions} from "@angular/http";
 
 import {Restaurant} from "../../model/Restaurant";
 import {AuthService} from "../../providers/auth-service";
@@ -41,9 +41,21 @@ export class RestaurantViewPage {
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
      */
     public toggleIsFavourite() {
+
+        let user = window.localStorage.getItem("username");
+        let token = window.localStorage.getItem(user);
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            "Authorization": "Basic " +token
+        });
+
+        let options = new RequestOptions({
+            headers: headers,
+        });
+
         // unset as favorite
         if (this.restaurant.isFavorite) {
-            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id).subscribe(
+            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = false;
@@ -58,7 +70,7 @@ export class RestaurantViewPage {
         }
         // set as favorite
         else {
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "").subscribe(
+            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = true;
