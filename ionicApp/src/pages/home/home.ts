@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {Events, ModalController, NavController, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
-import {Http} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
@@ -124,7 +124,24 @@ export class HomePage {
   private fetchRestaurants(coords: Coordinates) {
     // do not filter by radius, because there are just a few restaurants.
     // in the future it could filter by using the visible map-area.
-    this.http.get(`${SERVER_URL}/api/restaurants?latitude=${coords.latitude}&longitude=${coords.longitude}&radius=9999999`).subscribe(
+
+      let options; 
+      if(this.auth.getLoggedIn()){
+
+          let user = window.localStorage.getItem("username");
+          let token = window.localStorage.getItem(user);
+          let headers = new Headers({
+              'Content-Type': 'application/json',
+              "Authorization": "Basic " +token
+          });
+
+          options = new RequestOptions({
+              headers: headers,
+              method: RequestMethod.Get
+          });
+      }
+
+    this.http.get(`${SERVER_URL}/api/restaurants?latitude=${coords.latitude}&longitude=${coords.longitude}&radius=9999999`,options).subscribe(
       res => {
         this._allRestaurants = res.json();
         this.setRestaurantMarkers(this._allRestaurants);
