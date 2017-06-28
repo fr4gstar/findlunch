@@ -6,6 +6,7 @@ export interface Reservation {
   donation: number,
   totalPrice: number,
   usedPoints: boolean,
+  points: number,
   reservationNumber: number,
   reservation_offers: Array<Offer>,
   restaurant: Restaurant,
