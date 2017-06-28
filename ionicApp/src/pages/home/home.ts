@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Events, ModalController, NavController, PopoverController} from "ionic-angular";
+import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
@@ -30,7 +30,8 @@ export class HomePage {
               private http: Http,
               private popCtrl: PopoverController,
               private popService: FilterPopoverService,
-              private events: Events
+              private events: Events,
+              private platform: Platform
   ) {
     this.events.subscribe("menu", eventData => {
       if (eventData === "open"){
@@ -40,11 +41,14 @@ export class HomePage {
         this._map.setClickable(true);
       }
     })
+      this.platform.ready().then(() => {
+          this.loadMap();
+      });
   }
 
   // Load map only after view is initialized
   ngAfterViewInit() {
-    this.loadMap();
+
   }
 
   public openFilterDialog(ev: Event) {
