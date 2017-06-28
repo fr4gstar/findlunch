@@ -9,6 +9,7 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
+import {AuthService} from "../../providers/auth-service";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
@@ -30,7 +31,8 @@ export class HomePage {
               private http: Http,
               private popCtrl: PopoverController,
               private popService: FilterPopoverService,
-              private events: Events
+              private events: Events,
+              private auth: AuthService
   ) {
     this.events.subscribe("menu", eventData => {
       if (eventData === "open"){
@@ -125,7 +127,7 @@ export class HomePage {
     // do not filter by radius, because there are just a few restaurants.
     // in the future it could filter by using the visible map-area.
 
-      let options; 
+      let options;
       if(this.auth.getLoggedIn()){
 
           let user = window.localStorage.getItem("username");
