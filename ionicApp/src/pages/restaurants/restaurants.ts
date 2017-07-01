@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams, Platform} from "ionic-angular";
-import {Http, RequestOptions, Headers} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
@@ -49,6 +49,8 @@ export class RestaurantsPage {
           });
           options = new RequestOptions({
               headers: headers,
+              method: RequestMethod.Get
+
           });
       }
 
