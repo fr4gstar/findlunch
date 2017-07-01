@@ -24,7 +24,27 @@ export class HomePage {
     private _mapMarkers: Array<Marker> = [];
     private _allRestaurants: Array<Restaurant>;
 
+    constructor(private navCtrl: NavController,
+                private geolocation: Geolocation,
+                private modalCtrl: ModalController,
+                private googleMaps: GoogleMaps,
+                private http: Http,
+                private popCtrl: PopoverController,
+                private popService: FilterPopoverService,
+                private events: Events,
+                private platform: Platform) {
+        this.events.subscribe("menu", eventData => {
+            if (eventData === "open") {
                 this._map.setClickable(false);
+            }
+            else if (eventData === "close") {
+                this._map.setClickable(true);
+            }
+        });
+        this.platform.ready().then(() => {
+            this.loadMap();
+        });
+    }
 
     // Load map only after view is initialized
     ngAfterViewInit() {
@@ -91,7 +111,15 @@ export class HomePage {
                         zoom: 16
                     };
 
+                    this._map.moveCamera(camPos);
+                })
+                    .catch(err => {
                         this._map.setMyLocationEnabled(false);
+                        this.showAddressInput();
+                    })
+            }
+        );
+    }
 
     /**
      * Fetches the restaurants from the server using the provided coordinates
