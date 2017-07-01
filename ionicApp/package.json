@@ -40,7 +40,8 @@
         "cordova-plugin-datepicker": "^0.9.3",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-geolocation": "^2.4.3",
-        "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git",
+        "cordova-plugin-googlemaps": "^1.4.1",
+        "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
         "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-nativegeocoder": "^1.0.2",
         "cordova-plugin-splashscreen": "^4.0.3",
@@ -84,17 +85,19 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
             "ionic-plugin-keyboard": {},
-            "cordova-plugin-googlemaps": {
-                "API_KEY_FOR_ANDROID": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g",
-                "API_KEY_FOR_IOS": "AIzaSyCVHpbnWxIqaHLF6xkaV69kmM5RKUv2lQ4"
-            },
             "cordova-plugin-nativegeocoder": {},
             "phonegap-plugin-barcodescanner": {},
             "phonegap-plugin-push": {
                 "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
             },
             "cordova-plugin-datepicker": {},
-            "cordova-plugin-inappbrowser": {}
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-googlemaps": {
+                "API_KEY_FOR_ANDROID": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g",
+                "API_KEY_FOR_IOS": "AIzaSyDpkk1hAfWgvB_5KLj1U-usZ0V4TX5YN5A",
+                "NSLOCATIONWHENINUSEUSAGEDESCRIPTION": "Show your location on the map",
+                "NSLOCATIONALWAYSUSAGEDESCRIPTION": "Trace your location on the map"
+            }
         },
         "platforms": [
             "android",

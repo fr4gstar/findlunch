@@ -12,7 +12,6 @@ import {CartService} from "../../services/CartService";
 import {AuthService} from "../../providers/auth-service";
 
 
-
 /**
  * Page for showing the offers of a specific restaurant in a list.
  * If the user clicks on an offer, she will get to the detail view of this offer.
@@ -46,6 +45,7 @@ export class OffersPage implements OnInit {
             offers => {
                 this.offers = offers;
                 this.categories = Object.keys(offers);
+                this.shownGroup = this.categories[0] || null;
             },
             err => console.error(err)
         );

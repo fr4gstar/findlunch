@@ -1,7 +1,12 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>Adresse eingeben</ion-title>
-        <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="true" (ionInput)="updateSearch()" (ionCancel)="dismiss()"></ion-searchbar>
+        <!--<ion-title>Adresse eingeben</ion-title>-->
+        <ion-buttons start>
+            <button ion-button (click)="dismiss()">Close</button>
+        </ion-buttons>
+        <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="false" (ionInput)="updateSearch()"
+                       [placeholder]="'Adresse eingeben'"
+        ></ion-searchbar>
     </ion-toolbar>
 </ion-header>
 <ion-content>
