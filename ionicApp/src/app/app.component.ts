@@ -56,13 +56,11 @@ export class MyApp {
               private auth: AuthService,
               public menu: MenuService,
               private toastCtrl: ToastController,
-              public push: Push,
               public qr: QRService,
               public iab: InAppBrowser,
               public alertCtrl: AlertController) {
 
     this.auth.verifyUser();
-    this.pushSetup();
 
     //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
     document.addEventListener('resume', () => {
@@ -71,69 +69,7 @@ export class MyApp {
 
   }
 
-  /**
-   * Sets the firebase push configuration up.
-   * Register the device token at the backend.
-   * If the device receives a push message,
-   * it will be displayed as a notification.
-   */
-  pushSetup() {
-    let user = window.localStorage.getItem("username");
-    let token = window.localStorage.getItem(user);
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      "Authorization": "Basic " +token
-    });
 
-    let options = new RequestOptions({
-      headers: headers,
-      method: RequestMethod.Put
-    });
-
-    const pushOptions: PushOptions = {
-      android: {
-        senderID: '343682752512',
-        icon: '',
-        vibrate: true
-      },
-      ios: {
-        alert: 'false',
-        badge: true,
-        sound: 'false'
-      },
-      windows: {}
-    };
-
-    const pushObject: PushObject = this.push.init(pushOptions);
-
-    pushObject.on('notification')
-      .subscribe((notification: any) => {
-
-        // Foreground handling
-        if (notification.additionalData.foreground) {
-          let youralert = this.alertCtrl.create({
-            title: notification.title,
-            message: notification.message,
-            buttons: [{
-              text: 'Okay',
-              role: 'cancel'
-            }],
-          });
-          youralert.present();
-        }
-      });
-
-    pushObject.on('registration')
-      .subscribe((registration: any) => {
-        this.http.get(`${SERVER_URL}/api/submitToken/${registration.registrationId}`, options)
-          .subscribe(
-            res => res,
-            err => console.error(err)
-          )
-      });
-
-    pushObject.on('error').subscribe(error => console.log('Error with Push plugin' + error));
-  }
 
 
   openPage(page) {

@@ -8,7 +8,7 @@ export interface Reservation {
   usedPoints: boolean,
   points: number,
   reservationNumber: number,
-  reservation_offers: Array<Offer>,
+  reservation_offers: Offer[],
   restaurant: Restaurant,
   bill: number,
   reservationStatus:
