@@ -151,12 +151,11 @@ export class HomePage {
                 position: new LatLng(restaurant.locationLatitude, restaurant.locationLongitude),
                 icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png',
                 title: restaurant.name,
-                snippet: `Adresse: ${restaurant.street} ${restaurant.streetNumber}
-Telefon: ${restaurant.phone}
-Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}
-Entfernung: ${restaurant.distance}m
-Jetzt geöffnet`,
-
+                snippet: `<p>Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
+Telefon: ${restaurant.phone}<br/>
+Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
+Entfernung: ${restaurant.distance}m<br/>
+Jetzt geöffnet<p/>`,
                 infoClick: () => {
                     this.navCtrl.push(OffersPage, {restaurant: restaurant});
                 }
