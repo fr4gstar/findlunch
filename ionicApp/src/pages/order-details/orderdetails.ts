@@ -332,8 +332,15 @@ export class OrderDetailsPage {
         let date = new Date();
         // restaurant.timeSchedules is an Array with of Objects with opening times for single
         // days in the order of weekdays e.g. timeSchedules[0] are opening times on Monday
-        this.closingTime = this.restaurant.timeSchedules[date.getDay() - 1]["offerEndTime"].split(" ")[1];
-        this.openingTime = this.restaurant.timeSchedules[date.getDay() - 1]["offerStartTime"].split(" ")[1];
+        let day = date.getDay();
+        if(day === 0){
+            day = 1;
+        } else{
+            day = day-1;
+
+        }
+        this.closingTime = this.restaurant.timeSchedules[day]["offerEndTime"].split(" ")[1];
+        this.openingTime = this.restaurant.timeSchedules[day]["offerStartTime"].split(" ")[1];
         console.log("openingtime : " + this.openingTime);
 
 
