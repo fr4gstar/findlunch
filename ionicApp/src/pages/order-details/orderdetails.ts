@@ -58,7 +58,7 @@ export class OrderDetailsPage {
             donation: 0,
             totalPrice: 0,
             usedPoints: false,
-            //pointsCollected: false,
+            pointsCollected: true,
             points: 0,
             reservationNumber: 0,
             items: cartService.getCart(this.restaurant.id),
@@ -66,12 +66,9 @@ export class OrderDetailsPage {
             bill: null,
             reservationStatus: null,
             collectTime: null,
-            timestampReceived: null,
-            timestampResponded: null
         };
 
 
-        this.nowOpen = this.restaurant.currentlyOpen;
 
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
@@ -81,12 +78,9 @@ export class OrderDetailsPage {
 
         }
 
-        this.calcTimings(15);
+        this.nowOpen = true; //  this.restaurant.currentlyOpen;
 
-        //TODO: Remove
-        console.log("this user has enough points to pay with them: "+ this.morePointsThanNeeded);
-
-
+        this.calcTimings(5);
     }
 
     /**
@@ -177,10 +171,14 @@ export class OrderDetailsPage {
             });
             let options = new RequestOptions({headers: headers});
 
+                this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
             if(this.auth.getLoggedIn()){
-                this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
+                console.log("pay with points : " + this.payWithPoints);
                 this.reservation.usedPoints = this.payWithPoints;
+                if (this.reservation.usedPoints){
+                    this.reservation.pointsCollected = false;
+                }
                 this.reservation.points = this.neededPoints;
             }
 
@@ -197,13 +195,8 @@ export class OrderDetailsPage {
                     amount: item.amount
                 });
             });
-            let payload_1 = payload;
-            console.log("Der payload vor löschen: ", JSON.stringify(payload));
-
+            console.log("payload vor abschicken :", JSON.stringify(payload));
             delete payload.items;
-            console.log("payloads vorher nachher gleich? " + (payload_1 === payload));
-
-            console.log("Der payload nach löschen: ", JSON.stringify(payload));
 
             this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
                 (res) => {
@@ -346,22 +339,9 @@ export class OrderDetailsPage {
             day = day-1;
 
         }
-        this.closingTime = this.restaurant.timeSchedules[day]["offerEndTime"].split(" ")[1];
-        this.openingTime = this.restaurant.timeSchedules[day]["offerStartTime"].split(" ")[1];
+        this.closingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].closingTime.split(" ")[1];
+        this.openingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].openingTime.split(" ")[1];
         console.log("openingtime : " + this.openingTime);
-
-        //TODO:rausschmeissen
-        /*
-        let openingInt = parseInt(this.openingTime.replace(":",""));
-        let closingInt = parseInt(this.closingTime.replace(":",""));
-        let nowInt = parseInt((date.getHours()) + "" + date.getMinutes());
-        console.log("offen: " + openingInt +"\n" +
-            "geschlossen: " + closingInt + "\n" +
-            "jetzt: " + nowInt);
-        //TODO: Restaurant Schließzeiten auf 23:59 begrenzen, sonst geht das nicht.
-        this.nowOpen  = true; //((openingInt < nowInt) && (nowInt < closingInt));
-        console.log("geöffnet: " + this.nowOpen);
-        */
 
 
         let prepTimeInMs = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
