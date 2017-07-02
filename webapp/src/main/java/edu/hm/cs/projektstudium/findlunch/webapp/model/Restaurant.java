@@ -914,13 +914,6 @@ public class Restaurant implements Serializable {
 					closeHour = timeSchedule.getOfferEndTime().getHours();
 					closeMin = timeSchedule.getOfferEndTime().getMinutes();
 				}
-								
-				/*
-				int openHour = timeSchedule.getOfferStartTime().getHours();
-				int openMin = timeSchedule.getOfferStartTime().getMinutes();
-				int closeHour = timeSchedule.getOfferEndTime().getHours();
-				int closeMin = timeSchedule.getOfferEndTime().getMinutes();
-				*/
 				
 				int nowHour = actuallyDate.getHours();
 				int nowMin = actuallyDate.getMinutes();
