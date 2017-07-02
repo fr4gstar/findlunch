@@ -53,7 +53,6 @@ export class RestaurantsPage {
       }
 
     this.restaurants$ = this.http.get(`https://shrouded-dusk-87807.herokuapp.com/api/restaurants?latitude=48.1559834&longitude=11.6314406&radius=9999999`,options)
-
         .map(res => res.json())
  }
 
