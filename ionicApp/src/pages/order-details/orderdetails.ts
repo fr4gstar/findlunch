@@ -9,6 +9,7 @@ import {Restaurant} from "../../model/Restaurant";
 import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
+import {Reservation} from "../../model/Reservation";
 
 
 /**
@@ -20,20 +21,20 @@ import {RegistryPage} from "../registry/registry";
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage {
-    public reservation: {
-        totalPrice: number,
-        items: Offer[],
-        donation: number,
-        usedPoints: number,
-        collectTime: number
-    };
+    public reservation: Reservation;
     public restaurant: Restaurant;
     public pickUpTime;
+    public pickUpTimeISOFormat;
 
 
     public userPoints = 0;
     public neededPoints = 0;
     public morePointsThanNeeded;
+    public payWithPoints;
+
+    public openingTime;
+    public closingTime;
+    public nowOpen;
 
 
     constructor(private http: Http,
@@ -49,9 +50,8 @@ export class OrderDetailsPage {
         this.restaurant = navParams.get("restaurant");
         //TODO: ftr_reservation
         this.reservation = {
-            items: cartService.getCart(this.restaurant.id),
+            id:0,
             donation: 0,
-            usedPoints: 0,
             totalPrice: 0,
             usedPoints: false,
             pointsCollected: true,
@@ -68,7 +68,6 @@ export class OrderDetailsPage {
 
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
-            console.log("ein schritt vor get UserPoints");
             this.calcNeededPoints();
             this.getUserPoints();
 
@@ -169,7 +168,6 @@ export class OrderDetailsPage {
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
             if(this.auth.getLoggedIn()){
-                console.log("pay with points : " + this.payWithPoints);
                 this.reservation.usedPoints = this.payWithPoints;
                 if (this.reservation.usedPoints){
                     this.reservation.pointsCollected = false;
@@ -181,7 +179,6 @@ export class OrderDetailsPage {
                 ...this.reservation,
                 reservation_offers: []
             };
-            console.log("vor payload 'Beladung ist der Warenkorb leer: " + this.reservation.items);
             payload.items.forEach((item) => {
                 payload.reservation_offers.push({
                     offer: {
@@ -190,7 +187,6 @@ export class OrderDetailsPage {
                     amount: item.amount
                 });
             });
-            console.log("payload vor abschicken :", JSON.stringify(payload));
             delete payload.items;
 
             this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
@@ -252,21 +248,7 @@ export class OrderDetailsPage {
    * Lets the user enter his desired pickup time.
    * /TODO: Only valid times should be able to be chosen.
    */
-  public enterPickUpTime(){
-   /* this.datePicker.show({
-      date: new Date(),
-      mode: 'time',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
 
-      date => {
-        console.log('Got date: ', date)
-        this.pickUpTime = date;
-      },
-          err => console.log('Error occurred while getting date: ', err)
-    );
-    */
-  }
 
   /**
    * Sends the user to the Loginpage. After successful Login he is automatically
@@ -301,7 +283,6 @@ export class OrderDetailsPage {
             .subscribe(
                 res =>{
                     let reply = res.json();
-                    console.log(reply[0].points);
                     this.userPoints= reply[0].points;
                     // boolean whether enough points to pay order with points
                     // has to wait for the getUserPoints query
@@ -336,16 +317,13 @@ export class OrderDetailsPage {
         }
         this.closingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].closingTime.split(" ")[1];
         this.openingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].openingTime.split(" ")[1];
-        console.log("openingtime : " + this.openingTime);
 
 
         let prepTimeInMs = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
         date.setTime(date.getTime() + prepTimeInMs);
-        console.log("heute ist der Tag der Woche :" + date.getDay());
 
         this.pickUpTime = date;
         this.pickUpTimeISOFormat = date.toISOString();
-        console.log(this.closingTime);
     }
 
 }

@@ -61,7 +61,6 @@ export class MyApp {
                 public alertCtrl: AlertController) {
 
         this.auth.verifyUser();
-        this.pushSetup();
 
         //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
         document.addEventListener('resume', () => {
@@ -71,7 +70,28 @@ export class MyApp {
     }
 
 
-  onMenuOpened() {
+    openPage(page) {
+        // Reset the content nav to have just this page
+        // we wouldn't want the back button to show in this scenario
+        this.nav.setRoot(page.component);
+    }
+
+    public logout() {
+        this.auth.logout();
+        const toast = this.toastCtrl.create({
+            message: "Logout erfolgt",
+            duration: 3000
+        });
+        toast.present();
+        this.nav.setRoot(HomePage);
+    }
+
+    onMenuClosed() {
+        this.events.publish("menu", "close");
+    }
+
+
+    onMenuOpened() {
     this.events.publish("menu", "open");
   }
    openUrl(url){
