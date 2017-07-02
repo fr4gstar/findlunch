@@ -1,23 +1,19 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
-import {HomePage} from "../pages/home/home";
-
-
 
 
 @Injectable()
 export class AuthService {
       private loggedIn: boolean;
+      private userName: string;
 
   constructor(private http: Http) {
 
   }
 
   public login(username: string, password: string) {
-    console.log("in auth-service login angekommen");
     let encodedCredentials: string = btoa(username + ":" + password);
-    console.log(encodedCredentials);
     let headers = new Headers({
       'Content-Type': 'application/json',
       "Authorization": "Basic " + encodedCredentials
@@ -27,14 +23,12 @@ export class AuthService {
     return new Promise(resolve => {
       this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
         (res) => {
-          console.log("lgoin api-call erfolgreich");
           window.localStorage.setItem("username", username);
           window.localStorage.setItem(username, encodedCredentials);
-          console.log("user und token gesetzt");
+          this.userName = window.localStorage.getItem("username");
           this.loggedIn = true;
           resolve(true);
         }, (err) => {
-          console.log("login api-call negative antwort")
           resolve(err.body);
 
 
@@ -68,7 +62,6 @@ public register(username: string, password: string) {
         this.login(username, password);
         resolve(true);
       }, (err) => {
-        console.log("registry hat nicht funktioniert \n ErrorCode:" + err._body);
         reject(err._body);
 
       })
@@ -78,29 +71,33 @@ public register(username: string, password: string) {
 
   public verifyUser() {
     //zuletzt eingeloggter user
-    let currentUser = window.localStorage.getItem("username");
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      //token zum zuletzt eingeloggten user, gespeichert als value zum key der Variable currentuser
-      "Authorization": "Basic " + window.localStorage.getItem(currentUser)
-    });
-    console.log("derzeitiger User " + currentUser);
-    console.log("vorhandener key :" + window.localStorage.getItem(currentUser));
-    let options = new RequestOptions({headers: headers});
-    return new Promise((resolve) => {
-      this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
-        (res) => {
-          console.log("user verifiziert");
-          this.loggedIn = true;
-        }, (err) => {
-          console.log("user konnte nicht verifiziert werden \n automatischer Logout")
-          this.logout();
-        })
-    })
+    if(window.localStorage.getItem("username")!== null){
+
+      let currentUser = window.localStorage.getItem("username");
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        //token zum zuletzt eingeloggten user, gespeichert als value zum key der Variable currentuser
+        "Authorization": "Basic " + window.localStorage.getItem(currentUser)
+      });
+
+      let options = new RequestOptions({headers: headers});
+      return new Promise((resolve) => {
+        this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
+          (res) => {
+            this.loggedIn = true;
+          }, (err) => {
+            this.logout();
+          })
+      })
+    }
   }
 
   public getLoggedIn(){
     return this.loggedIn;
+  }
+
+  public getUserName(){
+    return this.userName;
   }
 
   public logout(){
@@ -110,6 +107,6 @@ public register(username: string, password: string) {
     //lösche den zuletzt eingeloggten usernamen gesetzt unter dem key-String "username"
     window.localStorage.removeItem("username");
     this.loggedIn = false;
-    console.log("logout erfolgt");
+    this.userName = "";
   }
 }

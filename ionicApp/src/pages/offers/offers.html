@@ -3,20 +3,64 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Aktuelle Angebote</ion-title>
+
+        <ion-title (click)="onRestaurantClicked($event)">
+            <img *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
+                 style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
+            {{restaurant.name}}
+        </ion-title>
+        <ion-buttons end>
+
+            <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
+                <ion-icon name="star-outline" *ngIf="this.auth.getLoggedIn()&& !restaurant.isFavorite"></ion-icon>
+                <ion-icon name="star" *ngIf="this.auth.getLoggedIn()&&restaurant.isFavorite"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="goToCheckout()">
+                <ion-icon name="cart">
+                    <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
+                </ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content>
-    <ion-list>
-      <ion-toolbar color="light">
-        <h2>Produkte</h2>
-      </ion-toolbar>
-        <button ion-item *ngFor="let offer of offers" (click)="onOfferClicked($event, offer)">
-            <div>{{offer.title}}</div>
-            <div class="item-note" item-right>
-                {{offer.price | currency:'EUR':true}}
-            </div>
-        </button>
-    </ion-list>
-</ion-content>
+
+    <ion-content>
+        <ion-list id="foodMenu">
+            <ion-item *ngFor="let category of categories" text-wrap (click)="toggleGroup(category)"
+                      [ngClass]="{active: isGroupShown(category)}">
+                <ion-list-header>
+                    {{category}}
+                    <ion-icon color="success" item-right
+                              [name]="isGroupShown(category) ? 'arrow-dropdown' : 'arrow-dropleft'"></ion-icon>
+                </ion-list-header>
+                <div *ngIf="isGroupShown(category)">
+                    <div *ngFor='let offer of offers[category]'>
+                        <ion-item (click)="onOfferClicked($event, offer)">
+                            <span>{{offer.title}}<sup>{{offerService.getALGsAndADDsOfOffer(offer)}}</sup></span>
+                            <span item-right>{{offer.price | currency:'EUR':true}}</span>
+                        </ion-item>
+                    </div>
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-row id="aUndZ">
+            <ion-col>
+
+                <h6 class="allergenics-header">Allergene</h6>
+                <ion-row *ngFor="let allerg of allergenics$ | async" class="allergenics">
+                    {{allerg.shortKey}} {{allerg.name}}
+                </ion-row>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <h6 id="zusatzstoffe">Zusatzstoffe</h6>
+                <div *ngFor="let additive of additives$ | async" class="allergenics">
+                    {{additive.shortKey}} {{additive.name}}
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-content>

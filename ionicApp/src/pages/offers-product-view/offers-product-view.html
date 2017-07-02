@@ -3,11 +3,11 @@
         <button ion-button menuToggle>
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
-        <ion-title>Aktuelle Angebote</ion-title>
+        <ion-title>{{restaurant.name}}</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="goToCheckout()">
+            <button ion-button icon-only (click)="goToOrderDetailsPage()">
                 <ion-icon name="cart">
-                    <ion-badge class="cartBadge">{{cart.length}}</ion-badge>
+                    <ion-badge class="cartBadge">{{getCartItemCount()}}</ion-badge>
                 </ion-icon>
             </button>
         </ion-buttons>
@@ -15,25 +15,77 @@
 </ion-header>
 
 
-<ion-content padding>
-    <ion-list>
-        <ion-card *ngFor="let offer of offers" id="{{offer.id}}" padding>
-            <ion-card-title>{{offer.title}}</ion-card-title>
-            <ion-card-content>
+<ion-content>
+    <ion-grid style="font-size: 17px;">
+        <ion-row *ngIf="offer.defaultPhoto">
+            <img [src]="'data:image/jpg;base64,' + offer.defaultPhoto.thumbnail"
+                 style="max-width: 100%; width: auto; height: auto; margin: auto">
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <h1>{{offer.title}}<sup id="hochzahl">{{offersService.getALGsAndADDsOfOffer(offer)}}</sup></h1>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
                 <p>{{offer.description}}</p>
-                <div>Preis: {{offer.price}}</div>
-                <div>Zubereitungszeit: {{offer.preparationTime}}</div>
-                <div>Punkte: {{offer.neededPoints}}</div>
-            </ion-card-content>
+            </ion-col>
+        </ion-row>
+        <ion-row id="icons">
+            <ion-col>
+                <ion-icon name="pricetag" ios="ios-pricetag-outline" class="icon"></ion-icon>
+                {{offer.price | currency:'EUR':true}}
+            </ion-col>
+            <ion-col>
+                <ion-icon name="heart-outline" class="icon"></ion-icon>
+                {{offer.neededPoints}}
+            </ion-col>
 
-            <ion-row>
-                <ion-col>
-                    <button ion-button icon-left clear small (click)="addToCart(offer)">
-                        <ion-icon name="add-circle"></ion-icon>
-                        <div>In den Warenkorb</div>
-                    </button>
-                </ion-col>
-            </ion-row>
-        </ion-card>
-    </ion-list>
+            <ion-col>
+                <ion-icon name="time" ios="ios-time-outline" class="icon"></ion-icon>
+                {{offer.preparationTime}}
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col class="icon-subtext">
+                Preis
+            </ion-col>
+            <ion-col class="icon-subtext">
+                <div class="toLeft">
+                    Preis in Treuepunkten
+                </div>
+            </ion-col>
+            <ion-col class="icon-subtext">
+                Zubereitungszeit
+            </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+            <ion-col>
+                <h6 class="allergenics-header">Enthaltene Allergene</h6>
+                <ion-row *ngFor="let allerg of offer.allergenic" class="allergenics">
+                    {{allerg.shortKey}} {{allerg.name}}
+                </ion-row>
+            </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+            <ion-col>
+                <h6 class="allergenics-header">Enthaltene Zusatzstoffe</h6>
+                <div *ngFor="let add of offer.additives" class="allergenics">
+                    {{add.shortKey}} {{add.name}}
+                </div>
+            </ion-col>
+        </ion-row>
+
+
+        <ion-row margin-top>
+            <button ion-button block (click)="addToCart(offer)">
+                zum Warenkorb hinzufügen
+            </button>
+        </ion-row>
+    </ion-grid>
 </ion-content>

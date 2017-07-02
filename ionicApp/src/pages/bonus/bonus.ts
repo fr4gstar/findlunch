@@ -1,105 +1,66 @@
 import {Component, OnInit} from "@angular/core";
-import {NavController, NavParams, ToastController} from "ionic-angular";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
-import {OrderDetailsPage} from "../order-details/orderdetails";
+import {ToastController} from "ionic-angular";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import {OffersPage} from "../offers/offers";
-import {AuthService} from "../../providers/auth-service";
+import {QRService} from "../../providers/QRService";
 
-//export const FL_NAVPARAM_OFFER_ID = "offer_id";
-
+/**
+ * This pages loads and shows the points of an user per restaurant.
+ * Also shows the barcode scanner (qr scanner) function.
+ */
 @Component({
     selector: 'bonus',
     templateUrl: 'bonus.html'
 })
 
-export class BonusPage implements OnInit {
-
+export class BonusPage {
+  /**
+   * Object with restaurant and user points
+   */
   public points: Object[];
 
-    constructor(private barcodeScanner: BarcodeScanner, private toastCtrl: ToastController, navParams: NavParams, private http: Http, private navCtrl: NavController, private auth: AuthService) {
+  /**
+   *  Initialize modules and loadPoints for an user.
+   *
+   * @param toastCtrl for displaying messages
+   * @param http for requests
+   * @param qr for using barcode functions
+   */
+    constructor(
+      private toastCtrl: ToastController,
+      private http: Http,
+      private qr: QRService) {
+    this.loadPoints();
     }
 
-    ngOnInit() {
-      let user = window.localStorage.getItem("userName");
-      let token = window.localStorage.getItem(user);
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic " +token
-      });
+  /**
+   * Opens the barcode scanner(camera) of the device via service
+   * @param event
+   */
+  onQRClicked(event) {
+    this.qr.onQRClicked(event);
+  }
 
-      let options = new RequestOptions({
-        headers: headers,
-        method: RequestMethod.Get
-      });
+  /**
+   * Loads available points of an authorized user per restaurant
+   */
+  loadPoints(){
+    let user = window.localStorage.getItem("username");
+    let token = window.localStorage.getItem(user);
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      "Authorization": "Basic " +token
+    });
 
-        this.http.get(`${SERVER_URL}/api/get_points`, options)
-         .subscribe(
-         res => this.points =
-          //console.log(
-           res.json()
-         //)
-          ,
-         err => console.error(err)
-         )
-    }
+    let options = new RequestOptions({
+      headers: headers,
+      method: RequestMethod.Get
+    });
 
-    onQRClicked(event) {
-      let user = window.localStorage.getItem("userName");
-      let token = window.localStorage.getItem(user);
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-        "Authorization": "Basic " + token
-      });
-
-      let options = new RequestOptions({
-        headers: headers,
-        method: RequestMethod.Put
-      });
-      this.barcodeScanner.scan()
-        .then((barcodeData) => {
-          this.http.get(`${SERVER_URL}/api/confirm_reservation/`+barcodeData.text, options)
-            .subscribe(
-              (res) => {
-                console.log("res: " + res.json());
-                let msg;
-                switch (res.json()){
-                  case 0:
-                    msg = "Bestellung erfolgreich bestätigt!"
-                    break;
-                  case 3:
-                    msg = "Fehler: Restaurant nicht gefunden!"
-                    break;
-                  case 4:
-                    msg = "Fehler: Offer nicht gefunden!"
-                    break;
-                }
-                console.log("Msg: " + msg);
-                const toast = this.toastCtrl.create({
-                  message: msg,
-                  duration: 3000
-                });
-                toast.present();
-              },
-              (err) => {
-                const toast = this.toastCtrl.create({
-                  message: "Fehler: Verbindung zum Server",
-                  duration: 3000
-                });
-                toast.present();
-              }
-            )
-        }, (err) => {
-          const toast = this.toastCtrl.create({
-            message: "QR-Code Scan Fehler",
-            duration: 3000
-          });
-          toast.present();
-        });
-      }
-
-    showOffers(restaurant_id: String) {
-      this.navCtrl.push(OffersPage,{restaurant_id: restaurant_id});
-    }
+    this.http.get(`${SERVER_URL}/api/get_points`, options)
+    .subscribe(
+      res => this.points = res.json(),
+      err => console.error("Punkte Holen Fehlgeschlagen " + err)
+    )
+  }
 }

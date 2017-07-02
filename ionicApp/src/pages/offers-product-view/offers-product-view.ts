@@ -1,58 +1,53 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
-import {OffersService} from "../offers/OffersService";
 import {Offer} from "../../model/Offer";
 import {CartService} from "../../services/CartService";
 import {OrderDetailsPage} from "../order-details/orderdetails";
-import {AuthService} from "../../providers/auth-service";
+import {Restaurant} from "../../model/Restaurant";
+import {Http} from "@angular/http";
+import {OffersService} from "../offers/OffersService";
 
 /**
- * Generated class for the OffersProductViewPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
+ * Page for showing the details of a specific offer.
+ * Offer and restaurant-id must be provided via navParams ("restaurant", "offer").
+ * This view enables adding the item to the cart and shows the number of items in cart in the header.
  */
-
 @Component({
   selector: 'page-offers-product-view',
   templateUrl: 'offers-product-view.html',
 })
-export class OffersProductViewPage implements OnInit {
+export class OffersProductViewPage {
 
-  public offers: Offer[];
   public cart: Array<Object>;
-  private _restaurantId: number;
-  private loggedIn;
+  public restaurant: Restaurant;
+  public offer: Offer;
 
   constructor(
       public navCtrl: NavController,
       public navParams: NavParams,
-      private offerService: OffersService,
       private cartService: CartService,
-      private auth : AuthService
+      private http: Http,
+      public offersService: OffersService
   ) {
-    this._restaurantId = navParams.get("restaurant_id");
-    let cart = cartService.getCart(this._restaurantId);
-    if (cart === null || cart === undefined) {
-      this.cart = cartService.createCart(this._restaurantId);
-    } else {
-      this.cart = cart;
-    }
-  }
+    this.restaurant = navParams.get("restaurant");
+    this.offer = navParams.get("offer");
 
-  ngOnInit() {
-    this.offerService.getOffers(this._restaurantId).subscribe(offers => {
-      this.offers = offers;
-    })
+    // get cart for this restaurant
+    this.cart = cartService.getCart(this.restaurant.id);
   }
 
   addToCart(offer: Offer) {
-    this.cart.push(offer);
+    this.cartService.addItemToCart(this.restaurant.id, offer);
   }
 
-  goToCheckout() {
+  getCartItemCount() {
+    return this.cartService.getCartItemCount(this.restaurant.id);
+  }
+
+
+  goToOrderDetailsPage() {
     this.navCtrl.push(OrderDetailsPage, {
-      restaurant_id: this._restaurantId
+      restaurant: this.restaurant
     });
   }
 
