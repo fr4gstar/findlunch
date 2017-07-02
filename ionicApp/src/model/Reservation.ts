@@ -16,7 +16,5 @@ export interface Reservation {
     {
       id: number, status: string, key: number
     },
-  collectTime: number,
-  timestampReceived: number,
-  timestampResponded: number
+  collectTime: number
 }
