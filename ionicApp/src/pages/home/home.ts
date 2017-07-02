@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
+import {Events, LoadingController, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
@@ -23,6 +23,7 @@ export class HomePage {
     private _map: GoogleMap;
     private _mapMarkers: Array<Marker> = [];
     private _allRestaurants: Array<Restaurant>;
+    private loader;
 
     constructor(private navCtrl: NavController,
                 private geolocation: Geolocation,
@@ -32,7 +33,12 @@ export class HomePage {
                 private popCtrl: PopoverController,
                 private popService: FilterPopoverService,
                 private events: Events,
-                private platform: Platform) {
+                private platform: Platform,
+                private loadingController: LoadingController) {
+        this.loader = this.loadingController.create({
+            content: "Bitte warten"
+        });
+
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);
@@ -128,10 +134,13 @@ export class HomePage {
     private fetchRestaurants(coords: Coordinates) {
         // do not filter by radius, because there are just a few restaurants.
         // in the future it could filter by using the visible map-area.
+        this.loader.present();
         this.http.get(`${SERVER_URL}/api/restaurants?latitude=${coords.latitude}&longitude=${coords.longitude}&radius=9999999`).subscribe(
             res => {
                 this._allRestaurants = res.json();
                 this.setRestaurantMarkers(this._allRestaurants);
+            }, () => {
+                this.loader.dismiss()
             }
         )
     }

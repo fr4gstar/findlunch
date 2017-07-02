@@ -1,10 +1,11 @@
 import {Component} from "@angular/core";
-import {NavController, NavParams, ToastController} from "ionic-angular";
+import {LoadingController, NavController, NavParams, ToastController} from "ionic-angular";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../providers/auth-service";
 import {SERVER_URL} from "../../app/app.module";
+import {LoadingService} from "../../providers/loading-service";
 
 @Component({
   selector: 'login-page',
@@ -14,13 +15,18 @@ import {SERVER_URL} from "../../app/app.module";
 export class LoginPage {
 
   popThisPage : boolean;
+  private loader;
   private counterPasswordWrong: number = 0;
 
   constructor(private navCtrl: NavController,
               private toastCtrl: ToastController,
               private auth: AuthService,
               private http: Http,
-              navParams: NavParams) {
+              navParams: NavParams,
+              private loadingController: LoadingController) {
+      this.loader = this.loadingController.create({
+          content: "Bitte warten"
+      });
 
     this.popThisPage = navParams.get("comeBack");
   }
@@ -28,25 +34,25 @@ export class LoginPage {
 
   public login(userName: string, password: string) {
     this.counterPasswordWrong ++;
+    this.loader.present();
     this.auth.login(userName, password).then(data => {
-      if (data) {
 
+      if (data) {
         const toast = this.toastCtrl.create({
           message: "Login Erfolgreich",
           duration: 3000
         });
         toast.present();
-
+        this.loader.dismiss()
         if(this.popThisPage){
           this.navCtrl.pop();
         }else {
           this.navCtrl.setRoot(HomePage);
         }
       } else{
-      alert("E-Mail und/oder Passwort nicht bekannt");
+        alert("E-Mail und/oder Passwort nicht bekannt");
       }
     });
-
   }
 
   public goToRegisterPage() {
@@ -85,6 +91,8 @@ export class LoginPage {
       body: JSON.stringify(user)
     });
 
+    this.loader.present();
+
     this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
       .subscribe(
         (res) => {
@@ -103,7 +111,9 @@ export class LoginPage {
           toast.present();
         }, (err) => {
           console.error(err)
-        }
+        }, () => {
+              this.loader.dismiss()
+          }
       )
   }
 

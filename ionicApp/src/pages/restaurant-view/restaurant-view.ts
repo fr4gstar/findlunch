@@ -1,10 +1,11 @@
 import {Component} from "@angular/core";
-import {NavController, NavParams} from "ionic-angular";
+import {LoadingController, NavController, NavParams} from "ionic-angular";
 import {SERVER_URL} from "../../app/app.module";
 import {Headers, Http, RequestOptions} from "@angular/http";
 
 import {Restaurant} from "../../model/Restaurant";
 import {AuthService} from "../../providers/auth-service";
+import {LoadingService} from "../../providers/loading-service";
 
 
 /**
@@ -21,6 +22,7 @@ export class RestaurantViewPage {
    */
   public restaurant: Restaurant;
   public openingTime;
+  private loader;
 
   /**
    * Initialize modules and gets restaurant from previous page.
@@ -30,7 +32,11 @@ export class RestaurantViewPage {
     public navCtrl : NavController,
     private navParams:NavParams,
     private auth: AuthService,
-    private http: Http ) {
+    private http: Http,
+    private loadingController: LoadingController ) {
+      this.loader = this.loadingController.create({
+          content: "Bitte warten"
+      });
 
     this.restaurant = navParams.get("restaurant");
     this.openingTime = this.restaurant.timeSchedules;

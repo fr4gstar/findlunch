@@ -1,8 +1,7 @@
 import {Component} from "@angular/core";
-import {NavController, NavParams, Platform} from "ionic-angular";
+import {NavController, LoadingController, NavParams, Platform} from "ionic-angular";
 import {Http, RequestOptions, Headers} from "@angular/http";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
-import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
 import {Observable} from "rxjs/Observable";
@@ -17,14 +16,19 @@ import {AuthService} from "../../providers/auth-service";
 export class RestaurantsPage {
   public restaurants$: Observable<Restaurant[]>;
   private pos : Coordinates;
+  private loader;
 
   constructor(public navCtrl : NavController,
               private navParams:NavParams,
               private http: Http,
               private geolocation: Geolocation,
               private platform: Platform,
-              private auth: AuthService
+              private auth: AuthService,
+              private loadingController: LoadingController
   ) {
+      this.loader = this.loadingController.create({
+          content: "Bitte warten"
+      });
     this.platform.ready().then(() => this.getGeolocation()  )
   }
 
@@ -52,7 +56,7 @@ export class RestaurantsPage {
           });
       }
 
-    this.restaurants$ = this.http.get(`https://shrouded-dusk-87807.herokuapp.com/api/restaurants?latitude=48.1559834&longitude=11.6314406&radius=9999999`,options)
+      this.restaurants$ = this.http.get(`https://shrouded-dusk-87807.herokuapp.com/api/restaurants?latitude=48.1559834&longitude=11.6314406&radius=9999999`,options)
         .map(res => res.json())
  }
 

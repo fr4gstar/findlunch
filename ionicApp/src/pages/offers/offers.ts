@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {NavController, NavParams} from "ionic-angular";
+import {LoadingController, NavController, NavParams} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 import {OrderDetailsPage} from "../order-details/orderdetails";
@@ -24,7 +24,7 @@ export class OffersPage implements OnInit {
     public offers: any;
     public categories;
     shownGroup = null;
-
+    private loader;
     allergenics$: Observable<any>;
     additives$: Observable<any>;
 
@@ -33,9 +33,11 @@ export class OffersPage implements OnInit {
               private cartService: CartService,
               private navCtrl: NavController,
               private http: Http,
-              public auth: AuthService
-  ) {
-
+              public auth: AuthService,
+              private loadingController: LoadingController) {
+      this.loader = this.loadingController.create({
+          content: "Bitte warten"
+      });
     this.restaurant = navParams.get("restaurant");
   }
 
@@ -49,9 +51,10 @@ export class OffersPage implements OnInit {
             },
             err => console.error(err)
         );
-
+        //this.loader.present();
         this.allergenics$ = this.http.get(SERVER_URL + "/api/all_allergenic").map(res => res.json());
         this.additives$ = this.http.get(SERVER_URL + "/api/all_additives").map(res => res.json());
+        //this.loader.dismiss()
     }
 
     public onOfferClicked(event, offer) {
@@ -80,6 +83,7 @@ export class OffersPage implements OnInit {
 
         // unset as favorite
         if (this.restaurant.isFavorite) {
+            this.loader.present();
             this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
                 res => {
                     if (res.json() === 0) {
@@ -90,11 +94,15 @@ export class OffersPage implements OnInit {
                 err => {
                     alert("Konnte Restaurant nicht als Favorit entfernen.");
                     console.error(err);
+                },
+                () => {
+                    this.loader.dismiss()
                 }
             )
         }
         // set as favorite
         else {
+            this.loader.present();
             this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
                 res => {
                     if (res.json() === 0) {
@@ -105,8 +113,12 @@ export class OffersPage implements OnInit {
                 err => {
                     alert("Konnte Restaurant nicht als Favorit setzen.");
                     console.error(err);
+                },
+                () => {
+                    this.loader.dismiss()
                 })
         }
+
     }
 
     getCartItemCount() {

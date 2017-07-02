@@ -1,8 +1,9 @@
 import {Component, OnInit} from "@angular/core";
-import {ToastController} from "ionic-angular";
+import {LoadingController, ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "../../providers/QRService";
+import {LoadingService} from "../../providers/loading-service";
 
 /**
  * This pages loads and shows the points of an user per restaurant.
@@ -18,6 +19,7 @@ export class BonusPage {
    * Object with restaurant and user points
    */
   public points: Object[];
+  private loader;
 
   /**
    *  Initialize modules and loadPoints for an user.
@@ -29,8 +31,12 @@ export class BonusPage {
     constructor(
       private toastCtrl: ToastController,
       private http: Http,
-      private qr: QRService) {
-    this.loadPoints();
+      private qr: QRService,
+      private loadingController: LoadingController) {
+      this.loader = this.loadingController.create({
+          content: "Bitte warten"
+      });
+        this.loadPoints();
     }
 
   /**
@@ -45,22 +51,28 @@ export class BonusPage {
    * Loads available points of an authorized user per restaurant
    */
   loadPoints(){
-    let user = window.localStorage.getItem("username");
-    let token = window.localStorage.getItem(user);
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      "Authorization": "Basic " +token
-    });
+
+      let user = window.localStorage.getItem("username");
+      let token = window.localStorage.getItem(user);
+      let headers = new Headers({
+          'Content-Type': 'application/json',
+          "Authorization": "Basic " +token
+      });
 
     let options = new RequestOptions({
       headers: headers,
       method: RequestMethod.Get
     });
 
+    this.loader.present();
+
     this.http.get(`${SERVER_URL}/api/get_points`, options)
     .subscribe(
       res => this.points = res.json(),
-      err => console.error("Punkte Holen Fehlgeschlagen " + err)
+      err => console.error("Punkte Holen Fehlgeschlagen " + err),
+        () => {
+            this.loader.dismiss()
+        }
     )
   }
 }

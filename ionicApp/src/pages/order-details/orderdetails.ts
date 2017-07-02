@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
+import {AlertController, LoadingController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
@@ -11,6 +11,7 @@ import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
 import {Reservation} from "../../model/Reservation";
 import {HomePage} from "../home/home";
+import {LoadingService} from "../../providers/loading-service";
 
 
 /**
@@ -26,7 +27,7 @@ export class OrderDetailsPage {
     public restaurant: Restaurant;
     public pickUpTime;
     public pickUpTimeISOFormat;
-
+    private loader;
 
     public userPoints = 0;
     public neededPoints = 0;
@@ -45,9 +46,11 @@ export class OrderDetailsPage {
                 private cartService: CartService,
                 private auth: AuthService,
                 private alertCtrl: AlertController,
-                private datePicker: DatePicker
-)
-    {
+                private datePicker: DatePicker,
+                private loadingController: LoadingController) {
+        this.loader = this.loadingController.create({
+            content: "Bitte warten"
+        });
         this.restaurant = navParams.get("restaurant");
         //TODO: ftr_reservation
         this.reservation = {
@@ -189,7 +192,7 @@ export class OrderDetailsPage {
                 });
             });
             delete payload.items;
-
+            this.loader.present();
             this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
                 (res) => {
                     const toast = this.toastCtrl.create({
@@ -205,6 +208,8 @@ export class OrderDetailsPage {
                     this.navCtrl.popTo(HomePage);
                 }, (err) => {
                     console.error(err)
+                }, () => {
+                    this.loader.dismiss()
                 })
         }
     }
@@ -280,6 +285,7 @@ export class OrderDetailsPage {
         });
         let options = new RequestOptions({headers: headers,
                                 method: RequestMethod.Get});
+        this.loader.present();
         this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
             .subscribe(
                 res =>{
@@ -290,7 +296,10 @@ export class OrderDetailsPage {
                     this.morePointsThanNeeded = this.userPoints > this.neededPoints;
 
                 },
-                err => console.error(err)
+                err => console.error(err),
+                () => {
+                    this.loader.dismiss()
+                }
             )}
 
     public calcNeededPoints(){
