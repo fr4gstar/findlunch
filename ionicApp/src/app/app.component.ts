@@ -97,8 +97,17 @@ export class MyApp {
   }
    openUrl(url){
     this.platform.ready().then(() => {
-      let browser = this.iab.create(url);
+       this.iab.create(url);
     });
+  }
+
+  goToImpressum(){
+       this.openUrl("https://shrouded-dusk-87807.herokuapp.com/about_findlunch");
+  }
+
+  goToFaq(){
+      this.openUrl("https://shrouded-dusk-87807.herokuapp.com/faq_customer");
+
   }
 
 }
