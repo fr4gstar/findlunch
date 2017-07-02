@@ -61,7 +61,7 @@ export class OrderDetailsPage {
             //pointsCollected: false,
             points: 0,
             reservationNumber: 0,
-            reservation_offers: cartService.getCart(this.restaurant.id),
+            items: cartService.getCart(this.restaurant.id),
             restaurant: this.restaurant,
             bill: null,
             reservationStatus: null,
@@ -71,8 +71,9 @@ export class OrderDetailsPage {
         };
 
 
+        this.nowOpen = this.restaurant.currentlyOpen;
 
-        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.reservation_offers);
+        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
             console.log("ein schritt vor get UserPoints");
             this.calcNeededPoints();
@@ -99,7 +100,7 @@ export class OrderDetailsPage {
             console.log("Maxmimum amount of Product reached");
         } else {
             offer.amount++;
-            this.reservation.totalPrice = this.calcTotalPrice(this.reservation.reservation_offers);
+            this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
             this.reservation.donation = 0;
             this.calcNeededPoints();
             this.hasEnoughPoints();
@@ -116,11 +117,11 @@ export class OrderDetailsPage {
      */
     decreaseAmount(offer) {
         if (offer.amount <= 1) {
-            this.reservation.reservation_offers.splice(this.findItemIndex(offer), 1);
+            this.reservation.items.splice(this.findItemIndex(offer), 1);
         } else {
             offer.amount--;
         }
-        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.reservation_offers);
+        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         this.reservation.donation = 0;
         this.calcNeededPoints();
         this.hasEnoughPoints();
@@ -164,7 +165,7 @@ export class OrderDetailsPage {
      * Displays Alert if order is empty
      */
     sendOrder() {
-        if(this.reservation.reservation_offers.length === 0){
+        if(this.reservation.items.length === 0){
             alert("Sie können keine leere Bestellung absenden.");
         } else{
 
@@ -187,17 +188,22 @@ export class OrderDetailsPage {
                 ...this.reservation,
                 reservation_offers: []
             };
-            console.log("vor payload 'Beladung ist der Warenkorb leer: " + this.reservation.reservation_offers);
-            payload.reservation_offers.forEach((reservation_offers) => {
+            console.log("vor payload 'Beladung ist der Warenkorb leer: " + this.reservation.items);
+            payload.items.forEach((item) => {
                 payload.reservation_offers.push({
                     offer: {
-                        id: reservation_offers.id
+                        id: item.id
                     },
-                    amount: reservation_offers.amount
+                    amount: item.amount
                 });
             });
-            console.log("Der payload : " + payload);
-            delete payload.reservation_offers;
+            let payload_1 = payload;
+            console.log("Der payload vor löschen: ", JSON.stringify(payload));
+
+            delete payload.items;
+            console.log("payloads vorher nachher gleich? " + (payload_1 === payload));
+
+            console.log("Der payload nach löschen: ", JSON.stringify(payload));
 
             this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
                 (res) => {
@@ -225,7 +231,7 @@ export class OrderDetailsPage {
      * @returns {number} the total price of all items respecting their amounts.
      */
     private calcTotalPrice(items: Offer[]) {
-        return this.reservation.reservation_offers
+        return this.reservation.items
             .map(offer => offer.price * offer.amount)
             .reduce((prevOfferSum, offerSum) => prevOfferSum + offerSum, 0);
     }
@@ -236,7 +242,7 @@ export class OrderDetailsPage {
      * @returns {number}
      */
     private findItemIndex(offer) {
-        return this.reservation.reservation_offers
+        return this.reservation.items
             .findIndex((item, i) => item.id === offer.id)
     }
 
@@ -319,7 +325,7 @@ export class OrderDetailsPage {
 
     public calcNeededPoints(){
         let totalNeededPoints = 0;
-        for(let item of this.reservation.reservation_offers){
+        for(let item of this.reservation.items){
             totalNeededPoints += (item.neededPoints * item.amount);
         }
         this.neededPoints = totalNeededPoints;
@@ -344,7 +350,8 @@ export class OrderDetailsPage {
         this.openingTime = this.restaurant.timeSchedules[day]["offerStartTime"].split(" ")[1];
         console.log("openingtime : " + this.openingTime);
 
-
+        //TODO:rausschmeissen
+        /*
         let openingInt = parseInt(this.openingTime.replace(":",""));
         let closingInt = parseInt(this.closingTime.replace(":",""));
         let nowInt = parseInt((date.getHours()) + "" + date.getMinutes());
@@ -354,7 +361,7 @@ export class OrderDetailsPage {
         //TODO: Restaurant Schließzeiten auf 23:59 begrenzen, sonst geht das nicht.
         this.nowOpen  = true; //((openingInt < nowInt) && (nowInt < closingInt));
         console.log("geöffnet: " + this.nowOpen);
-
+        */
 
 
         let prepTimeInMs = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time

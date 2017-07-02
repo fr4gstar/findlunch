@@ -25,7 +25,7 @@ export class ReservationViewPage {
   constructor(private navParams: NavParams)
   {
       this.reservation = navParams.get("reservation");
-      this.reservation_offers = this.reservation.reservation_offers;
+      this.reservation_offers = this.reservation.items;
       this.restaurant = this.reservation.restaurant;
       this.sumPoints();
   }

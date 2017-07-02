@@ -17,7 +17,7 @@
       <ion-col col-3>Menge</ion-col>
       <ion-col col-2>Preis</ion-col>
     </ion-row>
-    <ion-row id="gericht" *ngFor="let item of reservation.reservation_offers">
+    <ion-row id="gericht" *ngFor="let item of reservation.items">
       <ion-col col-7>{{item.title}}</ion-col>
       <ion-col col-3>
         <span item-right>
