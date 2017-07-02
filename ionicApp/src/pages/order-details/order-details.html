@@ -75,7 +75,7 @@
     </div>
     <ion-item *ngIf="this.nowOpen">
         <ion-label >Abholen um (Wunschzeit)</ion-label>
-        <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min={{this.openingTime}} max={{this.closingTime}} (click)="enterPickUpTime()" [(ngModel)]="this.pickUpTimeISOFormat"></ion-datetime>
+        <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min={{this.openingTime}} max={{this.closingTime}} [(ngModel)]="this.pickUpTimeISOFormat"></ion-datetime>
         <span item-right>Uhr</span>
     </ion-item>
     <ion-item *ngIf="!this.nowOpen" text-wrap>
