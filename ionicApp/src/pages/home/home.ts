@@ -1,7 +1,6 @@
-import {Component} from "@angular/core";
+import {Component, ElementRef, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Coordinates, Geolocation} from "@ionic-native/geolocation";
-import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
@@ -9,9 +8,15 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
+import LatLng = google.maps.LatLng;
+import Marker = google.maps.Marker;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
+
+// this is needed for google maps plugin v2
+declare var plugin: any;
+declare var cordova: any;
 
 @Component({
     selector: 'page-home',
@@ -19,14 +24,14 @@ export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
 })
 export class HomePage {
 
-    private _map: GoogleMap;
-    private _mapMarkers: Array<Marker> = [];
+    @ViewChild('map') theMap: ElementRef;
+    private _map: any;
+    private _mapMarkers = [];
     private _allRestaurants: Array<Restaurant>;
 
     constructor(private navCtrl: NavController,
                 private geolocation: Geolocation,
                 private modalCtrl: ModalController,
-                private googleMaps: GoogleMaps,
                 private http: Http,
                 private popCtrl: PopoverController,
                 private popService: FilterPopoverService,
@@ -43,11 +48,6 @@ export class HomePage {
         this.platform.ready().then(() => {
             this.loadMap();
         });
-    }
-
-    // Load map only after view is initialized
-    ngAfterViewInit() {
-
     }
 
     public openFilterDialog(ev: Event) {
@@ -82,15 +82,13 @@ export class HomePage {
      * Initializes the Map and positions the current device on it.
      */
     private loadMap() {
-        // create a new map by passing HTMLElement
-        let element: HTMLElement = document.getElementById('map');
-
-        this._map = this.googleMaps.create(element);
+        // create map
+        let element = this.theMap.nativeElement;
+        this._map = plugin.google.maps.Map.getMap(element, {});
 
         // listen to MAP_READY event
         // You must wait for this event to fire before adding something to the map or modifying it in anyway
-        this._map.one(GoogleMapsEvent.MAP_READY).then(
-            () => {
+        this._map.one(plugin.google.maps.event.MAP_READY, () => {
                 console.log('Map is ready!');
                 // Now you can add elements to the map like the marker
 
@@ -105,7 +103,7 @@ export class HomePage {
 
                     this.fetchRestaurants(res.coords);
 
-                    let camPos: CameraPosition = {
+                    let camPos = {
                         target: pos,
                         zoom: 16
                     };
@@ -149,17 +147,35 @@ export class HomePage {
         restaurants.forEach((restaurant: Restaurant) => {
             this._map.addMarker({
                 position: new LatLng(restaurant.locationLatitude, restaurant.locationLongitude),
-                icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png',
-                title: restaurant.name,
-                snippet: `<p>Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
+                icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png'
+            }, (marker) => {
+                // add html info window
+                let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
+                htmlInfoWindow.setContent(`<div style="max-width: 80%">
+<h4>${restaurant.name}</h4>
+<div id="myCurrentInfoWindow">Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
 Telefon: ${restaurant.phone}<br/>
 Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
 Entfernung: ${restaurant.distance}m<br/>
-Jetzt geöffnet<p/>`,
-                infoClick: () => {
-                    this.navCtrl.push(OffersPage, {restaurant: restaurant});
-                }
-            }).then(marker => {
+Jetzt geöffnet<div/>
+</div>`);
+
+                marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
+                    htmlInfoWindow.open(marker);
+                    setTimeout(() => {
+                        document.getElementById("myCurrentInfoWindow").onclick = (event: MouseEvent) => {
+                            this.navCtrl.push(OffersPage, {restaurant: restaurant});
+                            return event;
+                        }
+                    }, 100);
+                });
+
+
+                /* // add info window event listener for click
+                 marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function() {
+                 this.navCtrl.push(OffersPage, {restaurant: restaurant});
+                 });*/
+
                 this._mapMarkers.push(marker);
             })
         });

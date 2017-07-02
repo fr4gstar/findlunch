@@ -24,7 +24,6 @@
         "@ionic-native/core": "^3.6.1",
         "@ionic-native/date-picker": "^3.12.1",
         "@ionic-native/geolocation": "^3.6.1",
-        "@ionic-native/google-maps": "^3.9.2",
         "@ionic-native/in-app-browser": "^3.12.1",
         "@ionic-native/native-geocoder": "^3.10.3",
         "@ionic-native/push": "^3.12.1",
@@ -40,7 +39,7 @@
         "cordova-plugin-datepicker": "^0.9.3",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-geolocation": "^2.4.3",
-        "cordova-plugin-googlemaps": "^1.4.1",
+        "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
         "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-nativegeocoder": "^1.0.2",
@@ -94,9 +93,7 @@
             "cordova-plugin-inappbrowser": {},
             "cordova-plugin-googlemaps": {
                 "API_KEY_FOR_ANDROID": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g",
-                "API_KEY_FOR_IOS": "AIzaSyDpkk1hAfWgvB_5KLj1U-usZ0V4TX5YN5A",
-                "NSLOCATIONWHENINUSEUSAGEDESCRIPTION": "Show your location on the map",
-                "NSLOCATIONALWAYSUSAGEDESCRIPTION": "Trace your location on the map"
+                "API_KEY_FOR_IOS": "AIzaSyDpkk1hAfWgvB_5KLj1U-usZ0V4TX5YN5A"
             }
         },
         "platforms": [

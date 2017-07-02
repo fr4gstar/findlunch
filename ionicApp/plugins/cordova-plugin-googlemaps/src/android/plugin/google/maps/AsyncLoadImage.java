@@ -3,6 +3,7 @@ package plugin.google.maps;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.annotation.SuppressLint;
@@ -21,41 +22,30 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
   private AsyncLoadImageInterface targetPlugin;
   private int mWidth = -1;
   private int mHeight = -1;
+  private float density = Resources.getSystem().getDisplayMetrics().density;
 
   public static BitmapCache mIconCache;
-
-  class BitmapCache extends LruCache<String, Bitmap> {
-
-    public BitmapCache(int maxSize) {
-      super(maxSize);
-    }
-
-    @Override
-    protected int sizeOf(String key, Bitmap bitmap) {
-      // The cache size will be measured in kilobytes rather than
-      // number of items.
-      return bitmap.getByteCount() / 1024;
-    }
-
-    @Override
-    protected void entryRemoved(boolean evicted, String key,
-                                Bitmap oldValue, Bitmap newValue) {
-      if (!oldValue.isRecycled()) {
-        oldValue.recycle();
-        oldValue = null;
-      }
-    }
-  }
+  private String userAgent = null;
+  private boolean noCaching = false;
 
   public AsyncLoadImage(AsyncLoadImageInterface plugin) {
     targetPlugin = plugin;
     privateInit();
   }
 
-  public AsyncLoadImage(int width, int height, AsyncLoadImageInterface plugin) {
+  public AsyncLoadImage(String userAgent, int width, int height, boolean noCaching, AsyncLoadImageInterface plugin) {
     targetPlugin = plugin;
     mWidth = width;
     mHeight = height;
+    this.userAgent = userAgent == null ? "Mozilla" : userAgent;
+    this.noCaching = noCaching;
+    privateInit();
+  }
+  public AsyncLoadImage(String userAgent, int width, int height, AsyncLoadImageInterface plugin) {
+    targetPlugin = plugin;
+    mWidth = width;
+    mHeight = height;
+    this.userAgent = userAgent == null ? "Mozilla" : userAgent;
     privateInit();
   }
 
@@ -74,13 +64,33 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
 
     mIconCache = new BitmapCache(cacheSize);
   }
-  private void addBitmapToMemoryCache(String key, Bitmap image) {
+
+  public static String getCacheKey(String url, int width, int height) {
+    try {
+      return getCacheKey(new URL(url), width, height);
+    } catch (MalformedURLException e) {
+      return null;
+    }
+  }
+  public static String getCacheKey(URL url, int width, int height) {
+    return url.hashCode() + "/" + width + "x" + height;
+  }
+
+  public static void addBitmapToMemoryCache(String key, Bitmap image) {
     if (getBitmapFromMemCache(key) == null) {
       mIconCache.put(key, image.copy(image.getConfig(), true));
     }
   }
 
-  private Bitmap getBitmapFromMemCache(String key) {
+  public static void removeBitmapFromMemCahce(String key) {
+    Bitmap image = mIconCache.remove(key);
+    if (image == null || image.isRecycled()) {
+      return;
+    }
+    image.recycle();
+  }
+
+  private static Bitmap getBitmapFromMemCache(String key) {
     Bitmap image = mIconCache.get(key);
     if (image == null || image.isRecycled()) {
       return null;
@@ -90,47 +100,66 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
   }
 
 
+  @Override
+  protected void onCancelled(Bitmap bitmap) {
+    super.onCancelled(bitmap);
+
+    if (bitmap != null && !bitmap.isRecycled()) {
+      bitmap.recycle();
+    }
+    bitmap = null;
+  }
+
+
   @SuppressLint("NewApi")
   protected Bitmap doInBackground(String... urls) {
     try {
-      URL url= new URL(urls[0]);
-      String cacheKey = url.hashCode() + "/" + mWidth + "x" + mHeight;
-      Bitmap image = getBitmapFromMemCache(cacheKey);
-      if (image != null) {
-        return image;
+      URL url = new URL(urls[0]);
+      String cacheKey = getCacheKey(url, mWidth, mHeight);
+      if (!noCaching) {
+        Bitmap image = getBitmapFromMemCache(cacheKey);
+        if (image != null) {
+          return image;
+        }
       }
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
-      http.setRequestMethod("GET");
-      http.setUseCaches(true);
-      http.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-      http.addRequestProperty("User-Agent", "Mozilla");
-      http.setInstanceFollowRedirects(true);
-      HttpURLConnection.setFollowRedirects(true);
 
-      boolean redirect = false;
-      // normally, 3xx is redirect
-      int status = http.getResponseCode();
-      if (status != HttpURLConnection.HTTP_OK) {
-        if (status == HttpURLConnection.HTTP_MOVED_TEMP
-          || status == HttpURLConnection.HTTP_MOVED_PERM
-          || status == HttpURLConnection.HTTP_SEE_OTHER)
-          redirect = true;
-      }
-      if (redirect) {
-
-        // get redirect URL from "location" header field
-        String newUrl = http.getHeaderField("Location");
-
-        // get the cookie if need, for login
-        String cookies = http.getHeaderField("Set-Cookie");
-
-        // open the new connection again
-        http = (HttpURLConnection) new URL(newUrl).openConnection();
-        http.setUseCaches(true);
-        http.setRequestProperty("Cookie", cookies);
+      boolean redirect = true;
+      HttpURLConnection http = null;
+      String cookies = null;
+      int redirectCnt = 0;
+      while(redirect && redirectCnt < 10) {
+        redirect = false;
+        http = (HttpURLConnection)url.openConnection();
+        http.setRequestMethod("GET");
+        if (cookies != null) {
+          http.setRequestProperty("Cookie", cookies);
+        }
         http.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-        http.addRequestProperty("User-Agent", "Mozilla");
+        http.addRequestProperty("User-Agent", userAgent);
+        http.setInstanceFollowRedirects(true);
+        HttpURLConnection.setFollowRedirects(true);
+
+        // normally, 3xx is redirect
+        int status = http.getResponseCode();
+        if (status != HttpURLConnection.HTTP_OK) {
+          if (status == HttpURLConnection.HTTP_MOVED_TEMP
+              || status == HttpURLConnection.HTTP_MOVED_PERM
+              || status == HttpURLConnection.HTTP_SEE_OTHER)
+            redirect = true;
+        }
+        if (redirect) {
+          // get redirect url from "location" header field
+          url = new URL(http.getHeaderField("Location"));
+
+          // get the cookie if need, for login
+          cookies = http.getHeaderField("Set-Cookie");
+
+          // Disconnect the current connection
+          http.disconnect();
+          redirectCnt++;
+        }
       }
+
 
       Bitmap myBitmap = null;
       InputStream inputStream = http.getInputStream();
@@ -147,7 +176,10 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
 
       BitmapFactory.Options options = new BitmapFactory.Options();
       options.inJustDecodeBounds = true;
-      myBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
+
+      // The below line just checking the bitmap size (width,height).
+      // Returned value is always null.
+      BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
 
       if (mWidth < 1 && mHeight < 1) {
         mWidth = options.outWidth;
@@ -155,7 +187,6 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
       }
 
       // Resize
-      float density = Resources.getSystem().getDisplayMetrics().density;
       int newWidth = (int)(mWidth * density);
       int newHeight = (int)(mHeight * density);
 
@@ -184,11 +215,13 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
       myBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
       canvas.drawBitmap(myBitmap, middleX - options.outWidth / 2, middleY - options.outHeight / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
       myBitmap.recycle();
+      myBitmap = null;
       canvas = null;
       imageBytes = null;
 
-      addBitmapToMemoryCache(cacheKey, scaledBitmap);
-
+      if (!noCaching) {
+        addBitmapToMemoryCache(cacheKey, scaledBitmap);
+      }
       return scaledBitmap;
     } catch (Exception e) {
       e.printStackTrace();
@@ -200,4 +233,5 @@ public class AsyncLoadImage extends AsyncTask<String, Void, Bitmap> {
     System.gc();
     this.targetPlugin.onPostExecute(image);
   }
+
 }
