@@ -259,7 +259,7 @@ export class OrderDetailsPage {
    * /TODO: Only valid times should be able to be chosen.
    */
   public enterPickUpTime(){
-    this.datePicker.show({
+   /* this.datePicker.show({
       date: new Date(),
       mode: 'time',
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
@@ -271,6 +271,7 @@ export class OrderDetailsPage {
       },
           err => console.log('Error occurred while getting date: ', err)
     );
+    */
   }
 
   /**
