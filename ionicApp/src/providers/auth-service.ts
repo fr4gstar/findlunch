@@ -93,6 +93,7 @@ public register(username: string, password: string) {
         this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
           (res) => {
             this.loggedIn = true;
+            this.userName = currentUser;
           }, (err) => {
             this.logout();
           })

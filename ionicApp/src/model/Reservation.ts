@@ -7,6 +7,7 @@ export interface Reservation {
   totalPrice: number,
   usedPoints: boolean,
   points: number,
+  pointsCollected: boolean,
   reservationNumber: number,
   items: Offer[],
   restaurant: Restaurant,
