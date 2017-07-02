@@ -12,6 +12,7 @@ import {AddressInputComponent} from "./AddressInputComponent";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
+export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
 
 @Component({
     selector: 'page-home',
@@ -32,11 +33,11 @@ export class HomePage {
                 private popService: FilterPopoverService,
                 private events: Events,
                 private platform: Platform) {
-        this.events.subscribe("menu", eventData => {
-            if (eventData === "open") {
+        this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
+            if (eventData === false) {
                 this._map.setClickable(false);
             }
-            else if (eventData === "close") {
+            else if (eventData === true) {
                 this._map.setClickable(true);
             }
         });
@@ -166,29 +167,30 @@ Jetzt geöffnet`,
         });
     }
 
-    /**
+/**
      * Show the addressinput modal dialog
      */
-    private showAddressInput() {
-        this._map.setClickable(false);
-        const modal = this.modalCtrl.create(AddressInputComponent);
-        modal.onWillDismiss(coords => {
-            // if the user cancels, coords will be undefined
-            if (coords) {
-                const latlng = new LatLng(coords.latitude, coords.longitude);
-                this._map.addMarker({
-                    position: latlng,
-                    title: "Ihr Standort"
-                });
-                this._map.moveCamera({
-                    target: latlng,
-                    zoom: 16
-                });
-                this.fetchRestaurants(coords);
+  private showAddressInput() {
+    this._map.setClickable(false);
+    const modal = this.modalCtrl.create(AddressInputComponent);
+    modal.onWillDismiss(coords => {
+      // if the user cancels, coords will be undefined
+            if (coords) {const latlng = new LatLng(coords.latitude, coords.longitude);
+
+      this._map.addMarker({
+        position: latlng,
+        title: "Ihr Standort"
+      });
+      this._map.moveCamera({
+        target: latlng,
+        zoom: 16
+      });
+
+      this.fetchRestaurants(coords);
             }
             // map must be set clickable in any case
             this._map.setClickable(true);
-        });
-        modal.present();
-    }
+    });
+    modal.present();
+  }
 }
