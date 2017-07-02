@@ -19,8 +19,10 @@
 -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="phonegap-plugin-barcodescanner-tests"
-        version="3.1.0">
+    xmlns:rim="http://www.blackberry.com/ns/widgets"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="phonegap-plugin-barcodescanner-tests"
+    version="3.1.0">
     <name>PhoneGap BarcodeScanner Plugin Tests</name>
     <license>Apache 2.0</license>
 

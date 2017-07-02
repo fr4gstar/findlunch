@@ -151,7 +151,7 @@ export class HomePage {
             }, (marker) => {
                 // add html info window
                 let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
-                htmlInfoWindow.setContent(`<div style="max-width: 80%">
+                htmlInfoWindow.setContent(`<div style="white-space: normal">
 <h4>${restaurant.name}</h4>
 <div id="myCurrentInfoWindow">Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
 Telefon: ${restaurant.phone}<br/>

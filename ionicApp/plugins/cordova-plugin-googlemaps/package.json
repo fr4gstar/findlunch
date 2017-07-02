@@ -2,11 +2,11 @@
   "_args": [
     [
       {
-        "raw": "https://github.com/mapsplugin/cordova-plugin-googlemaps#multiple_maps",
+        "raw": "cordova-plugin-googlemaps@git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "scope": null,
-        "escapedName": null,
-        "name": null,
-        "rawSpec": "https://github.com/mapsplugin/cordova-plugin-googlemaps#multiple_maps",
+        "escapedName": "cordova-plugin-googlemaps",
+        "name": "cordova-plugin-googlemaps",
+        "rawSpec": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "spec": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "type": "hosted",
         "hosted": {
@@ -28,11 +28,11 @@
   "_location": "/cordova-plugin-googlemaps",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "https://github.com/mapsplugin/cordova-plugin-googlemaps#multiple_maps",
+    "raw": "cordova-plugin-googlemaps@git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
     "scope": null,
-    "escapedName": null,
-    "name": null,
-    "rawSpec": "https://github.com/mapsplugin/cordova-plugin-googlemaps#multiple_maps",
+    "escapedName": "cordova-plugin-googlemaps",
+    "name": "cordova-plugin-googlemaps",
+    "rawSpec": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
     "spec": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
     "type": "hosted",
     "hosted": {
@@ -50,9 +50,9 @@
     "/"
   ],
   "_resolved": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#8cb86c90deafdb5a9c7759dcce879b98f4d2f45f",
-  "_shasum": "2f4e556526496987ca70d6fc9450f59f31fc352f",
+  "_shasum": "6f2169d9f1078ae569ecda8f38e4060fa11e4a87",
   "_shrinkwrap": null,
-  "_spec": "https://github.com/mapsplugin/cordova-plugin-googlemaps#multiple_maps",
+  "_spec": "cordova-plugin-googlemaps@git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
   "_where": "/home/david/dev/findlunch/ionicApp/node_modules",
   "author": {
     "name": "Masashi Katsumata, Hirbod Mirjavadi"

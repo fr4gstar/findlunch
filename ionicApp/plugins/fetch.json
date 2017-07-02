@@ -41,12 +41,49 @@
         "is_top_level": false,
         "variables": {}
     },
+    "cordova-plugin-googlemaps": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-googlemaps@git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps"
+        },
+        "is_top_level": true,
+        "variables": {
+            "API_KEY_FOR_ANDROID": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g",
+            "API_KEY_FOR_IOS": "AIzaSyDpkk1hAfWgvB_5KLj1U-usZ0V4TX5YN5A",
+            "LOCATION_WHEN_IN_USE_DESCRIPTION": "Show your location on the map",
+            "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Trace your location on the map"
+        }
+    },
+    "com.googlemaps.ios": {
+        "source": {
+            "type": "registry",
+            "id": "https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inappbrowser@^1.7.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
     "cordova-plugin-nativegeocoder": {
         "source": {
             "type": "registry",
             "id": "cordova-plugin-nativegeocoder@^1.0.2"
         },
         "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-add-swift-support": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-add-swift-support@1.6.0"
+        },
+        "is_top_level": false,
         "variables": {}
     },
     "cordova-plugin-splashscreen": {
@@ -87,7 +124,9 @@
             "id": "phonegap-plugin-barcodescanner@^6.0.6"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "CAMERA_USAGE_DESCRIPTION": " "
+        }
     },
     "phonegap-plugin-push": {
         "source": {
@@ -97,41 +136,6 @@
         "is_top_level": true,
         "variables": {
             "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
-        }
-    },
-    "cordova-plugin-inappbrowser": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-inappbrowser@1.7.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-add-swift-support": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-add-swift-support@1.6.0"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "com.googlemaps.ios": {
-        "source": {
-            "type": "registry",
-            "id": "https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
-    "cordova-plugin-googlemaps": {
-        "source": {
-            "type": "registry",
-            "id": "https://github.com/mapsplugin/cordova-plugin-googlemaps#multiple_maps"
-        },
-        "is_top_level": true,
-        "variables": {
-            "API_KEY_FOR_ANDROID": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g",
-            "API_KEY_FOR_IOS": "AIzaSyDpkk1hAfWgvB_5KLj1U-usZ0V4TX5YN5A"
         }
     }
 }

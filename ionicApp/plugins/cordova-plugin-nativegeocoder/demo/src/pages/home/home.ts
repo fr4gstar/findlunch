@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
+import { Component } from '@angular/core';
 
-import {NavController, Platform} from "ionic-angular";
-import {NativeGeocoder, NativeGeocoderForwardResult, NativeGeocoderReverseResult} from "ionic-native";
+import { NavController, Platform } from 'ionic-angular';
+import { NativeGeocoder, NativeGeocoderForwardResult, NativeGeocoderReverseResult } from 'ionic-native';
 
 @Component({
   selector: 'page-home',
