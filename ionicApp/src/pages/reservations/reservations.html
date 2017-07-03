@@ -1,24 +1,29 @@
 <ion-header>
-  <ion-navbar color="dark">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Meine Bestellungen</ion-title>
-  </ion-navbar>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Meine Bestellungen</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+    <ion-list id="reservations">
 
-    <div  *ngFor='let reservation of reservations;'>
-      <ion-item (click)="onReservationClicked($event, reservation)" >
-        <span>{{reservation.restaurant.name}} {{reservation.collectTime | date:'dd.MM.yyyy'}}</span>
-        <span item-right style="color: yellow;" *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
-        <span item-right style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
-        <span item-right style="color: red;" *ngIf='reservation.reservationStatus.key === 2'>Abgelehnt</span>
-        <span item-right style="color: white;" *ngIf='reservation.reservationStatus.key === 3'>{{reservation.reservationStatus.status}}</span>
-      </ion-item>
-    </div>
-
-  </ion-list>
+        <ng-container *ngFor="let restaurant of this.usedRestaurants">
+            <ion-list-header text-wrap>{{restaurant}}</ion-list-header>
+            <ng-container *ngFor='let reservation of reservations;'>
+                <ng-container *ngIf="reservation.restaurant.name === restaurant">
+                    <ion-item (click)="onReservationClicked($event, reservation)">
+                        <span>{{reservation.collectTime | date:'dd.MM.yyyy hh:mm'}}</span>
+                        <span item-right style="color: yellow;" *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
+                        <span item-right style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
+                        <span item-right style="color: red;"
+                              *ngIf='reservation.reservationStatus.key === 2'>Abgelehnt</span>
+                        <span item-right style="color: black;" *ngIf='reservation.reservationStatus.key === 3'>{{reservation.reservationStatus.status}}</span>
+                    </ion-item>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </ion-list>
 </ion-content>
