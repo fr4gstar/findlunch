@@ -36,6 +36,8 @@ export class OrderDetailsPage {
     public openingTime;
     public closingTime;
     public nowOpen;
+    public now;
+    public earliestPickUp;
 
 
     constructor(private http: Http,
@@ -74,7 +76,7 @@ export class OrderDetailsPage {
 
         }
 
-        this.nowOpen = true; //  this.restaurant.currentlyOpen;
+        this.nowOpen = this.restaurant.currentlyOpen;
 
         this.calcTimings(5);
     }
@@ -327,6 +329,10 @@ export class OrderDetailsPage {
 
         this.pickUpTime = date;
         this.pickUpTimeISOFormat = date.toISOString();
+
+        date.setTime(date.getTime() - 120 * 60 * 1000);
+        this.earliestPickUp = date.toLocaleTimeString()
+
     }
 
 }

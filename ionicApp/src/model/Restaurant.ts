@@ -4,6 +4,7 @@ export interface Restaurant {
   actualPoints: number,
   city: string,
   country: Object,
+  currentlyOpen: boolean,
   distance: number,
   email: string,
   id: number,
