@@ -284,7 +284,10 @@ export class OrderDetailsPage {
             .subscribe(
                 res =>{
                     let reply = res.json();
-                    this.userPoints= reply[0].points;
+                    //if user has no points at the restaurant yet
+                    if(!(reply.length === 0)){
+                        this.userPoints= reply[0].points;
+                    }
                     // boolean whether enough points to pay order with points
                     // has to wait for the getUserPoints query
                     this.morePointsThanNeeded = this.userPoints > this.neededPoints;
