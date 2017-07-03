@@ -19,7 +19,7 @@ export class ReservationViewPage {
   public points = 0;
 
   /**
-   * Initialize modules and sums the points
+   * Initialize modules and displays the points earned for this order
    * @param navParams
    */
   constructor(private navParams: NavParams)
@@ -27,16 +27,7 @@ export class ReservationViewPage {
       this.reservation = navParams.get("reservation");
       this.reservation_offers = this.reservation.items;
       this.restaurant = this.reservation.restaurant;
-      this.sumPoints();
+      this.points = this.reservation.points;
   }
 
-  /**
-   * Sums the points from all
-   */
-  sumPoints(){
-    // TODO anpassen auf die richtige property
-    for(let offer of this.reservation_offers) {
-      this.points = this.points + offer.offer.neededPoints;
-    }
-  }
 }
