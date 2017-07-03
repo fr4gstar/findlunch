@@ -8,9 +8,9 @@
 </ion-header>
 
 <ion-content padding>
-  Ihre Bestellung bei  {{restaurant.name}} vom {{reservation.collectTime | date:'dd.MM.yyyy'}}
+    <h3>Ihre Bestellung bei  {{restaurant.name}} vom {{reservation.collectTime | date:'dd.MM.yyyy'}}</h3>
 
-  <div *ngFor='let offers of reservation_offers;'>
+  <div *ngFor='let offers of items;'>
     <ion-item>
       <span>{{offers.offer.title}}</span>
       <span item-right>{{offers.offer.price | currency:'EUR':true}}</span>
