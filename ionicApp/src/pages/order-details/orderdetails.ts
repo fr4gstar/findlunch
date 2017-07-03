@@ -31,7 +31,7 @@ export class OrderDetailsPage {
     public userPoints = 0;
     public neededPoints = 0;
     public morePointsThanNeeded;
-    public payWithPoints;
+    public payWithPoints = false;
 
     public openingTime;
     public closingTime;
@@ -170,9 +170,8 @@ export class OrderDetailsPage {
 
             if(this.auth.getLoggedIn()){
                 this.reservation.usedPoints = this.payWithPoints;
-                if (this.reservation.usedPoints){
-                    this.reservation.pointsCollected = false;
-                }
+                this.reservation.pointsCollected = !this.reservation.usedPoints;
+
                 this.reservation.points = this.neededPoints;
             }
 
