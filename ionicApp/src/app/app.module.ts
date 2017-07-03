@@ -15,6 +15,8 @@ import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
 import {AuthService} from "../providers/auth-service.ts";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
+import {ReservationsPage} from "../pages/reservations/reservations"
+import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
@@ -59,7 +61,9 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OffersProductViewPage,
         RestaurantViewPage,
         LoginPage,
-        RegistryPage
+        RegistryPage,
+        ReservationsPage,
+        ReservationViewPage
 
     ],
     imports: [
@@ -81,7 +85,9 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OffersProductViewPage,
         RestaurantViewPage,
         LoginPage,
-        RegistryPage
+        RegistryPage,
+        ReservationsPage,
+        ReservationViewPage
     ],
     providers: [
         StatusBar,
