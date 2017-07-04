@@ -1,44 +1,48 @@
 <ion-header>
-  <ion-navbar color="dark">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Registrieren</ion-title>
-  </ion-navbar>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Registrieren</ion-title>
+    </ion-navbar>
 </ion-header>
 <ion-content padding>
 
-  <ion-list >
-    <ion-item>
-      <ion-label floating>E-Mail</ion-label>
-      <ion-input #userName type="text"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label floating>Passwort</ion-label>
-      <ion-input #password type="password"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label floating>Passwort bestätigen</ion-label>
-      <ion-input #password2 type="password"></ion-input>
-    </ion-item>
-      <button ion-button full (click)='onRegisterClicked(userName.value,password.value,password2.value)'>REGISTRIERUNG ABSENDEN</button>
-  </ion-list>
+    <ion-list>
+        <ion-item>
+            <ion-label floating>E-Mail</ion-label>
+            <ion-input #userName type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>Passwort</ion-label>
+            <ion-input #password type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>Passwort bestätigen</ion-label>
+            <ion-input #password2 type="password"></ion-input>
+        </ion-item>
+        <div>&nbsp;</div>
+        <ion-grid>
+            <ion-row>
+                <ion-col col-1>
+                    <ion-checkbox color="blue" checked="false" [(ngModel)]="termsAndConditionsChecked"></ion-checkbox>
+                </ion-col>
+                <ion-col>
+                    <div>Ich habe die
+                        <div id="agb-link" (click)="goToTermsAndConditions()">allgemeinen Geschäftsbedingungen</div>
+                        gelesen und stimme ihnen hiermit zu
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-list>
+    <button ion-button full (click)='onRegisterClicked(userName.value,password.value,password2.value)'>
+        REGISTRIERUNG ABSENDEN
+    </button>
 
 
 
-    <ion-grid>
-        <ion-row>
-            <ion-col col-1>
-                <ion-checkbox color="blue" checked="false" [(ngModel)]="termsAndConditionsChecked"></ion-checkbox>
-            </ion-col>
-            <ion-col>
-                <div>Ich habe die
-                    <div id="agb-link" (click)="goToTermsAndConditions()">allgemeinen Geschäftsbedingungen</div>
-                    gelesen und stimme ihnen hiermit zu
-                </div>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+
 
 
 
