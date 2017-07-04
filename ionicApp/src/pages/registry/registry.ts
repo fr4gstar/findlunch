@@ -9,6 +9,9 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
   selector: 'registry',
   templateUrl: 'registry.html'
 })
+/**
+ * gets "comeback" navParam, to determine whether to send the view back to where it came from after registering
+ */
 export class RegistryPage {
 
   termsAndConditionsChecked : boolean;
@@ -24,16 +27,14 @@ export class RegistryPage {
   this.termsAndConditionsChecked = false;
   }
 
-
+/**
+ * Username password and password repetitions get checked and registered with the server. If registry not successful
+ * suiting error message gehts displayed. if successful, logs in directly and goes either back to orderdetails or
+ * homepage
+ */
   public onRegisterClicked(username: string, password: string, password2: string) {
     if (!this.passwordsIdentical(password, password2)) {
-      alert("Passwörter stimmen nicht überein");
-
-    }else if(!this.termsAndConditionsChecked){
-      const toast = this.toastCtrl.create({
-        message: "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Beschäftsbedniungenen",
-        duration: 3000});
-      toast.present();
+      alert("Passworteingaben stimmen nicht überein, bitte überprüfen Sie Ihre Eingabe");
 
     } else{
 
@@ -55,27 +56,33 @@ export class RegistryPage {
             alert("keine gültige E-Mail Adresse");
             break;
           case "2" :
-            alert("Passwort entspricht nicht den Passwortrichtlinien (mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen)");
+            alert("Passwort entspricht nicht den Passwortrichtlinien: \n" +
+                "mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen");
             break;
           case "3" :
-            alert("E-Mail adresse bereits vergeben");
+            alert("E-Mail adresse bereits vergeben.");
             break;
 
-          default : ;
+          default : alert("Anfrage fehlgeschlagen");
         }
       })
 
     }
   }
 
-
+    /**
+     * returns whether entered passwords are identical
+     *
+     * @param password
+     * password first entered
+     * @param password2
+     * password repetition
+     * @returns {boolean}
+     * whether passwords are identical
+     *
+     */
   private passwordsIdentical( password: string, password2: string) {
-    if (password !== password2) {
-      alert("Passworteingaben stimmen nicht überein, bitte überprüfen Sie Ihre Eingabe");
-      return false;
-    }
-    else
-      return true;
+    return (password === password2);
   }
 
   public goToTermsAndConditions(){
