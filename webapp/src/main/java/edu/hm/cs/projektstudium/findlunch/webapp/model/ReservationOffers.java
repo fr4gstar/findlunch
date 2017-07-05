@@ -39,6 +39,7 @@ public class ReservationOffers {
 	private Offer offer;
 	
 	/** The amount */
+	@JsonView({ReservationView.ReservationRest.class})
 	private int amount;
 
 
