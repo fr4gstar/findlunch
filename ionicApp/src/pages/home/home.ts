@@ -159,7 +159,6 @@ Entfernung: ${restaurant.distance}m
 Jetzt geöffnet`,
 
                 infoClick: () => {
-                    console.log("marker clicked");
                     this.navCtrl.push(OffersPage, {restaurant: restaurant});
                 }
             }).then(marker => {
