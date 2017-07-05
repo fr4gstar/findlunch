@@ -2,11 +2,10 @@ import {Component, ViewChild} from "@angular/core";
 import {AlertController, Events, Nav, Platform, ToastController} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {SERVER_URL} from "../app/app.module";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Http} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
-import {Push, PushObject, PushOptions} from "@ionic-native/push";
+import {Push} from "@ionic-native/push";
 import {QRService} from "../providers/QRService";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
@@ -69,7 +68,6 @@ export class MyApp {
 
     }
 
-
     openPage(page) {
         // Reset the content nav to have just this page
         // we wouldn't want the back button to show in this scenario
@@ -83,30 +81,29 @@ export class MyApp {
             duration: 3000
         });
         toast.present();
-        this.nav.setRoot(HomePage);
     }
 
     onMenuClosed() {
-        this.events.publish("menu", "close");
+        this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, true);
     }
 
-
     onMenuOpened() {
-    this.events.publish("menu", "open");
-  }
-   openUrl(url){
-    this.platform.ready().then(() => {
-       this.iab.create(url);
-    });
-  }
+        this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, false);
+    }
 
-  goToImpressum(){
-       this.openUrl("https://shrouded-dusk-87807.herokuapp.com/about_findlunch");
-  }
+    openUrl(url) {
+        this.platform.ready().then(() => {
+            let browser = this.iab.create(url);
+        });
+    }
 
-  goToFaq(){
-      this.openUrl("https://shrouded-dusk-87807.herokuapp.com/faq_customer");
+    goToImpressum() {
+        this.openUrl("https://shrouded-dusk-87807.herokuapp.com/about_findlunch");
+    }
 
-  }
+    goToFaq() {
+        this.openUrl("https://shrouded-dusk-87807.herokuapp.com/faq_customer");
+
+    }
 
 }
