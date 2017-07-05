@@ -156,7 +156,7 @@ export class HomePage {
 Telefon: ${restaurant.phone}
 Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}
 Entfernung: ${restaurant.distance}m
-Jetzt geöffnet`,
+${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}`,
 
                 infoClick: () => {
                     this.navCtrl.push(OffersPage, {restaurant: restaurant});
