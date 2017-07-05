@@ -34,7 +34,13 @@ export class RegistryPage {
  */
   public onRegisterClicked(username: string, password: string, password2: string) {
     if (!this.passwordsIdentical(password, password2)) {
-      alert("Passworteingaben stimmen nicht überein, bitte überprüfen Sie Ihre Eingabe");
+      alert("Passwörter stimmen nicht überein");
+
+    }else if(!this.termsAndConditionsChecked){
+      const toast = this.toastCtrl.create({
+        message: "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Beschäftsbedniungenen",
+        duration: 3000});
+      toast.present();
 
     } else{
 
