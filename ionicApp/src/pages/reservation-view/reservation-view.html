@@ -10,10 +10,10 @@
 <ion-content padding>
     <h3>Ihre Bestellung bei  {{restaurant.name}} vom {{reservation.collectTime | date:'dd.MM.yyyy'}}</h3>
 
-  <div *ngFor='let offers of items;'>
-    <ion-item>
-      <span>{{offers.offer.title}}</span>
-      <span item-right>{{offers.offer.price | currency:'EUR':true}}</span>
+  <div *ngFor='let offer of offers;'>
+    <ion-item text-wrap>
+      <span>{{offer.offer.title}} x {{offer.offer.amount}}</span>
+      <span item-right>{{offer.offer.price | currency:'EUR':true}}</span>
     </ion-item>
   </div>
   <div *ngIf='reservation.donation !== 0;'>
@@ -27,7 +27,7 @@
     <span item-right>{{reservation.totalPrice | currency:'EUR':true}}</span>
   </ion-item>
 
-  <span *ngIf='!reservation.usedPoints'>Sie haben für diese Bestellung {{points}} punkte erhalten</span>
+  <span *ngIf='reservation.pointsCollected'>Sie haben für diese Bestellung {{points}} punkte erhalten</span>
   <span style="color: blue;" *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
   <span style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
   <!-- reservation.reservationsStatus.status eher mit key und nicht mit status arbeiten -->
