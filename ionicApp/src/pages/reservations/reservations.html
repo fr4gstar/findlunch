@@ -15,7 +15,7 @@
             <ng-container *ngFor='let reservation of reservations;'>
                 <ng-container *ngIf="reservation.restaurant.name === restaurant">
                     <ion-item (click)="onReservationClicked($event, reservation)">
-                        <span>{{reservation.collectTime | date:'dd.MM.yyyy hh:mm'}}</span>
+                        <span>{{reservation.collectTime | date:'dd.MM.yyyy HH:mm'}}</span>
                         <span item-right style="color: yellow;" *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
                         <span item-right style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
                         <span item-right style="color: red;"

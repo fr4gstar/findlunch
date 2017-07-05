@@ -3,6 +3,7 @@ import {NavController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {ReservationViewPage} from "../reservation-view/reservation-view";
+import {Reservation} from "../../model/Reservation";
 
 /**
  * This pages loads and shows all reservation of an user.
@@ -52,6 +53,7 @@ export class ReservationsPage implements OnInit {
                     this.reservations = res.json();
                     if(this.reservations.length > 0){
                         this.collectUsedRestaurants();
+                        ReservationsPage.sortByCollectTime(this.reservations)
                      }
 
 
@@ -76,5 +78,14 @@ export class ReservationsPage implements OnInit {
      */
     public onReservationClicked(event, reservation: String) {
         this.navCtrl.push(ReservationViewPage, {reservation: reservation});
+    }
+
+
+    private static sortByCollectTime(reservations: Reservation[]) {
+        reservations.sort((a, b) => {
+            if (a.collectTime > b.collectTime) return -1;
+            if (b.collectTime > a.collectTime) return 1;
+            return 0;
+        })
     }
 }
