@@ -40,6 +40,41 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343682752512:android:62648d2097d9c9ed",
+        "android_client_info": {
+          "package_name": "de.findlunch.findlunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343682752512-p31fo14do7v1hg1u34232smj13rku4du.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "343682752512-cj1a83rb6l4qo6dqk8s9vgonhd1ius85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

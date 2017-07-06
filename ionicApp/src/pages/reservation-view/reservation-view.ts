@@ -9,34 +9,28 @@ import {Offer} from "../../model/Offer";
  * This view loads a detailed reservation page
  */
 @Component({
-  selector: 'reservation-view-page',
-  templateUrl: 'reservation-view.html'
+    selector: 'reservation-view-page',
+    templateUrl: 'reservation-view.html'
 })
 export class ReservationViewPage {
-  public reservation: Reservation;
-  public reservation_offers;
-  public restaurant: Restaurant;
-  public points = 0;
+    public reservation;
+    public offers = [];
+    public restaurant: Restaurant;
+    public points = 0;
 
-  /**
-   * Initialize modules and sums the points
-   * @param navParams
-   */
-  constructor(private navParams: NavParams)
-  {
-      this.reservation = navParams.get("reservation");
-      this.reservation_offers = this.reservation.items;
-      this.restaurant = this.reservation.restaurant;
-      this.sumPoints();
-  }
 
-  /**
-   * Sums the points from all
-   */
-  sumPoints(){
-    // TODO anpassen auf die richtige property
-    for(let offer of this.reservation_offers) {
-      this.points = this.points + offer.offer.neededPoints;
+    /**
+     * Initialize modules and displays the points earned for this order
+     * @param navParams
+     */
+    constructor(private navParams: NavParams) {
+        this.reservation = navParams.get("reservation");
+        this.restaurant = this.reservation.restaurant;
+        this.points = this.reservation.points;
+        this.offers= this.reservation.reservation_offers;
+        debugger;
+           console.log(this.offers[0].offer.amount);
+           console.log(this.offers[0]);
+
     }
-  }
 }

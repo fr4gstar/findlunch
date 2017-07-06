@@ -1,35 +1,38 @@
 <ion-header>
-  <ion-navbar color="dark">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Bestelldetails</ion-title>
-  </ion-navbar>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Bestelldetails</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  Ihre Bestellung bei  {{restaurant.name}} vom {{reservation.collectTime | date:'dd.MM.yyyy'}}
+    <h3>Ihre Bestellung bei {{restaurant.name}} vom {{reservation.collectTime | date:'dd.MM.yyyy'}}</h3>
 
-  <div *ngFor='let offers of reservation_offers;'>
+    <div *ngFor='let offer of offers;'>
+        <ion-item text-wrap>
+            <span>{{offer.offer.title}} x {{offer.amount}}</span>
+            <span item-right>{{offer.offer.price | currency:'EUR':true}}</span>
+        </ion-item>
+    </div>
+    <div *ngIf='reservation.donation !== 0;'>
+        <ion-item>
+            <span>Spende</span>
+            <span item-right>{{reservation.donation | currency:'EUR':true}}</span>
+        </ion-item>
+    </div>
     <ion-item>
-      <span>{{offers.offer.title}}</span>
-      <span item-right>{{offers.offer.price | currency:'EUR':true}}</span>
+        <span>Gesamt</span>
+        <span item-right>{{reservation.totalPrice | currency:'EUR':true}}</span>
     </ion-item>
-  </div>
-  <div *ngIf='reservation.donation !== 0;'>
-  <ion-item>
-    <span>Spende</span>
-    <span item-right>{{reservation.donation | currency:'EUR':true}}</span>
-  </ion-item>
-  </div>
-  <ion-item>
-    <span>Gesamt</span>
-    <span item-right>{{reservation.totalPrice | currency:'EUR':true}}</span>
-  </ion-item>
 
-  <span *ngIf='!reservation.usedPoints'>Sie haben für diese Bestellung {{points}} punkte erhalten</span>
-  <span style="color: blue;" *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
-  <span style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
-  <!-- reservation.reservationsStatus.status eher mit key und nicht mit status arbeiten -->
+    <span *ngIf='reservation.pointsCollected'>Sie haben für diese Bestellung {{points}} Punkte erhalten</span>
+    <span style="color: blue;"
+          *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
+    <span style="color: green;"
+          *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
+    <span style="color: red;"
+          *ngIf='reservation.reservationStatus.key === 2'>{{reservation.reservationStatus.status}}</span>
 
 </ion-content>
