@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
@@ -201,7 +201,8 @@ export class OrderDetailsPage {
                     this.cartService.emptyCart(this.restaurant.id);
 
                     // go back to restaurants-overview
-                    this.navCtrl.popTo(HomePage);
+                    this.navCtrl.setRoot(HomePage);
+                    this.navCtrl.popToRoot();
                 }, (err) => {
                     console.error(err)
                 })
