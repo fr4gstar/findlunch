@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams, ToastController} from "ionic-angular";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../providers/auth-service";

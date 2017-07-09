@@ -15,7 +15,7 @@ import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
-import {ReservationsPage} from "../pages/reservations/reservations"
+import {ReservationsPage} from "../pages/reservations/reservations";
 import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 
 import {InAppBrowser} from "@ionic-native/in-app-browser";

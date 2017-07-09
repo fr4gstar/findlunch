@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
-import {Coordinates, Geolocation} from "@ionic-native/geolocation";
+import {Coordinates} from "@ionic-native/geolocation";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
@@ -95,8 +95,8 @@ export class HomePage {
                 this._map.setAllGesturesEnabled(true);
                 this._map.setCompassEnabled(true);
 
-                this._map.getMyLocation()
-                    .then((pos) => {
+                this._map.getMyLocation(null,
+                    (pos) => {
                         // get restaurants around this location
                         this.fetchRestaurants(pos.latLng);
 
@@ -106,8 +106,8 @@ export class HomePage {
                             zoom: 15
                         };
                         this._map.moveCamera(camPos);
-                    })
-                    .catch(err => {
+                    },
+                    err => {
                         console.error("Error getting location: ", err);
                         this.showAddressInput();
                     })
