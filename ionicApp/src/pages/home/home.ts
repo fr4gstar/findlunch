@@ -148,13 +148,13 @@ export class HomePage {
             }, (marker) => {
                 // add html info window
                 let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
-                htmlInfoWindow.setContent(`<div style="white-space: normal">
-<h4>${restaurant.name}</h4>
-<div id="myCurrentInfoWindow">Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
-Telefon: ${restaurant.phone}<br/>
-Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
-Entfernung: ${restaurant.distance}m<br/>
-${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}<div/>
+                htmlInfoWindow.setContent(`<div id="myCurrentInfoWindow" style="font-size: small">
+<div style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</div>
+<div><span>Adresse: ${restaurant.street} ${restaurant.streetNumber}</span><br/>
+<span>Telefon: ${restaurant.phone}</span><br/>
+<span style="white-space: normal;">Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
+<span>Entfernung: ${restaurant.distance}m</span><br/>
+<span>${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`);
 
                 marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
@@ -162,7 +162,6 @@ ${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}
                     setTimeout(() => {
                         document.getElementById("myCurrentInfoWindow").onclick = (event: MouseEvent) => {
                             this.navCtrl.push(OffersPage, {restaurant: restaurant});
-                            return event;
                         }
                     }, 100);
                 });
