@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
-import {Coordinates, Geolocation} from "@ionic-native/geolocation";
 import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
@@ -11,7 +10,6 @@ import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
-export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
 
 @Component({
@@ -25,7 +23,6 @@ export class HomePage {
     private _allRestaurants: Array<Restaurant>;
 
     constructor(private navCtrl: NavController,
-                private geolocation: Geolocation,
                 private modalCtrl: ModalController,
                 private googleMaps: GoogleMaps,
                 private http: Http,
@@ -44,11 +41,6 @@ export class HomePage {
         this.platform.ready().then(() => {
             this.loadMap();
         });
-    }
-
-    // Load map only after view is initialized
-    ngAfterViewInit() {
-
     }
 
     public openFilterDialog(ev: Event) {
@@ -99,22 +91,20 @@ export class HomePage {
                 this._map.setAllGesturesEnabled(true);
                 this._map.setCompassEnabled(true);
 
-                this.geolocation.getCurrentPosition({
-                    timeout: CONFIG_GEOLOCATION_TIMEOUT
-                }).then((res) => {
-                    let pos = new LatLng(res.coords.latitude, res.coords.longitude);
+                this._map.getMyLocation()
+                    .then((pos) => {
+                        // get restaurants around this location
+                        this.fetchRestaurants(pos.latLng);
 
-                    this.fetchRestaurants(res.coords);
-
-                    let camPos: CameraPosition = {
-                        target: pos,
-                        zoom: 16
-                    };
-
-                    this._map.moveCamera(camPos);
-                })
+                        // move map to current location
+                        let camPos: CameraPosition = {
+                            target: pos.latLng,
+                            zoom: 15
+                        };
+                        this._map.moveCamera(camPos);
+                    })
                     .catch(err => {
-                        this._map.setMyLocationEnabled(false);
+                        console.error("Error getting location: ", err);
                         this.showAddressInput();
                     })
             }
@@ -122,13 +112,13 @@ export class HomePage {
     }
 
     /**
-     * Fetches the restaurants from the server using the provided coordinates
-     * @param coords
+     * Fetches the restaurants from the server using the provided coordinates7
+     * @param latLng location as LatLng-object
      */
-    private fetchRestaurants(coords: Coordinates) {
+    private fetchRestaurants(latLng: LatLng) {
         // do not filter by radius, because there are just a few restaurants.
         // in the future it could filter by using the visible map-area.
-        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${coords.latitude}&longitude=${coords.longitude}&radius=9999999`).subscribe(
+        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`).subscribe(
             res => {
                 this._allRestaurants = res.json();
                 this.setRestaurantMarkers(this._allRestaurants);
@@ -167,30 +157,31 @@ ${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}
         });
     }
 
-/**
+    /**
      * Show the addressinput modal dialog
      */
-  private showAddressInput() {
-    this._map.setClickable(false);
-    const modal = this.modalCtrl.create(AddressInputComponent);
-    modal.onWillDismiss(coords => {
-      // if the user cancels, coords will be undefined
-            if (coords) {const latlng = new LatLng(coords.latitude, coords.longitude);
+    private showAddressInput() {
+        this._map.setClickable(false);
+        const modal = this.modalCtrl.create(AddressInputComponent);
+        modal.onWillDismiss((coords: Coordinates) => {
+            // if the user cancels, coords will be undefined
+            if (coords) {
+                const latlng = new LatLng(coords.latitude, coords.longitude);
 
-      this._map.addMarker({
-        position: latlng,
-        title: "Ihr Standort"
-      });
-      this._map.moveCamera({
-        target: latlng,
-        zoom: 16
-      });
+                this._map.addMarker({
+                    position: latlng,
+                    title: "Ihr Standort"
+                });
+                this._map.moveCamera({
+                    target: latlng,
+                    zoom: 15
+                });
 
-      this.fetchRestaurants(coords);
+                this.fetchRestaurants(latlng);
             }
             // map must be set clickable in any case
             this._map.setClickable(true);
-    });
-    modal.present();
-  }
+        });
+        modal.present();
+    }
 }
