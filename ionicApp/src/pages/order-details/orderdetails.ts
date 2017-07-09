@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
@@ -9,6 +9,8 @@ import {Restaurant} from "../../model/Restaurant";
 import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
+import {Reservation} from "../../model/Reservation";
+import {HomePage} from "../home/home";
 
 
 /**
@@ -20,20 +22,22 @@ import {RegistryPage} from "../registry/registry";
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage {
-    public reservation: {
-        totalPrice: number,
-        items: Offer[],
-        donation: number,
-        usedPoints: number,
-        collectTime: number
-    };
+    public reservation: Reservation;
     public restaurant: Restaurant;
     public pickUpTime;
+    public pickUpTimeISOFormat;
 
 
     public userPoints = 0;
     public neededPoints = 0;
     public morePointsThanNeeded;
+    public payWithPoints = false;
+
+    public openingTime;
+    public closingTime;
+    public nowOpen;
+    public now;
+    public earliestPickUp;
 
 
     constructor(private http: Http,
@@ -49,27 +53,32 @@ export class OrderDetailsPage {
         this.restaurant = navParams.get("restaurant");
         //TODO: ftr_reservation
         this.reservation = {
-            items: cartService.getCart(this.restaurant.id),
+            id:0,
             donation: 0,
-            usedPoints: 0,
             totalPrice: 0,
-            collectTime: Date.now() + 1000 * 60 * 5     // 5 min in future
+            usedPoints: false,
+            pointsCollected: true,
+            points: 0,
+            reservationNumber: 0,
+            items: cartService.getCart(this.restaurant.id),
+            restaurant: this.restaurant,
+            bill: null,
+            reservationStatus: null,
+            collectTime: null,
         };
+
 
 
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
-            console.log("ein schritt vor get UserPoints");
             this.calcNeededPoints();
             this.getUserPoints();
 
         }
 
-        //TODO: anpassen
-        this.pickUpTime = this.reservation.collectTime;
-        //TODO: Remove
-        console.log("this user has enough points to pay with them: "+ this.morePointsThanNeeded);
+        this.nowOpen = this.restaurant.currentlyOpen;
 
+        this.calcTimings(5);
     }
 
     /**
@@ -146,45 +155,60 @@ export class OrderDetailsPage {
     /**
      * Sends the current order to the server. This requires authentication.
      */
-    sendOrder() {
-        let user = window.localStorage.getItem("username");
-        let token = window.localStorage.getItem(user);
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic " + token
-        });
-        let options = new RequestOptions({headers: headers});
+   sendOrder() {
+        if(this.reservation.items.length === 0){
+            alert("Sie können keine leere Bestellung absenden.");
+        } else{
 
-        let payload = {
-            ...this.reservation,
-            reservation_offers: []
-        };
-        payload.items.forEach((item) => {
-            payload.reservation_offers.push({
-                offer: {
-                    id: item.id
-                },
-                amount: item.amount
+            let user = window.localStorage.getItem("username");
+            let token = window.localStorage.getItem(user);
+            let headers = new Headers({
+                'Content-Type': 'application/json',
+                "Authorization": "Basic " + token
             });
-        });
-        delete payload.items;
+            let options = new RequestOptions({headers: headers});
 
-        this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
-            (res) => {
-                const toast = this.toastCtrl.create({
-                    message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
-                    duration: 3000
+                this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
+
+            if(this.auth.getLoggedIn()){
+                this.reservation.usedPoints = this.payWithPoints;
+                this.reservation.pointsCollected = !this.reservation.usedPoints;
+
+                this.reservation.points = this.neededPoints;
+            }
+
+            let payload = {
+                ...this.reservation,
+                reservation_offers: []
+            };
+            payload.items.forEach((item) => {
+                payload.reservation_offers.push({
+                    offer: {
+                        id: item.id
+                    },
+                    amount: item.amount
                 });
-                toast.present();
+            });
+            delete payload.items;
 
-                // empty the cart for this restaurant
-                this.cartService.emptyCart(this.restaurant.id);
+            this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
+                (res) => {
+                    const toast = this.toastCtrl.create({
+                        message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
+                        duration: 3000
+                    });
+                    toast.present();
 
-                // go back to restaurants-overview
-                this.navCtrl.popToRoot();
-            }, (err) => {
-                console.error(err)
-            })
+                    // empty the cart for this restaurant
+                    this.cartService.emptyCart(this.restaurant.id);
+
+                    // go back to restaurants-overview
+                    this.navCtrl.setRoot(HomePage);
+                    this.navCtrl.popToRoot();
+                }, (err) => {
+                    console.error(err)
+                })
+        }
     }
 
 
@@ -227,20 +251,7 @@ export class OrderDetailsPage {
    * Lets the user enter his desired pickup time.
    * /TODO: Only valid times should be able to be chosen.
    */
-  public enterPickUpTime(){
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'time',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
 
-      date => {
-        console.log('Got date: ', date)
-        this.pickUpTime = date;
-      },
-          err => console.log('Error occurred while getting date: ', err)
-    );
-  }
 
   /**
    * Sends the user to the Loginpage. After successful Login he is automatically
@@ -275,8 +286,10 @@ export class OrderDetailsPage {
             .subscribe(
                 res =>{
                     let reply = res.json();
-                    console.log(reply[0].points);
-                    this.userPoints= reply[0].points;
+                    //if user has no points at the restaurant yet
+                    if(!(reply.length === 0)){
+                        this.userPoints= reply[0].points;
+                    }
                     // boolean whether enough points to pay order with points
                     // has to wait for the getUserPoints query
                     this.morePointsThanNeeded = this.userPoints > this.neededPoints;
@@ -295,6 +308,32 @@ export class OrderDetailsPage {
 
     public hasEnoughPoints(){
         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+    }
+
+    public calcTimings(prepTime) {
+        let date = new Date();
+        // restaurant.timeSchedules is an Array with of Objects with opening times for single
+        // days in the order of weekdays e.g. timeSchedules[0] are opening times on Monday
+        let day = date.getDay();
+        if(day === 0){
+            day = 1;
+        } else{
+            day = day-1;
+
+        }
+        this.closingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].closingTime.split(" ")[1];
+        this.openingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].openingTime.split(" ")[1];
+
+
+        let prepTimeInMs = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
+        date.setTime(date.getTime() + prepTimeInMs);
+
+        this.pickUpTime = date;
+        this.pickUpTimeISOFormat = date.toISOString();
+
+        date.setTime(date.getTime() - 120 * 60 * 1000);
+        this.earliestPickUp = date.toLocaleTimeString()
+
     }
 
 }

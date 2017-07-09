@@ -30,7 +30,6 @@ export class LoginPage {
     this.counterPasswordWrong ++;
     this.auth.login(userName, password).then(data => {
       if (data) {
-        console.log("go back to warenkorb ?: " + this.popThisPage);
 
         const toast = this.toastCtrl.create({
           message: "Login Erfolgreich",

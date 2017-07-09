@@ -23,10 +23,10 @@ tmp/
 temp/
 hooks/
 platforms/
-plugins/android.json
-plugins/ios.json
+plugins/
 www/
 $RECYCLE.BIN/
+documentation/
 
 .DS_Store
 Thumbs.db

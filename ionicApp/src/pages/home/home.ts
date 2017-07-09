@@ -12,7 +12,7 @@ import LatLng = google.maps.LatLng;
 import Marker = google.maps.Marker;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
-export const CONFIG_GEOLOCATION_TIMEOUT = 2000;
+export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
 
 // this is needed for google maps plugin v2
 declare var plugin: any;
@@ -30,18 +30,17 @@ export class HomePage {
     private _allRestaurants: Array<Restaurant>;
 
     constructor(private navCtrl: NavController,
-                private geolocation: Geolocation,
                 private modalCtrl: ModalController,
                 private http: Http,
                 private popCtrl: PopoverController,
                 private popService: FilterPopoverService,
                 private events: Events,
                 private platform: Platform) {
-        this.events.subscribe("menu", eventData => {
-            if (eventData === "open") {
+        this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
+            if (eventData === false) {
                 this._map.setClickable(false);
             }
-            else if (eventData === "close") {
+            else if (eventData === true) {
                 this._map.setClickable(true);
             }
         });
@@ -96,22 +95,20 @@ export class HomePage {
                 this._map.setAllGesturesEnabled(true);
                 this._map.setCompassEnabled(true);
 
-                this.geolocation.getCurrentPosition({
-                    timeout: CONFIG_GEOLOCATION_TIMEOUT
-                }).then((res) => {
-                    let pos = new LatLng(res.coords.latitude, res.coords.longitude);
+                this._map.getMyLocation()
+                    .then((pos) => {
+                        // get restaurants around this location
+                        this.fetchRestaurants(pos.latLng);
 
-                    this.fetchRestaurants(res.coords);
-
-                    let camPos = {
-                        target: pos,
-                        zoom: 16
-                    };
-
-                    this._map.moveCamera(camPos);
-                })
+                        // move map to current location
+                        let camPos = {
+                            target: pos.latLng,
+                            zoom: 15
+                        };
+                        this._map.moveCamera(camPos);
+                    })
                     .catch(err => {
-                        this._map.setMyLocationEnabled(false);
+                        console.error("Error getting location: ", err);
                         this.showAddressInput();
                     })
             }
@@ -119,13 +116,13 @@ export class HomePage {
     }
 
     /**
-     * Fetches the restaurants from the server using the provided coordinates
-     * @param coords
+     * Fetches the restaurants from the server using the provided coordinates7
+     * @param latLng location as LatLng-object
      */
-    private fetchRestaurants(coords: Coordinates) {
+    private fetchRestaurants(latLng: LatLng) {
         // do not filter by radius, because there are just a few restaurants.
         // in the future it could filter by using the visible map-area.
-        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${coords.latitude}&longitude=${coords.longitude}&radius=9999999`).subscribe(
+        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`).subscribe(
             res => {
                 this._allRestaurants = res.json();
                 this.setRestaurantMarkers(this._allRestaurants);
@@ -157,7 +154,7 @@ export class HomePage {
 Telefon: ${restaurant.phone}<br/>
 Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
 Entfernung: ${restaurant.distance}m<br/>
-Jetzt geöffnet<div/>
+${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}<div/>
 </div>`);
 
                 marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
@@ -187,19 +184,21 @@ Jetzt geöffnet<div/>
     private showAddressInput() {
         this._map.setClickable(false);
         const modal = this.modalCtrl.create(AddressInputComponent);
-        modal.onWillDismiss(coords => {
+        modal.onWillDismiss((coords: Coordinates) => {
             // if the user cancels, coords will be undefined
             if (coords) {
                 const latlng = new LatLng(coords.latitude, coords.longitude);
+
                 this._map.addMarker({
                     position: latlng,
                     title: "Ihr Standort"
                 });
                 this._map.moveCamera({
                     target: latlng,
-                    zoom: 16
+                    zoom: 15
                 });
-                this.fetchRestaurants(coords);
+
+                this.fetchRestaurants(latlng);
             }
             // map must be set clickable in any case
             this._map.setClickable(true);

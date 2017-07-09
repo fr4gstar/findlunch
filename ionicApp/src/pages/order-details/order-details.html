@@ -64,25 +64,32 @@
   </ion-grid>
 
 
-      <ion-item *ngIf="this.auth.getLoggedIn()">
-        <ion-label>Mit Treuepunkten bezahlen</ion-label>
-        <ion-toggle checked="false" disabled="{{!this.morePointsThanNeeded}}"></ion-toggle>
-      </ion-item>
-      <div>Sie haben bei {{restaurant.name}} derzeit {{this.userPoints}} Punkte. Um diese Bestellung mit Treuepunkten zu
-          bezahlen
-          benötigen Sie {{this.neededPoints}} Punkte</div>
-      <ion-item>
-        <ion-label >Abholen um</ion-label>
-        <ion-datetime id="pickUpTime" displayFormat ="HH:mm" (click)="enterPickUpTime()" [(ngModel)]="pickUpTime"></ion-datetime>
-        <span item-right>Uhr</span>
-      </ion-item>
 
+    <ion-item *ngIf="this.auth.getLoggedIn()">
+        <ion-label>Mit Treuepunkten bezahlen</ion-label>
+        <ion-toggle checked="false" [(ngModel)]="this.payWithPoints" disabled="{{!this.morePointsThanNeeded}}"></ion-toggle>
+    </ion-item>
+    <div *ngIf="this.auth.getLoggedIn()">Sie haben bei {{restaurant.name}} derzeit {{this.userPoints}} Punkte. Um diese Bestellung mit Treuepunkten zu
+        bezahlen
+        benötigen Sie {{this.neededPoints}} Punkte
+    </div>
+    <ion-item *ngIf="this.nowOpen">
+        <ion-label >Abholen um (Wunschzeit)</ion-label>
+        <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min="{{this.earliestPickUp}}" max={{this.closingTime}} [(ngModel)]="this.pickUpTimeISOFormat"></ion-datetime>
+        <span item-right>Uhr</span>
+    </ion-item>
+    <ion-item *ngIf="!this.nowOpen" text-wrap>
+        Das ausgewählte Restaurant hat leider gerade geschlossen.
+    </ion-item>
+    <ion-item *ngIf="!this.auth.getLoggedIn()" text-wrap>
+        Sie müssen eingeloggt sein um eine Bestellung abzusenden!
+    </ion-item>
 
 
     <button id="bestellen" *ngIf="this.auth.getLoggedIn()" ion-button (click)="sendOrder()">Bestellen</button>
     <div id="notLoggedIn" *ngIf="!this.auth.getLoggedIn()">
-      <button  ion-button full (click)="goToLogin()">Login</button>
-      <button  ion-button full (click)="goToRegister()">Registrieren</button>
+        <button  ion-button full (click)="goToLogin()">Login</button>
+        <button  ion-button full (click)="goToRegister()">Registrieren</button>
     </div>
 
 </ion-content>
