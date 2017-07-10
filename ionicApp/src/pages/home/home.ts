@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from "@angular/core";
+import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
@@ -34,7 +34,9 @@ export class HomePage {
                 private popCtrl: PopoverController,
                 private popService: FilterPopoverService,
                 private events: Events,
-                private platform: Platform) {
+                private platform: Platform,
+                private zone: NgZone
+    ) {
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);
@@ -48,6 +50,13 @@ export class HomePage {
         });
     }
 
+    public ionViewDidEnter() {
+        // map should always be clickable when entering this page
+        if (this._map) {
+            this._map.setClickable(true);
+        }
+    }
+
     public openFilterDialog(ev: Event) {
         this._map.setClickable(false);      // needed to be able to click on the overlay
 
@@ -57,6 +66,7 @@ export class HomePage {
 
         pop.onWillDismiss(() => {
             // filter kitchen types
+            // this assumes, that kitchen-types are ALWAYS set on a restaurant
             let newRestaurants = this._allRestaurants.filter(res => {
                 return res.kitchenTypes.some(resKitchenType => {
                     return this.popService.selectedKitchenTypes.some(selKitchenType => {
@@ -102,7 +112,7 @@ export class HomePage {
                         // move map to current location
                         let camPos = {
                             target: pos.latLng,
-                            zoom: 15
+                            zoom: 13
                         };
                         this._map.moveCamera(camPos);
                     },
@@ -159,7 +169,10 @@ export class HomePage {
 </div>`;
                 infoDiv.addEventListener("click", () => {
                     htmlInfoWindow.close();
-                    this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
+                    this._map.setClickable(false);
+                    this.zone.run(() => {
+                        this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
+                    });
                 });
 
                 htmlInfoWindow.setContent(infoDiv);

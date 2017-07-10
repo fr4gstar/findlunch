@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {Navbar, NavController, NavParams} from "ionic-angular";
+import {Component, OnInit} from "@angular/core";
+import {NavController, NavParams, Platform} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 import {OrderDetailsPage} from "../order-details/orderdetails";
@@ -28,17 +28,22 @@ export class OffersPage implements OnInit {
     allergenics$: Observable<any>;
     additives$: Observable<any>;
 
-    @ViewChild(Navbar) navbar: Navbar;
-
-
     constructor(navParams: NavParams,
                 public offerService: OffersService,
                 private cartService: CartService,
                 private navCtrl: NavController,
                 private http: Http,
-                public auth: AuthService) {
-
+                public auth: AuthService,
+                private platform: Platform
+    ) {
         this.restaurant = navParams.get("restaurant");
+
+        // disable animation, because it causes problems with displaying the map on iOS
+        platform.ready().then(() => {
+            platform.registerBackButtonAction(() => {
+                this.navCtrl.pop({animate: false});
+            })
+        })
     }
 
 
@@ -54,8 +59,6 @@ export class OffersPage implements OnInit {
 
         this.allergenics$ = this.http.get(SERVER_URL + "/api/all_allergenic").map(res => res.json());
         this.additives$ = this.http.get(SERVER_URL + "/api/all_additives").map(res => res.json());
-
-        this.navbar.backButtonClick = () => this.navCtrl.pop({animate: false});
     }
 
     public onOfferClicked(event, offer) {
