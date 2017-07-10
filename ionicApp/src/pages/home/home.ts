@@ -168,7 +168,6 @@ export class HomePage {
 <span>${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
-                    htmlInfoWindow.close();
                     this._map.setClickable(false);
                     this.zone.run(() => {
                         this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
