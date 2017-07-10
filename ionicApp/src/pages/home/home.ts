@@ -159,7 +159,7 @@ export class HomePage {
 </div>`;
                 infoDiv.addEventListener("click", () => {
                     htmlInfoWindow.close();
-                    this.navCtrl.push(OffersPage, {restaurant: restaurant});
+                    this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
                 });
 
                 htmlInfoWindow.setContent(infoDiv);
