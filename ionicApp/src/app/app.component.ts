@@ -2,7 +2,6 @@ import {Component, ViewChild} from "@angular/core";
 import {AlertController, Events, Nav, Platform, ToastController} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {Http} from "@angular/http";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {Push} from "@ionic-native/push";
@@ -48,7 +47,6 @@ export class MyApp {
      */
     constructor(public platform: Platform,
                 public statusBar: StatusBar,
-                private http: Http,
                 public splashScreen: SplashScreen,
                 private events: Events,
                 private auth: AuthService,

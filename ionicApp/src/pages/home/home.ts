@@ -1,6 +1,5 @@
 import {Component, ElementRef, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
-import {Coordinates} from "@ionic-native/geolocation";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
@@ -148,29 +147,26 @@ export class HomePage {
             }, (marker) => {
                 // add html info window
                 let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
-                htmlInfoWindow.setContent(`<div id="myCurrentInfoWindow" style="font-size: small">
+
+                let infoDiv = document.createElement("div");
+                infoDiv.innerHTML = `<div style="font-size: small">
 <div style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</div>
 <div><span>Adresse: ${restaurant.street} ${restaurant.streetNumber}</span><br/>
 <span>Telefon: ${restaurant.phone}</span><br/>
 <span style="white-space: normal;">Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
 <span>Entfernung: ${restaurant.distance}m</span><br/>
 <span>${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
-</div>`);
+</div>`;
+                infoDiv.addEventListener("click", () => {
+                    htmlInfoWindow.close();
+                    this.navCtrl.push(OffersPage, {restaurant: restaurant});
+                });
+
+                htmlInfoWindow.setContent(infoDiv);
 
                 marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
                     htmlInfoWindow.open(marker);
-                    setTimeout(() => {
-                        document.getElementById("myCurrentInfoWindow").onclick = (event: MouseEvent) => {
-                            this.navCtrl.push(OffersPage, {restaurant: restaurant});
-                        }
-                    }, 100);
                 });
-
-
-                /* // add info window event listener for click
-                 marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function() {
-                 this.navCtrl.push(OffersPage, {restaurant: restaurant});
-                 });*/
 
                 this._mapMarkers.push(marker);
             })
