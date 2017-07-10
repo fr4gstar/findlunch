@@ -112,7 +112,7 @@ export class HomePage {
                         // move map to current location
                         let camPos = {
                             target: pos.latLng,
-                            zoom: 13
+                            zoom: 15
                         };
                         this._map.moveCamera(camPos);
                     },
