@@ -54,10 +54,12 @@ export class HomePage {
         // map should always be clickable when entering this page
         if (this._map) {
             this._map.setClickable(true);
+            cordova.fireDocumentEvent('plugin_touch', {});      // gives native map focus
         }
     }
 
     public openFilterDialog(ev: Event) {
+        // TODO: Still needed?
         this._map.setClickable(false);      // needed to be able to click on the overlay
 
         let pop = this.popCtrl.create(FilterPopoverComponent);
