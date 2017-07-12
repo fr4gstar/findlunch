@@ -162,56 +162,62 @@ export class OrderDetailsPage {
         if(this.reservation.items.length === 0){
             alert("Sie können keine leere Bestellung absenden.");
         } else{
-            this.loading.presentLoading("Ihre Bestellung wird abgesendet");
+            let loader = this.loading.prepareLoader("Ihre Bestellung wird abgesendet");
+            loader.present().then( res => {
 
-            let user = window.localStorage.getItem("username");
-            let token = window.localStorage.getItem(user);
-            let headers = new Headers({
-                'Content-Type': 'application/json',
-                "Authorization": "Basic " + token
-            });
-            let options = new RequestOptions({headers: headers});
 
-                this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
-
-            if(this.auth.getLoggedIn()){
-                this.reservation.usedPoints = this.payWithPoints;
-                this.reservation.pointsCollected = !this.reservation.usedPoints;
-
-                this.reservation.points = this.neededPoints;
-            }
-
-            let payload = {
-                ...this.reservation,
-                reservation_offers: []
-            };
-            payload.items.forEach((item) => {
-                payload.reservation_offers.push({
-                    offer: {
-                        id: item.id
-                    },
-                    amount: item.amount
+                let user = window.localStorage.getItem("username");
+                let token = window.localStorage.getItem(user);
+                let headers = new Headers({
+                    'Content-Type': 'application/json',
+                    "Authorization": "Basic " + token
                 });
-            });
-            delete payload.items;
+                let options = new RequestOptions({headers: headers});
 
-            this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
-                (res) => {
-                    const toast = this.toastCtrl.create({
-                        message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
-                        duration: 3000
+                    this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
+
+                if(this.auth.getLoggedIn()){
+                    this.reservation.usedPoints = this.payWithPoints;
+                    this.reservation.pointsCollected = !this.reservation.usedPoints;
+
+                    this.reservation.points = this.neededPoints;
+                }
+
+                let payload = {
+                    ...this.reservation,
+                    reservation_offers: []
+                };
+                payload.items.forEach((item) => {
+                    payload.reservation_offers.push({
+                        offer: {
+                            id: item.id
+                        },
+                        amount: item.amount
                     });
-                    toast.present();
+                });
+                delete payload.items;
 
-                    // empty the cart for this restaurant
-                    this.cartService.emptyCart(this.restaurant.id);
+                this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
+                    (res) => {
+                        const toast = this.toastCtrl.create({
+                            message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
+                            duration: 3000
+                        });
+                        toast.present();
 
-                    // go back to restaurants-overview
-                    this.navCtrl.setRoot(HomePage);
-                    this.navCtrl.popToRoot();
-                }, (err) => {
-                    console.error(err)
-                })
+                        // empty the cart for this restaurant
+                        this.cartService.emptyCart(this.restaurant.id);
+
+                        // go back to restaurants-overview
+                        this.navCtrl.setRoot(HomePage);
+                        this.navCtrl.popToRoot();
+                        loader.dismiss();
+                    }, (err) => {
+                        console.error(err)
+                        loader.dismiss();
+
+                    })
+            });
         }
     }
 
