@@ -162,10 +162,10 @@ export class HomePage {
 
                 let infoDiv = document.createElement("div");
                 infoDiv.innerHTML = `<div style="font-size: small">
-<div style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</div>
+<span style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</span>
 <div><span>Adresse: ${restaurant.street} ${restaurant.streetNumber}</span><br/>
 <span>Telefon: ${restaurant.phone}</span><br/>
-<span style="white-space: normal;">Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
+<span>Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
 <span>Entfernung: ${restaurant.distance}m</span><br/>
 <span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`;
@@ -175,6 +175,17 @@ export class HomePage {
                         this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
                     });
                 });
+
+                // marker size and styling must be done manually
+                infoDiv.style.maxWidth = "90%";
+                infoDiv.style.display = "inline-block";
+                infoDiv.style.margin = "6px 6px 0 6px";
+                // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
+                document.body.appendChild(infoDiv);
+                infoDiv.style.height = infoDiv.offsetHeight + 6 + "px";
+                infoDiv.style.width = infoDiv.offsetWidth + 12 + "px";
+                document.body.removeChild(infoDiv);
+                infoDiv.style.maxWidth = "none";
 
                 htmlInfoWindow.setContent(infoDiv);
 
