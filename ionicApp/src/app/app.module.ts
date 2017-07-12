@@ -34,7 +34,7 @@ import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import {CartService} from "../services/CartService";
 import {Push} from "@ionic-native/push";
-import {DatePicker} from "@ionic-native/date-picker";
+import {LoadingService} from "../providers/loading-service"
 
 
 // online Server:
@@ -106,7 +106,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         AuthService,
         MenuService,
         InAppBrowser,
-        DatePicker
+        LoadingService
     ]
 
 })

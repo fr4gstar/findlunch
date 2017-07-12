@@ -6,11 +6,12 @@ import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
-import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
 import {Reservation} from "../../model/Reservation";
 import {HomePage} from "../home/home";
+
+import {LoadingService} from "../../providers/loading-service";
 
 
 /**
@@ -47,7 +48,8 @@ export class OrderDetailsPage {
                 private cartService: CartService,
                 private auth: AuthService,
                 private alertCtrl: AlertController,
-                private datePicker: DatePicker
+                private loading: LoadingService
+
 )
     {
         this.restaurant = navParams.get("restaurant");
@@ -78,7 +80,7 @@ export class OrderDetailsPage {
 
         this.nowOpen = this.restaurant.currentlyOpen;
 
-        this.calcTimings(5);
+        this.calcTimings(10);
     }
 
     /**
@@ -153,12 +155,14 @@ export class OrderDetailsPage {
     }
 
     /**
-     * Sends the current order to the server. This requires authentication.
+     * Sends the current order to the server. This requires authentication. Loading spinner is display
+     * till view changes
      */
    sendOrder() {
         if(this.reservation.items.length === 0){
             alert("Sie können keine leere Bestellung absenden.");
         } else{
+            this.loading.presentLoading("Ihre Bestellung wird abgesendet");
 
             let user = window.localStorage.getItem("username");
             let token = window.localStorage.getItem(user);
