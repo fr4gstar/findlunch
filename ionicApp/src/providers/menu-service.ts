@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map';
+import {Injectable} from "@angular/core";
+import "rxjs/add/operator/map";
 
-import {HomePage} from '../pages/home/home';
-import {RestaurantsPage} from '../pages/restaurants/restaurants';
+import {HomePage} from "../pages/home/home";
+import {RestaurantsPage} from "../pages/restaurants/restaurants";
 import {LoginPage} from "../pages/login/login";
 import {RegistryPage} from "../pages/registry/registry";
 import {BonusPage} from "../pages/bonus/bonus";

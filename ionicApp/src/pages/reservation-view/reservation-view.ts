@@ -1,9 +1,6 @@
 import {Component} from "@angular/core";
 import {NavParams} from "ionic-angular";
-import {Reservation} from "../../model/Reservation";
 import {Restaurant} from "../../model/Restaurant";
-import {forEachToken} from "tslint";
-import {Offer} from "../../model/Offer";
 
 /**
  * This view loads a detailed reservation page

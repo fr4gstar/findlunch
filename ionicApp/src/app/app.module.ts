@@ -12,10 +12,10 @@ import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
 import {OffersProductViewPage} from "../pages/offers-product-view/offers-product-view";
 import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
-import {AuthService} from "../providers/auth-service.ts";
+import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
 import {OffersService} from "../pages/offers/OffersService";
-import {ReservationsPage} from "../pages/reservations/reservations"
+import {ReservationsPage} from "../pages/reservations/reservations";
 import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 
 import {InAppBrowser} from "@ionic-native/in-app-browser";
@@ -27,7 +27,6 @@ import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {BarcodeScanner} from "@ionic-native/barcode-scanner";
 import {QRService} from "../providers/QRService";
-import {GoogleMaps} from "@ionic-native/google-maps";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
@@ -94,7 +93,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
-        GoogleMaps,
         FilterPopoverService,
         NativeGeocoder,
         OffersService,

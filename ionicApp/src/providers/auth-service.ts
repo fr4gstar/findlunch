@@ -1,10 +1,8 @@
 import {Injectable} from "@angular/core";
-import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
-import {Push, PushObject, PushOptions} from '@ionic-native/push';
+import {Push, PushObject, PushOptions} from "@ionic-native/push";
 import {AlertController} from "ionic-angular";
-
-
 
 
 @Injectable()

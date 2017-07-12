@@ -1,6 +1,5 @@
-import {Component} from "@angular/core";
+import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
-import {CameraPosition, GoogleMap, GoogleMaps, GoogleMapsEvent, LatLng, Marker} from "@ionic-native/google-maps";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
@@ -8,9 +7,15 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
+import LatLng = google.maps.LatLng;
+import Marker = google.maps.Marker;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
+
+// this is needed for google maps plugin v2
+declare var plugin: any;
+declare var cordova: any;
 
 @Component({
     selector: 'page-home',
@@ -18,18 +23,20 @@ export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
 })
 export class HomePage {
 
-    private _map: GoogleMap;
-    private _mapMarkers: Array<Marker> = [];
+    @ViewChild('map') theMap: ElementRef;
+    private _map: any;
+    private _mapMarkers = [];
     private _allRestaurants: Array<Restaurant>;
 
     constructor(private navCtrl: NavController,
                 private modalCtrl: ModalController,
-                private googleMaps: GoogleMaps,
                 private http: Http,
                 private popCtrl: PopoverController,
                 private popService: FilterPopoverService,
                 private events: Events,
-                private platform: Platform) {
+                private platform: Platform,
+                private zone: NgZone
+    ) {
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);
@@ -43,7 +50,16 @@ export class HomePage {
         });
     }
 
+    public ionViewDidEnter() {
+        // map should always be clickable when entering this page
+        if (this._map) {
+            this._map.setClickable(true);
+            cordova.fireDocumentEvent('plugin_touch', {});      // gives native map focus
+        }
+    }
+
     public openFilterDialog(ev: Event) {
+        // TODO: Still needed?
         this._map.setClickable(false);      // needed to be able to click on the overlay
 
         let pop = this.popCtrl.create(FilterPopoverComponent);
@@ -52,6 +68,7 @@ export class HomePage {
 
         pop.onWillDismiss(() => {
             // filter kitchen types
+            // this assumes, that kitchen-types are ALWAYS set on a restaurant
             let newRestaurants = this._allRestaurants.filter(res => {
                 return res.kitchenTypes.some(resKitchenType => {
                     return this.popService.selectedKitchenTypes.some(selKitchenType => {
@@ -75,15 +92,13 @@ export class HomePage {
      * Initializes the Map and positions the current device on it.
      */
     private loadMap() {
-        // create a new map by passing HTMLElement
-        let element: HTMLElement = document.getElementById('map');
-
-        this._map = this.googleMaps.create(element);
+        // create map
+        let element = this.theMap.nativeElement;
+        this._map = plugin.google.maps.Map.getMap(element, {});
 
         // listen to MAP_READY event
         // You must wait for this event to fire before adding something to the map or modifying it in anyway
-        this._map.one(GoogleMapsEvent.MAP_READY).then(
-            () => {
+        this._map.one(plugin.google.maps.event.MAP_READY, () => {
                 console.log('Map is ready!');
                 // Now you can add elements to the map like the marker
 
@@ -91,19 +106,19 @@ export class HomePage {
                 this._map.setAllGesturesEnabled(true);
                 this._map.setCompassEnabled(true);
 
-                this._map.getMyLocation()
-                    .then((pos) => {
+                this._map.getMyLocation(null,
+                    (pos) => {
                         // get restaurants around this location
                         this.fetchRestaurants(pos.latLng);
 
                         // move map to current location
-                        let camPos: CameraPosition = {
+                        let camPos = {
                             target: pos.latLng,
                             zoom: 15
                         };
                         this._map.moveCamera(camPos);
-                    })
-                    .catch(err => {
+                    },
+                    err => {
                         console.error("Error getting location: ", err);
                         this.showAddressInput();
                     })
@@ -140,18 +155,44 @@ export class HomePage {
         restaurants.forEach((restaurant: Restaurant) => {
             this._map.addMarker({
                 position: new LatLng(restaurant.locationLatitude, restaurant.locationLongitude),
-                icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png',
-                title: restaurant.name,
-                snippet: `Adresse: ${restaurant.street} ${restaurant.streetNumber}
-Telefon: ${restaurant.phone}
-Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}
-Entfernung: ${restaurant.distance}m
-${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}`,
+                icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png'
+            }, (marker) => {
+                // add html info window
+                let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
 
-                infoClick: () => {
-                    this.navCtrl.push(OffersPage, {restaurant: restaurant});
-                }
-            }).then(marker => {
+                let infoDiv = document.createElement("div");
+                infoDiv.innerHTML = `<div style="font-size: small">
+<span style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</span>
+<div><span>Adresse: ${restaurant.street} ${restaurant.streetNumber}</span><br/>
+<span>Telefon: ${restaurant.phone}</span><br/>
+<span>Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
+<span>Entfernung: ${restaurant.distance}m</span><br/>
+<span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
+</div>`;
+                infoDiv.addEventListener("click", () => {
+                    this._map.setClickable(false);
+                    this.zone.run(() => {
+                        this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
+                    });
+                });
+
+                // marker size and styling must be done manually
+                infoDiv.style.maxWidth = "90%";
+                infoDiv.style.display = "inline-block";
+                infoDiv.style.margin = "6px 6px 0 6px";
+                // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
+                document.body.appendChild(infoDiv);
+                infoDiv.style.height = infoDiv.offsetHeight + 6 + "px";
+                infoDiv.style.width = infoDiv.offsetWidth + 12 + "px";
+                document.body.removeChild(infoDiv);
+                infoDiv.style.maxWidth = "none";
+
+                htmlInfoWindow.setContent(infoDiv);
+
+                marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
+                    htmlInfoWindow.open(marker);
+                });
+
                 this._mapMarkers.push(marker);
             })
         });

@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {NavController, NavParams} from "ionic-angular";
+import {NavController, NavParams, Platform} from "ionic-angular";
 import {OffersService} from "./OffersService";
 import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
 import {OrderDetailsPage} from "../order-details/orderdetails";
@@ -28,16 +28,23 @@ export class OffersPage implements OnInit {
     allergenics$: Observable<any>;
     additives$: Observable<any>;
 
-  constructor(navParams: NavParams,
-              public offerService: OffersService,
-              private cartService: CartService,
-              private navCtrl: NavController,
-              private http: Http,
-              public auth: AuthService
-  ) {
+    constructor(navParams: NavParams,
+                public offerService: OffersService,
+                private cartService: CartService,
+                private navCtrl: NavController,
+                private http: Http,
+                public auth: AuthService,
+                private platform: Platform
+    ) {
+        this.restaurant = navParams.get("restaurant");
 
-    this.restaurant = navParams.get("restaurant");
-  }
+        // disable animation, because it causes problems with displaying the map on iOS
+        platform.ready().then(() => {
+            platform.registerBackButtonAction(() => {
+                this.navCtrl.pop({animate: false});
+            })
+        })
+    }
 
 
     ngOnInit() {
@@ -64,14 +71,14 @@ export class OffersPage implements OnInit {
 
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
-      */
+     */
     public toggleIsFavourite() {
 
         let user = window.localStorage.getItem("username");
         let token = window.localStorage.getItem(user);
         let headers = new Headers({
             'Content-Type': 'application/json',
-            "Authorization": "Basic " +token
+            "Authorization": "Basic " + token
         });
 
         let options = new RequestOptions({
@@ -110,8 +117,8 @@ export class OffersPage implements OnInit {
     }
 
     getCartItemCount() {
-    return this.cartService.getCartItemCount(this.restaurant.id);
-  }
+        return this.cartService.getCartItemCount(this.restaurant.id);
+    }
 
 
     toggleDetails(data) {
