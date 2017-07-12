@@ -167,7 +167,7 @@ export class HomePage {
 <span>Telefon: ${restaurant.phone}</span><br/>
 <span style="white-space: normal;">Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
 <span>Entfernung: ${restaurant.distance}m</span><br/>
-<span>${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
+<span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
                     this._map.setClickable(false);
