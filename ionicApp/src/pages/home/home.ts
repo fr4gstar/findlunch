@@ -177,7 +177,7 @@ export class HomePage {
                 });
 
                 // marker size and styling must be done manually
-                infoDiv.style.maxWidth = "90%";
+                infoDiv.style.maxWidth = "85%";
                 infoDiv.style.display = "inline-block";
                 infoDiv.style.margin = "6px 6px 0 6px";
                 // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
