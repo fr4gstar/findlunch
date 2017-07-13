@@ -8,6 +8,7 @@ import {Push} from "@ionic-native/push";
 import {QRService} from "../providers/QRService";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
+import {ReservationsPage} from "../pages/reservations/reservations";
 
 /**
  * Initialize the application.
@@ -23,7 +24,7 @@ export class MyApp {
      * Sets the first site of the app
      * @type {HomePage}
      */
-    rootPage: any = HomePage;
+    rootPage: any = ReservationsPage;
 
     pages: Array<{ title: string, component: any }>;
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
+import {Component, ElementRef, NgZone, OnDestroy, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
@@ -21,7 +21,7 @@ declare var cordova: any;
     selector: 'page-home',
     templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnDestroy {
 
     @ViewChild('map') theMap: ElementRef;
     private _map: any;
@@ -56,6 +56,10 @@ export class HomePage {
             this._map.setClickable(true);
             cordova.fireDocumentEvent('plugin_touch', {});      // gives native map focus
         }
+    }
+
+    public ngOnDestroy() {
+        console.debug("HomePage was destroyed!");
     }
 
     public openFilterDialog(ev: Event) {
@@ -170,6 +174,7 @@ export class HomePage {
 <span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
+                    console.debug("click-handler run");
                     this._map.setClickable(false);
                     this.zone.run(() => {
                         this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
@@ -190,9 +195,11 @@ export class HomePage {
                 htmlInfoWindow.setContent(infoDiv);
 
                 marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
+                    console.debug("opening marker ", marker);
                     htmlInfoWindow.open(marker);
                 });
 
+                console.debug("adding marker ", marker);
                 this._mapMarkers.push(marker);
             })
         });
