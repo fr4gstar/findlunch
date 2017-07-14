@@ -1,4 +1,4 @@
-import {Component, ElementRef, NgZone, OnDestroy, ViewChild} from "@angular/core";
+import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
@@ -21,7 +21,7 @@ declare var cordova: any;
     selector: 'page-home',
     templateUrl: 'home.html'
 })
-export class HomePage implements OnDestroy {
+export class HomePage {
 
     @ViewChild('map') theMap: ElementRef;
     private _map: any;
@@ -56,10 +56,6 @@ export class HomePage implements OnDestroy {
             this._map.setClickable(true);
             cordova.fireDocumentEvent('plugin_touch', {});      // gives native map focus
         }
-    }
-
-    public ngOnDestroy() {
-        console.debug("HomePage was destroyed!");
     }
 
     public openFilterDialog(ev: Event) {
@@ -139,15 +135,19 @@ export class HomePage implements OnDestroy {
         // build authentication header...
         let user = window.localStorage.getItem("username");
         let token = window.localStorage.getItem(user);
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic " + token
-        });
+        let options;
+        if (token) {
+            let headers = new Headers({
+                'Content-Type': 'application/json',
+                "Authorization": "Basic " + token
+            });
 
-        let options = new RequestOptions({
-            headers: headers,
-            method: RequestMethod.Get
-        });
+            options = new RequestOptions({
+                headers: headers,
+                method: RequestMethod.Get
+            });
+        }
+
 
         // do not filter by radius, because there are just a few restaurants.
         // in the future it could filter by using the visible map-area.

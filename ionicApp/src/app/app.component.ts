@@ -79,6 +79,7 @@ export class MyApp {
             duration: 3000
         });
         toast.present();
+        this.nav.setRoot(this.rootPage);
     }
 
     onMenuClosed() {
