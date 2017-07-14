@@ -1,4 +1,4 @@
-import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
+import {Component, ElementRef, NgZone, OnDestroy, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
@@ -21,7 +21,7 @@ declare var cordova: any;
     selector: 'page-home',
     templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnDestroy {
 
     @ViewChild('map') theMap: ElementRef;
     private _map: any;
@@ -56,6 +56,10 @@ export class HomePage {
             this._map.setClickable(true);
             cordova.fireDocumentEvent('plugin_touch', {});      // gives native map focus
         }
+    }
+
+    public ngOnDestroy() {
+        console.debug("HomePage was destroyed!");
     }
 
     public openFilterDialog(ev: Event) {
@@ -161,12 +165,12 @@ export class HomePage {
                 let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
 
                 let infoDiv = document.createElement("div");
-                infoDiv.innerHTML = `<div style="font-size: small">
-<span style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</span>
-<div><span>Adresse: ${restaurant.street} ${restaurant.streetNumber}</span><br/>
-<span>Telefon: ${restaurant.phone}</span><br/>
-<span>Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
-<span>Entfernung: ${restaurant.distance}m</span><br/>
+                infoDiv.innerHTML = `<div style="display: inline-block">
+<div style="font-size: large; font-weight: bold; margin-bottom: 5px">${restaurant.name}</div>
+<div style="display: inline-block">Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
+Telefon: ${restaurant.phone}<br/>
+Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
+Entfernung: ${restaurant.distance}m<br/>
 <span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
@@ -179,13 +183,16 @@ export class HomePage {
                 // marker size and styling must be done manually
                 infoDiv.style.maxWidth = "85%";
                 infoDiv.style.display = "inline-block";
-                infoDiv.style.margin = "6px 6px 0 6px";
+                infoDiv.style.padding = "0";
+
                 // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
-                document.body.appendChild(infoDiv);
-                infoDiv.style.height = infoDiv.offsetHeight + 6 + "px";
-                infoDiv.style.width = infoDiv.offsetWidth + 12 + "px";
-                document.body.removeChild(infoDiv);
+                this.theMap.nativeElement.appendChild(infoDiv);
+                infoDiv.style.height = infoDiv.offsetHeight + 1 + "px";
+                infoDiv.style.width = infoDiv.offsetWidth + 4 + "px";
+                this.theMap.nativeElement.removeChild(infoDiv);
+
                 infoDiv.style.maxWidth = "none";
+                infoDiv.style.margin = "6px";
 
                 htmlInfoWindow.setContent(infoDiv);
 

@@ -10,7 +10,6 @@ import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
 import {Reservation} from "../../model/Reservation";
-import {HomePage} from "../home/home";
 
 
 /**
@@ -203,7 +202,6 @@ export class OrderDetailsPage {
                     this.cartService.emptyCart(this.restaurant.id);
 
                     // go back to restaurants-overview
-                    this.navCtrl.setRoot(HomePage);
                     this.navCtrl.popToRoot();
                 }, (err) => {
                     console.error(err)
