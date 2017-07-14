@@ -10,6 +10,12 @@
 <ion-content padding>
     <ion-list id="reservations">
 
+    <h2 *ngIf="this.usedRestaurants.length === 0" align-items-center text-wrap="">
+        Sie haben bisher noch keine Bestellungen
+    </h2>
+
+    <ng-container *ngIf="this.usedRestaurants.length > 0">
+
         <ng-container *ngFor="let restaurant of this.usedRestaurants">
             <ion-list-header text-wrap>{{restaurant}}</ion-list-header>
             <ng-container *ngFor='let reservation of reservations;'>
@@ -24,5 +30,6 @@
                 </ng-container>
             </ng-container>
         </ng-container>
+    </ng-container>
     </ion-list>
 </ion-content>

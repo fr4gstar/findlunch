@@ -5,6 +5,7 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 
 import {Restaurant} from "../../model/Restaurant";
 import {AuthService} from "../../providers/auth-service";
+import  {LoadingService } from "../../providers/loading-service";
 
 
 /**
@@ -30,7 +31,8 @@ export class RestaurantViewPage {
     public navCtrl : NavController,
     private navParams:NavParams,
     private auth: AuthService,
-    private http: Http ) {
+    private http: Http,
+    private loading: LoadingService) {
 
     this.restaurant = navParams.get("restaurant");
     this.openingTime = this.restaurant.timeSchedules;
@@ -53,34 +55,38 @@ export class RestaurantViewPage {
             headers: headers,
         });
 
+        let loader = this.loading.prepareLoader();
+        loader.present().then(res => {
         // unset as favorite
-        if (this.restaurant.isFavorite) {
-            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
-                res => {
-                    if (res.json() === 0) {
-                        this.restaurant.isFavorite = false;
+            if (this.restaurant.isFavorite) {
+                this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
+                    res => {
+                        if (res.json() === 0) {
+                            this.restaurant.isFavorite = false;
+                        }
+                        else throw new Error("Unknown return value from server: " + res.json())
+                    },
+                    err => {
+                        alert("Konnte Restaurant nicht als Favorit entfernen.");
+                        console.error(err);
                     }
-                    else throw new Error("Unknown return value from server: " + res.json())
-                },
-                err => {
-                    alert("Konnte Restaurant nicht als Favorit entfernen.");
-                    console.error(err);
-                }
-            )
-        }
-        // set as favorite
-        else {
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
-                res => {
-                    if (res.json() === 0) {
-                        this.restaurant.isFavorite = true;
-                    }
-                    else throw new Error("Unknown return value from server: " + res.json());
-                },
-                err => {
-                    alert("Konnte Restaurant nicht als Favorit setzen.");
-                    console.error(err);
-                })
-        }
+                )
+            }
+            // set as favorite
+            else {
+                this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
+                    res => {
+                        if (res.json() === 0) {
+                            this.restaurant.isFavorite = true;
+                        }
+                        else throw new Error("Unknown return value from server: " + res.json());
+                    },
+                    err => {
+                        alert("Konnte Restaurant nicht als Favorit setzen.");
+                        console.error(err);
+                    })
+            }
+            loader.dismiss();
+        })
     }
 }

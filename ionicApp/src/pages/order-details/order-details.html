@@ -74,7 +74,7 @@
         benötigen Sie {{this.neededPoints}} Punkte
     </div>
     <ion-item *ngIf="this.nowOpen">
-        <ion-label >Abholen um (Wunschzeit)</ion-label>
+        <ion-label text-wrap>Abholen um (Wunschzeit)</ion-label>
         <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min="{{this.earliestPickUp}}" max={{this.closingTime}} [(ngModel)]="this.pickUpTimeISOFormat"></ion-datetime>
         <span item-right>Uhr</span>
     </ion-item>

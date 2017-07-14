@@ -8,6 +8,7 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
+import {LoadingService} from "../../providers/loading-service"
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -29,7 +30,8 @@ export class HomePage {
                 private popCtrl: PopoverController,
                 private popService: FilterPopoverService,
                 private events: Events,
-                private platform: Platform) {
+                private platform: Platform,
+                private loading: LoadingService) {
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);
@@ -80,35 +82,42 @@ export class HomePage {
 
         this._map = this.googleMaps.create(element);
 
-        // listen to MAP_READY event
-        // You must wait for this event to fire before adding something to the map or modifying it in anyway
-        this._map.one(GoogleMapsEvent.MAP_READY).then(
-            () => {
-                console.log('Map is ready!');
-                // Now you can add elements to the map like the marker
 
-                this._map.setMyLocationEnabled(true);
-                this._map.setAllGesturesEnabled(true);
-                this._map.setCompassEnabled(true);
+        let loader = this.loading.prepareLoader("Karte wird geladen");
 
-                this._map.getMyLocation()
-                    .then((pos) => {
-                        // get restaurants around this location
-                        this.fetchRestaurants(pos.latLng);
+        loader.present().then( res => {
 
-                        // move map to current location
-                        let camPos: CameraPosition = {
-                            target: pos.latLng,
-                            zoom: 15
-                        };
-                        this._map.moveCamera(camPos);
-                    })
-                    .catch(err => {
-                        console.error("Error getting location: ", err);
-                        this.showAddressInput();
-                    })
-            }
-        );
+            // listen to MAP_READY event
+            // You must wait for this event to fire before adding something to the map or modifying it in anyway
+            this._map.one(GoogleMapsEvent.MAP_READY).then(
+                () => {
+                    console.log('Map is ready!');
+                    // Now you can add elements to the map like the marker
+
+                    this._map.setMyLocationEnabled(true);
+                    this._map.setAllGesturesEnabled(true);
+                    this._map.setCompassEnabled(true);
+
+                    this._map.getMyLocation()
+                        .then((pos) => {
+                            // get restaurants around this location
+                            this.fetchRestaurants(pos.latLng);
+
+                            // move map to current location
+                            let camPos: CameraPosition = {
+                                target: pos.latLng,
+                                zoom: 15
+                            };
+                            this._map.moveCamera(camPos);
+                        })
+                        .catch(err => {
+                            console.error("Error getting location: ", err);
+                            this.showAddressInput();
+                        })
+                })
+            loader.dismiss();
+
+        })
     }
 
     /**

@@ -4,6 +4,7 @@ import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {ReservationViewPage} from "../reservation-view/reservation-view";
 import {Reservation} from "../../model/Reservation";
+import {LoadingService} from "../../providers/loading-service";
 
 /**
  * This pages loads and shows all reservation of an user.
@@ -18,20 +19,22 @@ export class ReservationsPage implements OnInit {
     public usedRestaurants: String[];
 
 
+
     /**
      * Initialize modules
      * @param navCtrl
      * @param http
      */
     constructor(public navCtrl: NavController,
-                private http: Http) {
+                private http: Http,
+                private loading: LoadingService) {
 
         this.usedRestaurants = [];
 
     }
 
     /**
-     * Loads the reservation of an user.
+     * Loads the reservations of an user.
      */
     ngOnInit() {
         let user = window.localStorage.getItem("username");
@@ -46,22 +49,32 @@ export class ReservationsPage implements OnInit {
             method: RequestMethod.Get
         });
 
-        this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
-            .subscribe(
-                res => {
-
-                    this.reservations = res.json();
-                    if(this.reservations.length > 0){
-                        this.collectUsedRestaurants();
-                        ReservationsPage.sortByCollectTime(this.reservations)
-                     }
+        let loader = this.loading.prepareLoader("Bestellungen laden...");
+        loader.present().then(res => {
 
 
-                },
-                err => console.error(err)
-            );
+            this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
+                .subscribe(
+                    res => {
+
+                        this.reservations = res.json();
+                        if(this.reservations.length > 0){
+                            this.collectUsedRestaurants();
+                            ReservationsPage.sortByCollectTime(this.reservations)
+                         }
+
+
+                    },
+                    err => console.error(err)
+                );
+            loader.dismiss();
+        })
     }
 
+    /**
+     * Puts every restaurant name into the "usedRestaurants"-Array exactly once
+     * if a user has points of that restaurant
+     */
     public collectUsedRestaurants() {
         for (let reservation of this.reservations) {
             if (this.usedRestaurants.indexOf(reservation.restaurant.name) === -1) {

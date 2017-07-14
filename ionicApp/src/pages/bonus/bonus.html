@@ -4,27 +4,28 @@
             <ion-icon md="md-menu" name="menu"></ion-icon>
         </button>
         <ion-title>Bonuspunkte</ion-title>
-      <ion-buttons end>
-        <button ion-button icon-only (click)="onQRClicked($event)">
-          <ion-icon name="qr-scanner"></ion-icon>
-        </button>
-      </ion-buttons>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="onQRClicked($event)">
+                <ion-icon name="qr-scanner"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
     <ion-list>
-      <ion-toolbar color="light">
-        <h2>Ihre Bonuspunkte betragen:</h2>
-      </ion-toolbar>
+        <ion-toolbar color="light">
+            <h2>Ihre Bonuspunkte betragen:</h2>
+        </ion-toolbar>
 
-      <ion-item *ngFor="let point of points">
-        <div>
-          {{point.compositeKey.restaurant.name}}
-        </div>
-        <div class="item-note" item-right>
-          {{ point.points }}
-        </div>
-      </ion-item>
+        <ion-item *ngFor="let point of points" (click)="showOffers(point.compositeKey.restaurant)">
+            <ion-item *ngFor="let point of points">
+                <div>
+                    {{point.compositeKey.restaurant.name}}
+                </div>
+                <div class="item-note" item-right>
+                    {{ point.points }}
+                </div>
+            </ion-item>
+        </ion-item>
     </ion-list>
-</ion-content>

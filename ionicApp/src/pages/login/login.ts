@@ -5,6 +5,8 @@ import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../providers/auth-service";
 import {SERVER_URL} from "../../app/app.module";
+import {LoadingService} from "../../providers/loading-service";
+
 
 @Component({
   selector: 'login-page',
@@ -16,11 +18,12 @@ export class LoginPage {
   popThisPage : boolean;
   private counterPasswordWrong: number = 0;
 
-  constructor(private navCtrl: NavController,
-              private toastCtrl: ToastController,
-              private auth: AuthService,
-              private http: Http,
-              navParams: NavParams) {
+      constructor(private navCtrl: NavController,
+                  private toastCtrl: ToastController,
+                  private auth: AuthService,
+                  private http: Http,
+                  navParams: NavParams,
+                  private loading: LoadingService) {
 
     this.popThisPage = navParams.get("comeBack");
   }
@@ -28,24 +31,30 @@ export class LoginPage {
 
   public login(userName: string, password: string) {
     this.counterPasswordWrong ++;
-    this.auth.login(userName, password).then(data => {
-      if (data) {
+    let loader = this.loading.prepareLoader("Einloggen...");
+    loader.present().then(res => {
 
-        const toast = this.toastCtrl.create({
-          message: "Login Erfolgreich",
-          duration: 3000
-        });
-        toast.present();
+        this.auth.login(userName, password).then(data => {
+          if (data) {
 
-        if(this.popThisPage){
-          this.navCtrl.pop();
-        }else {
-          this.navCtrl.setRoot(HomePage);
-        }
-      } else{
-      alert("E-Mail und/oder Passwort nicht bekannt");
-      }
-    });
+            const toast = this.toastCtrl.create({
+              message: "Login Erfolgreich",
+              duration: 3000
+            });
+            toast.present();
+
+            if(this.popThisPage){
+              this.navCtrl.pop();
+            }else {
+              this.navCtrl.setRoot(HomePage);
+              loader.dismiss();
+            }
+          } else{
+            loader.dismiss();
+            alert("E-Mail und/oder Passwort nicht bekannt");
+          }
+        })
+    })
 
   }
 
