@@ -163,6 +163,8 @@ export class OrderDetailsPage {
             alert("Sie können keine leere Bestellung absenden.");
         } else{
             let loader = this.loading.prepareLoader("Ihre Bestellung wird abgesendet");
+
+            //starts the loading spinner
             loader.present().then( res => {
 
 
@@ -211,9 +213,11 @@ export class OrderDetailsPage {
                         // go back to restaurants-overview
                         this.navCtrl.setRoot(HomePage);
                         this.navCtrl.popToRoot();
+                        //stops the spinner
                         loader.dismiss();
                     }, (err) => {
                         console.error(err)
+                        //stop the spinner
                         loader.dismiss();
 
                     })

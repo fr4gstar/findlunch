@@ -11,14 +11,16 @@ export class LoadingService{
 
     }
 
-    prepareLoader(message) : Loading {
-        let loader = this.loadingCtrl.create({
-            content: message,
-      //      duration: 3000,
-      //      dismissOnPageChange : true
-        });
+    prepareLoader(message?: string) : Loading {
+        if (message!== null){
 
-        return loader;
+            let loader = this.loadingCtrl.create({
+                content: message
+          //      duration: 3000,
+            });
+
+            return loader;
+        }
 
 
     }
