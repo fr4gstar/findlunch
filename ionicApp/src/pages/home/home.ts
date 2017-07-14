@@ -165,16 +165,15 @@ export class HomePage implements OnDestroy {
                 let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
 
                 let infoDiv = document.createElement("div");
-                infoDiv.innerHTML = `<div style="font-size: small">
+                infoDiv.innerHTML = `<div>
 <span style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</span>
-<div><span>Adresse: ${restaurant.street} ${restaurant.streetNumber}</span><br/>
-<span>Telefon: ${restaurant.phone}</span><br/>
-<span>Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}</span><br/>
-<span>Entfernung: ${restaurant.distance}m</span><br/>
+<div>Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
+Telefon: ${restaurant.phone}<br/>
+Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
+Entfernung: ${restaurant.distance}m<br/>
 <span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
-                    console.debug("click-handler run");
                     this._map.setClickable(false);
                     this.zone.run(() => {
                         this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
@@ -184,18 +183,20 @@ export class HomePage implements OnDestroy {
                 // marker size and styling must be done manually
                 infoDiv.style.maxWidth = "85%";
                 infoDiv.style.display = "inline-block";
-                infoDiv.style.margin = "6px";
+                infoDiv.style.padding = "0";
+
                 // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
-                document.body.appendChild(infoDiv);
+                this.theMap.nativeElement.appendChild(infoDiv);
                 infoDiv.style.height = infoDiv.offsetHeight + 6 + "px";
                 infoDiv.style.width = infoDiv.offsetWidth + 12 + "px";
-                document.body.removeChild(infoDiv);
+                this.theMap.nativeElement.removeChild(infoDiv);
+
                 infoDiv.style.maxWidth = "none";
+                infoDiv.style.margin = "6px 6px 0 6px";
 
                 htmlInfoWindow.setContent(infoDiv);
 
                 marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
-                    console.debug("opening marker ", marker);
                     htmlInfoWindow.open(marker);
                 });
 
