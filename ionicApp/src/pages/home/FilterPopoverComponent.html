@@ -1,11 +1,11 @@
 <ion-list>
-    <ion-item>
-        <ion-label>Küche </ion-label>
+    <ion-item no-lines>
+        <ion-label style="color: #000;">Küche </ion-label>
         <ion-select [(ngModel)]="service.selectedKitchenTypes" multiple="true" cancelText="Zurück">
             <ion-option *ngFor="let type of service.kitchenTypes" [value]="type">{{type.name}}</ion-option>
         </ion-select>
     </ion-item>
-    <ion-item *ngIf="this.auth.getLoggedIn()">
+    <ion-item *ngIf="this.auth.getLoggedIn()" no-lines>
         <ion-label>nur Favoriten</ion-label>
         <ion-toggle [(ngModel)]="service.showOnlyFavorites"></ion-toggle>
     </ion-item>
