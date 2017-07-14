@@ -8,7 +8,6 @@ import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
 import LatLng = google.maps.LatLng;
-import Marker = google.maps.Marker;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -16,6 +15,9 @@ export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
 // this is needed for google maps plugin v2
 declare var plugin: any;
 declare var cordova: any;
+
+// constants
+const MAP_DEFAULT_ZOOM_LEVEL = 15;
 
 @Component({
     selector: 'page-home',
@@ -27,6 +29,7 @@ export class HomePage {
     private _map: any;
     private _mapMarkers = [];
     private _allRestaurants: Array<Restaurant>;
+    private _customLocationMarker: any;
 
     constructor(private navCtrl: NavController,
                 private modalCtrl: ModalController,
@@ -59,32 +62,39 @@ export class HomePage {
     }
 
     public openFilterDialog(ev: Event) {
-        // TODO: Still needed?
-        this._map.setClickable(false);      // needed to be able to click on the overlay
+        // this._map.setClickable(false);      // needed to be able to click on the overlay
 
         let pop = this.popCtrl.create(FilterPopoverComponent);
 
         pop.present({ev});
 
         pop.onWillDismiss(() => {
-            // filter kitchen types
-            // this assumes, that kitchen-types are ALWAYS set on a restaurant
-            let newRestaurants = this._allRestaurants.filter(res => {
-                return res.kitchenTypes.some(resKitchenType => {
-                    return this.popService.selectedKitchenTypes.some(selKitchenType => {
-                        return resKitchenType.id === selKitchenType.id
-                    })
-                })
-            });
-
-            // show only favorites
-            if (this.popService.showOnlyFavorites) {
-                newRestaurants = newRestaurants.filter(res => res.isFavorite);
-            }
-
-            this.setRestaurantMarkers(newRestaurants);
-            this._map.setClickable(true);
+            this.setRestaurantMarkers(this.filterRestaurants(this._allRestaurants));
+            // this._map.setClickable(true);
         })
+    }
+
+    /**
+     * Applies the filters set in FilterPopoverService to the restaurants
+     * @returns {Restaurant[]} the filtered restaurants to show
+     */
+    private filterRestaurants(allRestaurants: Restaurant[]) {
+        // filter kitchen types
+        // this assumes, that kitchen-types are ALWAYS set on a restaurant
+        let newRestaurants = allRestaurants.filter(res => {
+            return res.kitchenTypes.some(resKitchenType => {
+                return this.popService.selectedKitchenTypes.some(selKitchenType => {
+                    // at least one kitchentype must be matching the selected ones
+                    return resKitchenType.id === selKitchenType.id
+                })
+            })
+        });
+
+        // show only favorites
+        if (this.popService.showOnlyFavorites) {
+            newRestaurants = newRestaurants.filter(res => res.isFavorite);
+        }
+        return newRestaurants;
     }
 
 
@@ -114,7 +124,7 @@ export class HomePage {
                         // move map to current location
                         let camPos = {
                             target: pos.latLng,
-                            zoom: 15
+                            zoom: MAP_DEFAULT_ZOOM_LEVEL
                         };
                         this._map.moveCamera(camPos);
                     },
@@ -154,7 +164,7 @@ export class HomePage {
         this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(
             res => {
                 this._allRestaurants = res.json();
-                this.setRestaurantMarkers(this._allRestaurants);
+                this.setRestaurantMarkers(this.filterRestaurants(this._allRestaurants));
             }
         )
     }
@@ -230,13 +240,21 @@ Entfernung: ${restaurant.distance}m<br/>
             if (coords) {
                 const latlng = new LatLng(coords.latitude, coords.longitude);
 
+                // remove old marker if already set
+                if (this._customLocationMarker) {
+                    this._customLocationMarker.remove();
+                }
+
+                // set new marker
                 this._map.addMarker({
-                    position: latlng,
-                    title: "Ihr Standort"
+                    position: latlng
+                }, marker => {
+                    this._customLocationMarker = marker;
                 });
+
                 this._map.moveCamera({
                     target: latlng,
-                    zoom: 15
+                    zoom: MAP_DEFAULT_ZOOM_LEVEL
                 });
 
                 this.fetchRestaurants(latlng);
