@@ -165,9 +165,9 @@ export class HomePage implements OnDestroy {
                 let htmlInfoWindow = new plugin.google.maps.HtmlInfoWindow();
 
                 let infoDiv = document.createElement("div");
-                infoDiv.innerHTML = `<div>
-<span style="font-size: large; font-weight: bold; margin-bottom: 8px">${restaurant.name}</span>
-<div>Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
+                infoDiv.innerHTML = `<div style="display: inline-block">
+<div style="font-size: large; font-weight: bold; margin-bottom: 5px">${restaurant.name}</div>
+<div style="display: inline-block">Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
 Telefon: ${restaurant.phone}<br/>
 Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
 Entfernung: ${restaurant.distance}m<br/>
@@ -187,12 +187,12 @@ Entfernung: ${restaurant.distance}m<br/>
 
                 // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
                 this.theMap.nativeElement.appendChild(infoDiv);
-                infoDiv.style.height = infoDiv.offsetHeight + 6 + "px";
-                infoDiv.style.width = infoDiv.offsetWidth + 12 + "px";
+                infoDiv.style.height = infoDiv.offsetHeight + 1 + "px";
+                infoDiv.style.width = infoDiv.offsetWidth + 4 + "px";
                 this.theMap.nativeElement.removeChild(infoDiv);
 
                 infoDiv.style.maxWidth = "none";
-                infoDiv.style.margin = "6px 6px 0 6px";
+                infoDiv.style.margin = "6px";
 
                 htmlInfoWindow.setContent(infoDiv);
 
@@ -200,7 +200,6 @@ Entfernung: ${restaurant.distance}m<br/>
                     htmlInfoWindow.open(marker);
                 });
 
-                console.debug("adding marker ", marker);
                 this._mapMarkers.push(marker);
             })
         });
