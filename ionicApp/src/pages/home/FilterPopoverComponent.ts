@@ -9,7 +9,5 @@ export class FilterPopoverComponent {
 
     constructor(public service: FilterPopoverService,
                 public auth: AuthService
-) {
-    }
-
+) {}
 }
