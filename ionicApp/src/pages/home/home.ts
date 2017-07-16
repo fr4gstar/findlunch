@@ -24,11 +24,12 @@ const MAP_DEFAULT_ZOOM_LEVEL = 15;
     templateUrl: 'home.html'
 })
 export class HomePage {
+    _hasRestaurants: any;
 
     @ViewChild('map') theMap: ElementRef;
     private _map: any;
     private _mapMarkers = [];
-    private _allRestaurants: Array<Restaurant>;
+    public allRestaurants: Array<Restaurant>;
     private _customLocationMarker: any;
 
     constructor(private navCtrl: NavController,
@@ -68,8 +69,8 @@ export class HomePage {
 
         pop.present({ev});
 
-        pop.onWillDismiss(() => {
-            this.setRestaurantMarkers(this.filterRestaurants(this._allRestaurants));
+        pop.onDidDismiss(() => {
+            this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
             // this._map.setClickable(true);
         })
     }
@@ -79,16 +80,25 @@ export class HomePage {
      * @returns {Restaurant[]} the filtered restaurants to show
      */
     private filterRestaurants(allRestaurants: Restaurant[]) {
+        let newRestaurants = allRestaurants;
+
         // filter kitchen types
         // this assumes, that kitchen-types are ALWAYS set on a restaurant
-        let newRestaurants = allRestaurants.filter(res => {
-            return res.kitchenTypes.some(resKitchenType => {
-                return this.popService.selectedKitchenTypes.some(selKitchenType => {
-                    // at least one kitchentype must be matching the selected ones
-                    return resKitchenType.id === selKitchenType.id
+        if (this.popService.selectedKitchenTypes) {     // [] is also truthy, but if it is not loaded yet, this will skip
+            newRestaurants = newRestaurants.filter(res => {
+                return res.kitchenTypes.some(resKitchenType => {
+                    return this.popService.selectedKitchenTypes.some(selKitchenType => {
+                        // at least one kitchentype must be matching the selected ones
+                        return resKitchenType.id === selKitchenType.id
+                    })
                 })
-            })
-        });
+            });
+        }
+
+        // show only currently opened
+        if (this.popService.showOnlyOpened) {
+            newRestaurants = newRestaurants.filter(res => res.currentlyOpen);
+        }
 
         // show only favorites
         if (this.popService.showOnlyFavorites) {
@@ -163,8 +173,10 @@ export class HomePage {
         // in the future it could filter by using the visible map-area.
         this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(
             res => {
-                this._allRestaurants = res.json();
-                this.setRestaurantMarkers(this.filterRestaurants(this._allRestaurants));
+                this.zone.run(() => {       // needed for enabling filter-button in header dynamically
+                    this.allRestaurants = res.json();
+                    this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
+                });
             }
         )
     }
