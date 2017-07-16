@@ -8,7 +8,7 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
-import {LoadingService} from "../../providers/loading-service"
+import {LoadingService} from "../../providers/loading-service";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -83,10 +83,6 @@ export class HomePage {
         this._map = this.googleMaps.create(element);
 
 
-        let loader = this.loading.prepareLoader("Karte wird geladen");
-
-        loader.present().then( res => {
-
             // listen to MAP_READY event
             // You must wait for this event to fire before adding something to the map or modifying it in anyway
             this._map.one(GoogleMapsEvent.MAP_READY).then(
@@ -114,10 +110,7 @@ export class HomePage {
                             console.error("Error getting location: ", err);
                             this.showAddressInput();
                         })
-                })
-            loader.dismiss();
-
-        })
+                });
     }
 
     /**
@@ -125,14 +118,21 @@ export class HomePage {
      * @param latLng location as LatLng-object
      */
     private fetchRestaurants(latLng: LatLng) {
-        // do not filter by radius, because there are just a few restaurants.
-        // in the future it could filter by using the visible map-area.
-        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`).subscribe(
-            res => {
-                this._allRestaurants = res.json();
-                this.setRestaurantMarkers(this._allRestaurants);
-            }
-        )
+
+        let loader = this.loading.prepareLoader("Restaurants werden geladen");
+        loader.present().then( res => {
+
+            // do not filter by radius, because there are just a few restaurants.
+            // in the future it could filter by using the visible map-area.
+            this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`).subscribe(
+                res => {
+                    this._allRestaurants = res.json();
+                    this.setRestaurantMarkers(this._allRestaurants);
+
+                    loader.dismiss();
+                }
+            )
+        });
     }
 
 
