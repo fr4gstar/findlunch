@@ -83,7 +83,7 @@ public class MailService {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getUsername());
 		mail.setSubject(messages.getString("resetpassword.title"));
-		String text = MessageFormat.format(messages.getString("resetpassword.supplier.text"), resetLink);
+		String text = MessageFormat.format(messages.getString("resetpassword.text"), user.getUserType().getName(), resetLink);
 		mail.setText(text);
 		return mail;
 	}

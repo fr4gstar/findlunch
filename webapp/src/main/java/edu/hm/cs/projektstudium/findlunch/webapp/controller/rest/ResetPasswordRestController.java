@@ -1,5 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
@@ -47,11 +49,57 @@ public class ResetPasswordRestController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	private static final String HTTP = "http://";
+	
+	private static final String HTTPS= "https://";
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(ResetPasswordRestController.class);
 	
 	@CrossOrigin
 	@RequestMapping(path ="api/get_reset_token", method = RequestMethod.POST)
-	public ResponseEntity<Integer> getResetPassword(HttpServletRequest request, @RequestBody User u){
+	public ResponseEntity<Integer> getResetPassword(HttpServletRequest request, @RequestBody User user){
+		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		
+		User u = userRepository.findByUsername(user.getUsername());
+		if(u == null){
+			LOGGER.info(LogUtils.getErrorMessage(Thread.currentThread().getStackTrace()[1].getMethodName(),"Not existed Username(E-Mail) was entered."));
+			//send always a success Mail because of IT-Sec reasons.Also add the difference of the needed time to send a Mail.
+			return new ResponseEntity<>(0, HttpStatus.OK);
+		}
+		ResetPassword resetPasswordLast = resetPasswordRepository.findByUser(u);
+		
+		
+		//try to reset pw more then one time in 24hours
+		if(resetPasswordLast != null && validatePasswordDate(resetPasswordLast.getDate())){
+			String resetLink = getPasswordResetUrl(request, u);
+			try{
+				mailService.sendResetPwMail(u,resetLink);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return new ResponseEntity<>(0, HttpStatus.OK);
+		}
+		
+		//first try to reset pw in 24h
+		ResetPassword resetPassword = new ResetPassword();
+		resetPassword.setDate(new Date());
+		resetPassword.setToken(UUID.randomUUID().toString());
+		resetPassword.setUser(u);
+		u.setResetPassword(resetPassword);
+		resetPasswordRepository.save(resetPassword);
+		userRepository.save(u);
+		String resetLink = getPasswordResetUrl(request, u);
+		try{
+			mailService.sendResetPwMail(u,resetLink);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(0, HttpStatus.OK);
+		
+		/*
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 
 		User user = userRepository.findByUsername(u.getUsername());
@@ -70,7 +118,24 @@ public class ResetPasswordRestController {
 		
 		//should we send Http code 200 because of itsec
 //		return new ResponseEntity<Integer>(1, HttpStatus.CONFLICT);
-		return new ResponseEntity<>(0, HttpStatus.OK);
+		return new ResponseEntity<>(0, HttpStatus.OK);*/
+	}
+	
+	private boolean validatePasswordDate(Date dateToValidate){
+		LocalDateTime dtv = LocalDateTime.ofInstant(dateToValidate.toInstant(), ZoneId.systemDefault());
+		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		if (dtv.isAfter(yesterday))
+			return true;		
+		return false;
+	}
+	
+	private String getPasswordResetUrl(HttpServletRequest request, User user) {
+		String url = getProtocol(request.isSecure()) + request.getServerName()+":"+request.getServerPort()+"/resetpassword/"+user.getResetPassword().getToken();
+		return url;
+	}
+	
+	private String getProtocol(boolean https){
+		return https ? HTTPS : HTTP;
 	}
 
 	@CrossOrigin
