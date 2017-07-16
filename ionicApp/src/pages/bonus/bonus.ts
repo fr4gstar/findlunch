@@ -1,9 +1,10 @@
 import {Component, OnInit} from "@angular/core";
-import {ToastController} from "ionic-angular";
+import {NavController, ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "../../providers/QRService";
 import {LoadingService} from "../../providers/loading-service";
+
 
 /**
  * This pages loads and shows the points of an user per restaurant.
@@ -30,7 +31,8 @@ export class BonusPage {
     constructor(private toastCtrl: ToastController,
                 private http: Http,
                 private qr: QRService,
-                private loading: LoadingService) {
+                private loading: LoadingService,
+                private navCtrl: NavController) {
         this.loadPoints();
     }
 
@@ -42,8 +44,8 @@ export class BonusPage {
         let loader = this.loading.prepareLoader();
         loader.present().then(res => {
             this.qr.onQRClicked(event);
+            loader.dismiss();
         })
-        loader.dismiss();
     }
 
     /**
