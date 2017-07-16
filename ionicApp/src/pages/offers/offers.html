@@ -39,16 +39,15 @@
                 <div *ngIf="isGroupShown(category)">
                     <div *ngFor='let offer of offers[category]'>
                         <ion-item (click)="onOfferClicked($event, offer)">
-                            <span>{{offer.title}}<sup>{{offerService.getALGsAndADDsOfOffer(offer)}}</sup></span>
+                            <span>{{offer.title}}<sup class="exponent-allergenics">{{offerService.getALGsAndADDsOfOffer(offer)}}</sup></span>
                             <span item-right>{{offer.price | currency:'EUR':true}}</span>
                         </ion-item>
                     </div>
                 </div>
             </ion-item>
         </ion-list>
-        <ion-row id="aUndZ">
-            <ion-col>
-
+        <ion-row>
+            <ion-col class="allergenics-area-border">
                 <h6 class="allergenics-header">Allergene</h6>
                 <ion-row *ngFor="let allerg of allergenics$ | async" class="allergenics">
                     {{allerg.shortKey}} {{allerg.name}}
@@ -57,7 +56,7 @@
         </ion-row>
         <ion-row>
             <ion-col>
-                <h6 id="zusatzstoffe">Zusatzstoffe</h6>
+                <h6 class="allergenics-header">Zusatzstoffe</h6>
                 <div *ngFor="let additive of additives$ | async" class="allergenics">
                     {{additive.shortKey}} {{additive.name}}
                 </div>

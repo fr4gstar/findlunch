@@ -1,7 +1,19 @@
-#allergene, #zusatzstoffe {font-size : 80%;}
+// "allergenics" always targets additives also
 
-#aUndZ {
-  border-top: 1px solid darkgrey;
+.allergenics-header {
+  font-size: 7pt;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  color: grey;
+}
+
+.allergenics, .exponent-allergenics {
+  font-size: 6pt;
+  color: grey;
+}
+
+.allergenics-area-border {
+  border-top: 1px solid #dedede;
 }
 
 

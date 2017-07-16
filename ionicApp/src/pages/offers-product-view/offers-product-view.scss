@@ -12,24 +12,17 @@
   font-size: 14px;
 }
 
-.allergenics {
-  font-size: 9pt;
-}
-
-.allergenics-header {
-  font-size: 10pt;
-  margin-top: 10px;
-  margin-bottom: 4px;
-}
-
-#hochzahl {
-  font-size: 40%;
-}
-
 .toLeft{
     text-align: left;
 }
 
 #icons{
     text-align: left;
+}
+
+.title-exponent-allergenics {
+  color: grey;
+  font-size: 6pt;
+  position: relative;
+  top: -3ex;
 }
