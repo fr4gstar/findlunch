@@ -6,6 +6,8 @@ import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../providers/auth-service";
 import {SERVER_URL} from "../../app/app.module";
 import {LoadingService} from "../../providers/loading-service";
+import {OrderDetailsPage} from "../order-details/orderdetails";
+import {Restaurant} from "../../model/Restaurant";
 
 
 @Component({
@@ -17,15 +19,17 @@ export class LoginPage {
 
     popThisPage: boolean;
     private counterPasswordWrong: number = 0;
+    private restaurant: Restaurant;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
                 private auth: AuthService,
                 private http: Http,
-                navParams: NavParams,
+                private navParams: NavParams,
                 private loading: LoadingService) {
 
         this.popThisPage = navParams.get("comeBack");
+        this.restaurant = null;
     }
 
 
@@ -44,7 +48,10 @@ export class LoginPage {
                     toast.present();
 
                     if (this.popThisPage) {
-                        this.navCtrl.pop();
+                        this.restaurant = this.navParams.get("restaurant");
+                        this.navCtrl.push(OrderDetailsPage, {
+                            restaurant: this.restaurant
+                        });
                         loader.dismiss();
 
                     } else {

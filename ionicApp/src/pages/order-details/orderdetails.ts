@@ -66,7 +66,6 @@ export class OrderDetailsPage {
             collectTime: null,
         };
 
-
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if (this.auth.getLoggedIn()) {
             this.calcNeededPoints();
@@ -249,17 +248,12 @@ export class OrderDetailsPage {
         let alert = this.alertCtrl.create({
             title: 'Info',
             subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
-            "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom" +
+            "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom " +
             "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.",
             buttons: ['Ok']
         });
         alert.present();
     }
-
-    /**
-     * Lets the user enter his desired pickup time.
-     * /TODO: Only valid times should be able to be chosen.
-     */
 
 
     /**
@@ -267,7 +261,7 @@ export class OrderDetailsPage {
      * coming back to this order-details-page
      */
     public goToLogin() {
-        this.navCtrl.push(LoginPage, {comeBack: true});
+        this.navCtrl.push(LoginPage, {comeBack: true, restaurant:this.restaurant});
     }
 
     /**
@@ -275,7 +269,7 @@ export class OrderDetailsPage {
      * involved Login he is automatically coming back to this order-details-page
      */
     public goToRegister() {
-        this.navCtrl.push(RegistryPage, {comeBack: true});
+        this.navCtrl.push(RegistryPage, {comeBack: true, restaurant:this.restaurant});
     }
 
     /**

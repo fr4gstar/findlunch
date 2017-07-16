@@ -4,6 +4,8 @@ import {AuthService} from "../../providers/auth-service";
 import {HomePage} from "../home/home";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {LoadingService} from "../../providers/loading-service";
+import {Restaurant} from "../../model/Restaurant";
+import {OrderDetailsPage} from "../order-details/orderdetails";
 
 
 @Component({
@@ -17,11 +19,12 @@ export class RegistryPage {
 
     termsAndConditionsChecked: boolean;
     popThisPage: boolean;
+    restaurant: Restaurant;
 
     constructor(private auth: AuthService,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
-                navParams: NavParams,
+                private navParams: NavParams,
                 private iab: InAppBrowser,
                 private loading: LoadingService) {
         this.popThisPage = navParams.get("comeBack");
@@ -54,9 +57,15 @@ export class RegistryPage {
                 });
                 toast.present();
                 //if coming from Orderdetailspage, go back there after registry
+
                 if (this.popThisPage) {
-                    this.navCtrl.pop();
-                //else go to Home
+                    this.restaurant = this.navParams.get("restaurant");
+                    this.navCtrl.push(OrderDetailsPage, {
+                        restaurant: this.restaurant
+                    });
+                    loader.dismiss();
+
+                    //else go to Home
                 } else {
                     this.navCtrl.setRoot(HomePage);
                 }
@@ -79,7 +88,7 @@ export class RegistryPage {
                             alert("Anfrage fehlgeschlagen");
 
                     }
-                loader.dismiss();
+                    loader.dismiss();
                 })
 
         })
