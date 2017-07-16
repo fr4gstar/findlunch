@@ -247,9 +247,9 @@ export class OrderDetailsPage {
     public showDonationInfo() {
         let alert = this.alertCtrl.create({
             title: 'Info',
-            subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
-            "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom " +
-            "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.",
+            subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. " +
+                "Mit jedem Klick auf das plus-Zeichen wird Ihre Spende so gewählt, dass sie den Gesamtbetrag auf die " +
+                "nächsten 10 Cent aufrundet.",
             buttons: ['Ok']
         });
         alert.present();
