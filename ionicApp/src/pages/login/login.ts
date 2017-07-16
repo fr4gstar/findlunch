@@ -74,9 +74,7 @@ export class LoginPage {
     });
 
     let user = {
-        user: {
             username: username
-        }
     };
 
     let options = new RequestOptions({
