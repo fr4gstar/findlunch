@@ -10,6 +10,7 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {CartService} from "../../services/CartService";
 import {AuthService} from "../../providers/auth-service";
+import {LoadingService} from "../../providers/loading-service";
 
 
 /**
@@ -28,15 +29,16 @@ export class OffersPage implements OnInit {
     allergenics$: Observable<any>;
     additives$: Observable<any>;
 
-    constructor(navParams: NavParams,
-                public offerService: OffersService,
-                private cartService: CartService,
-                private navCtrl: NavController,
-                private http: Http,
-                public auth: AuthService,
-                private platform: Platform
-    ) {
-        this.restaurant = navParams.get("restaurant");
+  constructor(navParams: NavParams,
+              public offerService: OffersService,
+              private cartService: CartService,
+              private navCtrl: NavController,
+              private http: Http,
+              public auth: AuthService,
+              private loading: LoadingService,
+              private platform: Platform
+  ) {
+                
 
         // disable animation, because it causes problems with displaying the map on iOS
         platform.ready().then(() => {
@@ -48,17 +50,26 @@ export class OffersPage implements OnInit {
 
 
     ngOnInit() {
+        let loader = this.loading.prepareLoader("Angebote werden geladen");
+        loader.present().then(res => {
+
         this.offerService.getOffers(this.restaurant.id).subscribe(
             offers => {
                 this.offers = offers;
                 this.categories = Object.keys(offers);
                 this.shownGroup = this.categories[0] || null;
+
             },
-            err => console.error(err)
+            err => {
+                console.error(err)
+
+            }
         );
 
         this.allergenics$ = this.http.get(SERVER_URL + "/api/all_allergenic").map(res => res.json());
         this.additives$ = this.http.get(SERVER_URL + "/api/all_additives").map(res => res.json());
+        loader.dismiss();
+        })
     }
 
     public onOfferClicked(event, offer) {
@@ -85,35 +96,44 @@ export class OffersPage implements OnInit {
             headers: headers,
         });
 
-        // unset as favorite
-        if (this.restaurant.isFavorite) {
-            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
-                res => {
-                    if (res.json() === 0) {
-                        this.restaurant.isFavorite = false;
+        let loader = this.loading.prepareLoader();
+        //start loading
+        loader.present().then(res => {
+
+
+
+            // unset as favorite
+
+            if (this.restaurant.isFavorite) {
+                this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
+                    res => {
+                        if (res.json() === 0) {
+                            this.restaurant.isFavorite = false;
+                        }
+                        else throw new Error("Unknown return value from server: " + res.json())
+                    },
+                    err => {
+                        alert("Konnte Restaurant nicht als Favorit entfernen.");
+                        console.error(err);
                     }
-                    else throw new Error("Unknown return value from server: " + res.json())
-                },
-                err => {
-                    alert("Konnte Restaurant nicht als Favorit entfernen.");
-                    console.error(err);
-                }
-            )
-        }
-        // set as favorite
-        else {
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
-                res => {
-                    if (res.json() === 0) {
-                        this.restaurant.isFavorite = true;
-                    }
-                    else throw new Error("Unknown return value from server: " + res.json());
-                },
-                err => {
-                    alert("Konnte Restaurant nicht als Favorit setzen.");
-                    console.error(err);
-                })
-        }
+                )
+            }
+            // set as favorite
+            else {
+                this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
+                    res => {
+                        if (res.json() === 0) {
+                            this.restaurant.isFavorite = true;
+                        }
+                        else throw new Error("Unknown return value from server: " + res.json());
+                    },
+                    err => {
+                        alert("Konnte Restaurant nicht als Favorit setzen.");
+                        console.error(err);
+                    })
+            }
+            loader.dismiss();
+        })
     }
 
     getCartItemCount() {

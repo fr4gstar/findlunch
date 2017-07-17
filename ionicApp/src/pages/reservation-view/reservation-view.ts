@@ -25,7 +25,6 @@ export class ReservationViewPage {
         this.restaurant = this.reservation.restaurant;
         this.points = this.reservation.points;
         this.offers= this.reservation.reservation_offers;
-        debugger;
            console.log(this.offers[0].offer.amount);
            console.log(this.offers[0]);
 

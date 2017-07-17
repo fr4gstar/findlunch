@@ -8,6 +8,7 @@ import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
 import LatLng = google.maps.LatLng;
+import {LoadingService} from "../../providers/loading-service";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -39,7 +40,9 @@ export class HomePage {
                 private popService: FilterPopoverService,
                 private events: Events,
                 private platform: Platform,
-                private zone: NgZone
+                private zone: NgZone,
+                private loading: LoadingService
+
     ) {
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
@@ -111,6 +114,9 @@ export class HomePage {
     /**
      * Initializes the Map and positions the current device on it.
      */
+    /**
+     * Initializes the Map and positions the current device on it.
+     */
     private loadMap() {
         // create map
         let element = this.theMap.nativeElement;
@@ -150,7 +156,7 @@ export class HomePage {
      * Fetches the restaurants from the server using the provided coordinates7
      * @param latLng location as LatLng-object
      */
-    private fetchRestaurants(latLng: LatLng) {
+       private fetchRestaurants(latLng: LatLng) {
 
         // build authentication header...
         let user = window.localStorage.getItem("username");
@@ -168,18 +174,24 @@ export class HomePage {
             });
         }
 
+        let loader = this.loading.prepareLoader("Restaurants werden geladen");
+        //loader.present().then( res => {
 
-        // do not filter by radius, because there are just a few restaurants.
-        // in the future it could filter by using the visible map-area.
-        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(
-            res => {
-                this.zone.run(() => {       // needed for enabling filter-button in header dynamically
-                    this.allRestaurants = res.json();
-                    this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
-                });
-            }
-        )
+
+            // do not filter by radius, because there are just a few restaurants.
+            // in the future it could filter by using the visible map-area.
+            this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(
+                res => {
+                    this.zone.run(() => {       // needed for enabling filter-button in header dynamically
+                        this.allRestaurants = res.json();
+                        this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
+
+                   //     loader.dismiss();
+                    })
+              })
+       //  })
     }
+
 
 
     /**

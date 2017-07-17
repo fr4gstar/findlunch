@@ -1,5 +1,6 @@
 {
   "rules": {
+      /*
     "no-duplicate-variable": true,
     "no-unused-variable": [
       true
@@ -22,6 +23,7 @@
     "no-access-missing-member": true,
     "invoke-injectable": true,
     "template-to-ng-template": true
+  */
   },
   "rulesDirectory": [
     "node_modules/tslint-eslint-rules/dist/rules",

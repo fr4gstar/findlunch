@@ -9,9 +9,11 @@
 
 <ion-content padding>
     <ion-list id="reservations">
+        
+    <ng-container *ngIf="this.usedRestaurants.length > 0">
 
         <ng-container *ngFor="let restaurant of this.usedRestaurants">
-            <ion-list-header text-wrap>{{restaurant}}</ion-list-header>
+            <ion-list-header id="restaurantName" text-wrap>{{restaurant}}</ion-list-header>
             <ng-container *ngFor='let reservation of reservations;'>
                 <ng-container *ngIf="reservation.restaurant.name === restaurant">
                     <ion-item (click)="onReservationClicked($event, reservation)">
@@ -20,9 +22,12 @@
                         <span item-right style="color: green;" *ngIf='reservation.reservationStatus.key === 1'>{{reservation.reservationStatus.status}}</span>
                         <span item-right style="color: red;" *ngIf='reservation.reservationStatus.key === 2'>Abgelehnt</span>
                         <span item-right style="color: black;" *ngIf='reservation.reservationStatus.key === 3'>{{reservation.reservationStatus.status}}</span>
+
                     </ion-item>
                 </ng-container>
             </ng-container>
+            <span> &nbsp; </span>
         </ng-container>
+    </ng-container>
     </ion-list>
 </ion-content>

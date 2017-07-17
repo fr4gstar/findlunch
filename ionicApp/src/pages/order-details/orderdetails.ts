@@ -6,10 +6,12 @@ import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
-import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
 import {Reservation} from "../../model/Reservation";
+
+import {LoadingService} from "../../providers/loading-service";
+import {HomePage} from "../home/home";
 
 
 /**
@@ -46,13 +48,11 @@ export class OrderDetailsPage {
                 private cartService: CartService,
                 private auth: AuthService,
                 private alertCtrl: AlertController,
-                private datePicker: DatePicker
-)
-    {
+                private loading: LoadingService) {
         this.restaurant = navParams.get("restaurant");
         //TODO: ftr_reservation
         this.reservation = {
-            id:0,
+            id: 0,
             donation: 0,
             totalPrice: 0,
             usedPoints: false,
@@ -66,10 +66,8 @@ export class OrderDetailsPage {
             collectTime: null,
         };
 
-
-
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
-        if(this.auth.getLoggedIn()){
+        if (this.auth.getLoggedIn()) {
             this.calcNeededPoints();
             this.getUserPoints();
 
@@ -77,7 +75,7 @@ export class OrderDetailsPage {
 
         this.nowOpen = this.restaurant.currentlyOpen;
 
-        this.calcTimings(5);
+        this.calcTimings(10);
     }
 
     /**
@@ -154,58 +152,70 @@ export class OrderDetailsPage {
     /**
      * Sends the current order to the server. This requires authentication.
      */
-   sendOrder() {
-        if(this.reservation.items.length === 0){
+    sendOrder() {
+        if (this.reservation.items.length === 0) {
             alert("Sie können keine leere Bestellung absenden.");
-        } else{
+        } else {
+            let loader = this.loading.prepareLoader("Ihre Bestellung wird abgesendet");
 
-            let user = window.localStorage.getItem("username");
-            let token = window.localStorage.getItem(user);
-            let headers = new Headers({
-                'Content-Type': 'application/json',
-                "Authorization": "Basic " + token
-            });
-            let options = new RequestOptions({headers: headers});
+            //starts the loading spinner
+            loader.present().then(res => {
+
+
+                let user = window.localStorage.getItem("username");
+                let token = window.localStorage.getItem(user);
+                let headers = new Headers({
+                    'Content-Type': 'application/json',
+                    "Authorization": "Basic " + token
+                });
+                let options = new RequestOptions({headers: headers});
 
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
-            if(this.auth.getLoggedIn()){
-                this.reservation.usedPoints = this.payWithPoints;
-                this.reservation.pointsCollected = !this.reservation.usedPoints;
+                if (this.auth.getLoggedIn()) {
+                    this.reservation.usedPoints = this.payWithPoints;
+                    this.reservation.pointsCollected = !this.reservation.usedPoints;
 
-                this.reservation.points = this.neededPoints;
-            }
+                    this.reservation.points = this.neededPoints;
+                }
 
-            let payload = {
-                ...this.reservation,
-                reservation_offers: []
-            };
-            payload.items.forEach((item) => {
-                payload.reservation_offers.push({
-                    offer: {
-                        id: item.id
-                    },
-                    amount: item.amount
-                });
-            });
-            delete payload.items;
-
-            this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
-                (res) => {
-                    const toast = this.toastCtrl.create({
-                        message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
-                        duration: 3000
+                let payload = {
+                    ...this.reservation,
+                    reservation_offers: []
+                };
+                payload.items.forEach((item) => {
+                    payload.reservation_offers.push({
+                        offer: {
+                            id: item.id
+                        },
+                        amount: item.amount
                     });
-                    toast.present();
+                });
+                delete payload.items;
 
-                    // empty the cart for this restaurant
-                    this.cartService.emptyCart(this.restaurant.id);
+                this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
+                    (res) => {
+                        const toast = this.toastCtrl.create({
+                            message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
+                            duration: 3000
+                        });
+                        toast.present();
 
-                    // go back to restaurants-overview
-                    this.navCtrl.popToRoot();
-                }, (err) => {
-                    console.error(err)
-                })
+                        // empty the cart for this restaurant
+                        this.cartService.emptyCart(this.restaurant.id);
+
+                        // go back to restaurants-overview
+                        this.navCtrl.setRoot(HomePage);
+                        this.navCtrl.popToRoot();
+                        //stops the spinner
+                        loader.dismiss();
+                    }, (err) => {
+                        console.error(err)
+                        //stop the spinner
+                        loader.dismiss();
+
+                    })
+            });
         }
     }
 
@@ -231,80 +241,86 @@ export class OrderDetailsPage {
             .findIndex((item, i) => item.id === offer.id)
     }
 
-  /**
-   * Shows explanation alert for donation option in the view
-   */
-    public showDonationInfo(){
-      let alert = this.alertCtrl.create({
-        title: 'Info',
-        subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Die Spende " +
-        "wird als Ausgangseinstellung so gewählt, dass sie auf die nächsten vollen 10 Cent vom" +
-          "Betrag Ihrer Bestellung rundet. Diese können Sie aber nach Belieben anpassen.",
-        buttons: ['Ok']
-      });
-      alert.present();
-  }
-
-  /**
-   * Lets the user enter his desired pickup time.
-   * /TODO: Only valid times should be able to be chosen.
-   */
+    /**
+     * Shows explanation alert for donation option in the view
+     */
+    public showDonationInfo() {
+        let alert = this.alertCtrl.create({
+            title: 'Info',
+            subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. " +
+                "Mit jedem Klick auf das plus-Zeichen wird Ihre Spende so gewählt, dass sie den Gesamtbetrag auf die " +
+                "nächsten 10 Cent aufrundet.",
+            buttons: ['Ok']
+        });
+        alert.present();
+    }
 
 
-  /**
-   * Sends the user to the Loginpage. After successful Login he is automatically
-   * coming back to this order-details-page
-   */
-  public goToLogin(){
-    this.navCtrl.push(LoginPage, {comeBack: true});
-  }
+    /**
+     * Sends the user to the Loginpage. After successful Login he is automatically
+     * coming back to this order-details-page
+     */
+    public goToLogin() {
+        this.navCtrl.push(LoginPage, {comeBack: true, restaurant:this.restaurant});
+    }
 
-  /**
-   * Sends the user to the Registry. After successful Registry and
-   * involved Login he is automatically coming back to this order-details-page
-   */
-  public goToRegister(){
-    this.navCtrl.push(RegistryPage, {comeBack: true});
-  }
+    /**
+     * Sends the user to the Registry. After successful Registry and
+     * involved Login he is automatically coming back to this order-details-page
+     */
+    public goToRegister() {
+        this.navCtrl.push(RegistryPage, {comeBack: true, restaurant:this.restaurant});
+    }
 
     /**
      * Gets the Points of the user for the particular restaurant
      * Sets the information whether its possible to pay the order with points
      */
-    public getUserPoints(){
+    public getUserPoints() {
         let user = window.localStorage.getItem("username");
         let token = window.localStorage.getItem(user);
         let headers = new Headers({
             'Content-Type': 'application/json',
             "Authorization": "Basic " + token
         });
-        let options = new RequestOptions({headers: headers,
-                                method: RequestMethod.Get});
-        this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
-            .subscribe(
-                res =>{
-                    let reply = res.json();
-                    //if user has no points at the restaurant yet
-                    if(!(reply.length === 0)){
-                        this.userPoints= reply[0].points;
-                    }
-                    // boolean whether enough points to pay order with points
-                    // has to wait for the getUserPoints query
-                    this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+        let options = new RequestOptions({
+            headers: headers,
+            method: RequestMethod.Get
+        });
 
-                },
-                err => console.error(err)
-            )}
+        let loader = this.loading.prepareLoader();
+        loader.present().then(res => {
 
-    public calcNeededPoints(){
+            this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
+                .subscribe(
+                    res => {
+                        let reply = res.json();
+                        //if user has no points at the restaurant yet
+                        if (!(reply.length === 0)) {
+                            this.userPoints = reply[0].points;
+                        }
+                        // boolean whether enough points to pay order with points
+                        // has to wait for the getUserPoints query
+                        this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+
+                    },
+                    err => {
+                        console.error(err);
+
+                })
+            loader.dismiss();
+        })
+    }
+
+    public calcNeededPoints() {
         let totalNeededPoints = 0;
-        for(let item of this.reservation.items){
+        for (let item of this.reservation.items) {
             totalNeededPoints += (item.neededPoints * item.amount);
         }
         this.neededPoints = totalNeededPoints;
     }
 
-    public hasEnoughPoints(){
+    public hasEnoughPoints() {
         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
     }
 
@@ -313,10 +329,10 @@ export class OrderDetailsPage {
         // restaurant.timeSchedules is an Array with of Objects with opening times for single
         // days in the order of weekdays e.g. timeSchedules[0] are opening times on Monday
         let day = date.getDay();
-        if(day === 0){
+        if (day === 0) {
             day = 1;
-        } else{
-            day = day-1;
+        } else {
+            day = day - 1;
 
         }
         this.closingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].closingTime.split(" ")[1];
