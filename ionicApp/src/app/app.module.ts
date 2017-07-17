@@ -68,7 +68,9 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     imports: [
         CommonModule,
         BrowserModule,
-        IonicModule.forRoot(MyApp),
+        IonicModule.forRoot(MyApp, {
+            menuType: 'overlay'
+        }),
         HttpModule
     ],
     bootstrap: [IonicApp],
