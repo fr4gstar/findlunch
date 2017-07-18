@@ -8,6 +8,7 @@ import {SERVER_URL} from "../../app/app.module";
 import {LoadingService} from "../../providers/loading-service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
+import {PushService} from "../../providers/push-service";
 
 
 @Component({
@@ -26,7 +27,8 @@ export class LoginPage {
                 private auth: AuthService,
                 private http: Http,
                 private navParams: NavParams,
-                private loading: LoadingService) {
+                private loading: LoadingService,
+                private push: PushService) {
 
         this.popThisPage = navParams.get("comeBack");
         this.restaurant = null;
@@ -46,6 +48,8 @@ export class LoginPage {
                         duration: 3000
                     });
                     toast.present();
+
+                    this.push.pushSetup();
 
                     if (this.popThisPage) {
                         this.restaurant = this.navParams.get("restaurant");
