@@ -38,7 +38,11 @@ export class BonusPage {
    * @param event
    */
   onQRClicked(event) {
-    this.qr.onQRClicked(event);
+    this.qr.onQRClicked(event).then(
+        () => {
+            this.loadPoints();
+        }
+    );
   }
 
   /**

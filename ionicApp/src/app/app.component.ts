@@ -8,6 +8,7 @@ import {Push} from "@ionic-native/push";
 import {QRService} from "../providers/QRService";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
+import {PushService} from "../providers/push-service";
 
 /**
  * Initialize the application.
@@ -52,16 +53,18 @@ export class MyApp {
                 private auth: AuthService,
                 public menu: MenuService,
                 private toastCtrl: ToastController,
-                public push: Push,
                 public qr: QRService,
                 public iab: InAppBrowser,
-                public alertCtrl: AlertController) {
+                public alertCtrl: AlertController,
+                private push: PushService) {
 
         this.auth.verifyUser();
+        this.push.pushSetup();
 
         //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
         document.addEventListener('resume', () => {
             this.auth.verifyUser();
+            this.push.pushSetup();
         })
 
     }

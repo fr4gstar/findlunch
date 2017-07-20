@@ -47,7 +47,7 @@ export class QRService {
       headers: headers,
       method: RequestMethod.Put
     });
-    this.barcodeScanner.scan()
+    return this.barcodeScanner.scan()
       .then((barcodeData) => {
         this.http.get(`${SERVER_URL}/api/confirm_reservation/`+barcodeData.text, options)
           .subscribe(
@@ -81,11 +81,7 @@ export class QRService {
             }
           )
       }, (err) => {
-        const toast = this.toastCtrl.create({
-          message: "QR-Code Scan Fehler",
-          duration: 3000
-        });
-        toast.present();
+        console.info("QR Code Scan Abbruch");
       });
   }
 }
