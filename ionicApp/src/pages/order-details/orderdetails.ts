@@ -6,11 +6,9 @@ import {CartService} from "../../services/CartService";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../providers/auth-service";
 import {Restaurant} from "../../model/Restaurant";
-import {DatePicker} from "@ionic-native/date-picker";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
 import {Reservation} from "../../model/Reservation";
-import {HomePage} from "../home/home";
 
 import {LoadingService} from "../../providers/loading-service";
 import {TranslateService} from "@ngx-translate/core";
@@ -227,12 +225,11 @@ export class OrderDetailsPage {
                         this.cartService.emptyCart(this.restaurant.id);
 
                         // go back to restaurants-overview
-                        this.navCtrl.setRoot(HomePage);
                         this.navCtrl.popToRoot();
                         //stops the spinner
                         loader.dismiss();
                     }, (err) => {
-                        console.error(err)
+                        console.error(err);
                         //stop the spinner
                         loader.dismiss();
 
