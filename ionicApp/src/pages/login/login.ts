@@ -35,10 +35,10 @@ export class LoginPage {
         translate.setDefaultLang('de');
         this.popThisPage = navParams.get("comeBack");
         this.restaurant = null;
-        this.translate.get('loginError').subscribe(
+        this.translate.get('LoginPage.loginError').subscribe(
             (res: string) => { this.loginError = res }
         )
-        this.translate.get('loginSuccessful').subscribe(
+        this.translate.get('LoginPage.loginSuccessful').subscribe(
             key => { this.loginSuccessful = key }
         )
     }
