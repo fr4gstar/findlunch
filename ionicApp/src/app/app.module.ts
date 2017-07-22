@@ -24,7 +24,7 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
-import {HttpModule} from "@angular/http";
+import {HttpModule, Http} from "@angular/http";
 import {BarcodeScanner} from "@ionic-native/barcode-scanner";
 import {QRService} from "../providers/QRService";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
@@ -35,6 +35,9 @@ import {CartService} from "../services/CartService";
 import {Push} from "@ionic-native/push";
 import {LoadingService} from "../providers/loading-service";
 import {PushService} from "../providers/push-service";
+import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 
 // online Server:
@@ -69,6 +72,13 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     imports: [
         CommonModule,
         BrowserModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [Http]
+            }
+        }),
         IonicModule.forRoot(MyApp, {
             menuType: 'overlay'
         }),
@@ -108,9 +118,14 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         MenuService,
         InAppBrowser,
         PushService,
+        TranslateService,
         LoadingService
     ]
 
 })
 export class AppModule {
+}
+
+export function createTranslateLoader(http: Http) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

@@ -1,0 +1,35 @@
+{
+    "title" : "FindLunch",
+    "BonusPage": {
+        "title": "Bonuspunkte"
+    },
+    "RestaurantViewPage": {
+        "title": "Info",
+        "openingTimes": "Öffnungszeiten"
+    },
+    "ReservationsPage": {
+        "title": "Meine Bestellungen",
+        "rejected": "Abgelehnt"
+    },
+    "ReservationViewPage": {
+        "title": "Bestelldetails",
+        "rejected": "Abgelehnt",
+        "donation": "Spende",
+        "total": "Gesamt",
+        "subtitle1": "Ihre Bestellung bei",
+        "subtitle2": "vom",
+        "points1": "Sie haben für diese Bestellung",
+        "points2": "Punkte erhalten"
+    },
+    "LoginPage": {
+        "title": "Login",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "login": "Einloggen",
+        "register": "Registrieren",
+        "passwordReset": "Passwort Vergessen",
+        "securityToken": "Sicherheitstoken Anfordern",
+        "loginSuccessful": "Login Erfolgreich",
+        "loginError": "E-Mail und/oder Passwort nicht bekannt"
+    }
+}

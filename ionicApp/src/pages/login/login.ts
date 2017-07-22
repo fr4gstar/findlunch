@@ -9,7 +9,7 @@ import {LoadingService} from "../../providers/loading-service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {PushService} from "../../providers/push-service";
-
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'login-page',
@@ -21,6 +21,8 @@ export class LoginPage {
     popThisPage: boolean;
     private counterPasswordWrong: number = 0;
     private restaurant: Restaurant;
+    private loginError;
+    private loginSuccessful;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
@@ -28,10 +30,17 @@ export class LoginPage {
                 private http: Http,
                 private navParams: NavParams,
                 private loading: LoadingService,
-                private push: PushService) {
-
+                private push: PushService,
+                private translate: TranslateService) {
+        translate.setDefaultLang('de');
         this.popThisPage = navParams.get("comeBack");
         this.restaurant = null;
+        this.translate.get('loginError').subscribe(
+            (res: string) => { this.loginError = res }
+        )
+        this.translate.get('loginSuccessful').subscribe(
+            key => { this.loginSuccessful = key }
+        )
     }
 
 
@@ -42,9 +51,8 @@ export class LoginPage {
 
             this.auth.login(userName, password).then(data => {
                 if (data) {
-
                     const toast = this.toastCtrl.create({
-                        message: "Login Erfolgreich",
+                        message: this.loginSuccessful,
                         duration: 3000
                     });
                     toast.present();
@@ -64,7 +72,7 @@ export class LoginPage {
                     }
                 } else {
                     loader.dismiss();
-                    alert("E-Mail und/oder Passwort nicht bekannt");
+                    alert(this.loginError);
                 }
             })
         })
