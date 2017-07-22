@@ -16,7 +16,11 @@ export class AddressInputComponent implements OnInit {
     autocomplete;
     service = new google.maps.places.AutocompleteService();
 
-    constructor(public viewCtrl: ViewController, private zone: NgZone, private geocoder: NativeGeocoder, private translate: TranslateService) {
+    constructor(
+        public viewCtrl: ViewController,
+        private zone: NgZone,
+        private geocoder: NativeGeocoder,
+        private translate: TranslateService) {
         translate.setDefaultLang('de');
         this.autocompleteItems = [];
         this.autocomplete = {

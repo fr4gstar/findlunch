@@ -29,6 +29,9 @@ export class OffersPage implements OnInit {
     allergenics$: Observable<any>;
     additives$: Observable<any>;
 
+    private errorFavorize;
+    private errorDeFavorize;
+
     constructor(navParams: NavParams,
                 public offerService: OffersService,
                 private cartService: CartService,
@@ -36,9 +39,16 @@ export class OffersPage implements OnInit {
                 private http: Http,
                 public auth: AuthService,
                 private platform: Platform,
-                translate: TranslateService
+                private translate: TranslateService
     ) {
         translate.setDefaultLang('de');
+        this.translate.get('Error.favorize').subscribe(
+            (res: string) => { this.errorFavorize = res }
+        )
+        this.translate.get('Error.deFavorize').subscribe(
+            (res: string) => { this.errorDeFavorize = res }
+        )
+
         this.restaurant = navParams.get("restaurant");
 
         // disable animation, because it causes problems with displaying the map on iOS
@@ -95,10 +105,10 @@ export class OffersPage implements OnInit {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = false;
                     }
-                    else throw new Error("Unknown return value from server: " + res.json())
+                    else throw new Error("Unknown return value from server: "+ res.json())
                 },
                 err => {
-                    alert("Konnte Restaurant nicht als Favorit entfernen.");
+                    alert(this.errorDeFavorize);
                     console.error(err);
                 }
             )
@@ -110,10 +120,10 @@ export class OffersPage implements OnInit {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = true;
                     }
-                    else throw new Error("Unknown return value from server: " + res.json());
+                    else throw new Error("Unknown return value from server: "+ res.json());
                 },
                 err => {
-                    alert("Konnte Restaurant nicht als Favorit setzen.");
+                    alert(this.errorFavorize);
                     console.error(err);
                 })
         }

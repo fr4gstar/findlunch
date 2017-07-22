@@ -5,6 +5,7 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 
 import {Restaurant} from "../../model/Restaurant";
 import {AuthService} from "../../providers/auth-service";
+import {TranslateService} from "@ngx-translate/core";
 
 
 /**
@@ -22,6 +23,8 @@ export class RestaurantViewPage {
   public restaurant: Restaurant;
   public openingTime;
 
+  private errorFavorize;
+  private errorDeFavorize;
   /**
    * Initialize modules and gets restaurant from previous page.
    * @param navParams to get restaurant
@@ -30,11 +33,19 @@ export class RestaurantViewPage {
     public navCtrl : NavController,
     private navParams:NavParams,
     private auth: AuthService,
-    private http: Http ) {
+    private http: Http,
+    private translate: TranslateService
+  ) {
+      translate.setDefaultLang('de');
+      this.translate.get('Error.favorize').subscribe(
+          (res: string) => { this.errorFavorize = res }
+      )
+      this.translate.get('Error.deFavorize').subscribe(
+          (res: string) => { this.errorDeFavorize = res }
+      )
 
     this.restaurant = navParams.get("restaurant");
     this.openingTime = this.restaurant.timeSchedules;
-    console.log("Restaurant", this.restaurant);
   }
 
     /**
@@ -63,7 +74,7 @@ export class RestaurantViewPage {
                     else throw new Error("Unknown return value from server: " + res.json())
                 },
                 err => {
-                    alert("Konnte Restaurant nicht als Favorit entfernen.");
+                    alert(this.errorDeFavorize);
                     console.error(err);
                 }
             )
@@ -78,7 +89,7 @@ export class RestaurantViewPage {
                     else throw new Error("Unknown return value from server: " + res.json());
                 },
                 err => {
-                    alert("Konnte Restaurant nicht als Favorit setzen.");
+                    alert(this.errorFavorize);
                     console.error(err);
                 })
         }

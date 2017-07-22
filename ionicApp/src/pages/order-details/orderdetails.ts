@@ -43,6 +43,11 @@ export class OrderDetailsPage {
     public earliestPickUp;
     private param;
 
+    private donationInfo;
+    private info;
+    private successOrder;
+    private emptyOrder;
+
     constructor(private http: Http,
                 navParams: NavParams,
                 private toastCtrl: ToastController,
@@ -51,10 +56,23 @@ export class OrderDetailsPage {
                 private auth: AuthService,
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
-                translate: TranslateService) {
+                private translate: TranslateService) {
         translate.setDefaultLang('de');
+        this.translate.get('Error.emptyOrder').subscribe(
+            value => { this.emptyOrder = value }
+        )
+        this.translate.get('Success.order').subscribe(
+            value => { this.successOrder = value }
+        )
+        this.translate.get('info').subscribe(
+            value => { this.info = value }
+        )
+        this.translate.get('donationInfo').subscribe(
+            value => { this.donationInfo = value }
+        )
+
         this.restaurant = navParams.get("restaurant");
-        //TODO: ftr_reservation
+
         this.reservation = {
             id:0,
             donation: 0,
@@ -79,6 +97,7 @@ export class OrderDetailsPage {
         this.nowOpen = this.restaurant.currentlyOpen;
 
         this.calcTimings(10);
+
     }
 
     /**
@@ -89,7 +108,7 @@ export class OrderDetailsPage {
      */
     incrAmount(offer) {
         if (offer.amount >= 999) {
-            console.log("Maxmimum amount of Product reached");
+            console.info("Maxmimum amount of Product reached");
         } else {
             offer.amount++;
             this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
@@ -157,7 +176,7 @@ export class OrderDetailsPage {
      */
     sendOrder() {
         if (this.reservation.items.length === 0) {
-            alert("Sie können keine leere Bestellung absenden.");
+            alert(this.emptyOrder);
         } else {
             let loader = this.loading.prepareLoader();
 
@@ -199,7 +218,7 @@ export class OrderDetailsPage {
                 this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
                     (res) => {
                         const toast = this.toastCtrl.create({
-                            message: "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
+                            message: this.successOrder,
                             duration: 3000
                         });
                         toast.present();
@@ -249,10 +268,8 @@ export class OrderDetailsPage {
      */
     public showDonationInfo() {
         let alert = this.alertCtrl.create({
-            title: 'Info',
-            subTitle: "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. " +
-                "Mit jedem Klick auf das plus-Zeichen wird Ihre Spende so gewählt, dass sie den Gesamtbetrag auf die " +
-                "nächsten 10 Cent aufrundet.",
+            title: this.info,
+            subTitle: this.donationInfo,
             buttons: ['Ok']
         });
         alert.present();

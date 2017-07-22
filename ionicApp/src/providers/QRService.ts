@@ -3,6 +3,7 @@ import {NavParams, ToastController} from "ionic-angular";
 import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
+import {TranslateService} from "@ngx-translate/core";
 
 /**
  * Handles the barcode scanner function of the device.
@@ -11,6 +12,11 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner';
  */
 @Injectable()
 export class QRService {
+
+    private confirmOrderSuccess;
+    private restaurantNotFound;
+    private offerNotFound;
+    private qrError;
   /**
    *  Initialize modules
    *
@@ -21,8 +27,22 @@ export class QRService {
   constructor(
     private barcodeScanner: BarcodeScanner,
     private toastCtrl: ToastController,
-    private http: Http
+    private http: Http,
+    private translate: TranslateService
   ) {
+      translate.setDefaultLang('de');
+      this.translate.get('Success.confirmOrder').subscribe(
+          value => { this.confirmOrderSuccess = value }
+      )
+      this.translate.get('Error.confirmOrderRestaurant').subscribe(
+          value => { this.restaurantNotFound = value }
+      )
+      this.translate.get('Error.confirmOrderOffer').subscribe(
+          value => { this.offerNotFound = value }
+      )
+      this.translate.get('Error.qr').subscribe(
+          value => { this.qrError = value }
+      )
   }
 
   /**
@@ -52,20 +72,19 @@ export class QRService {
         this.http.get(`${SERVER_URL}/api/confirm_reservation/`+barcodeData.text, options)
           .subscribe(
             (res) => {
-              console.log("res: " + res.json());
               let msg;
               switch (res.json()){
                 case 0:
-                  msg = "Bestellung erfolgreich bestätigt!"
+                  msg = this.confirmOrderSuccess;
                   break;
                 case 3:
-                  msg = "Fehler: Restaurant nicht gefunden!"
+                  msg = this.restaurantNotFound;
                   break;
                 case 4:
-                  msg = "Fehler: Offer nicht gefunden!"
+                  msg = this.offerNotFound;
                   break;
               }
-              console.log("Msg: " + msg);
+
               const toast = this.toastCtrl.create({
                 message: msg,
                 duration: 3000
@@ -73,15 +92,15 @@ export class QRService {
               toast.present();
             },
             (err) => {
-              const toast = this.toastCtrl.create({
-                message: "Fehler: Verbindung zum Server",
-                duration: 3000
-              });
-              toast.present();
+                console.info("QR scan abort!");
             }
           )
       }, (err) => {
-        console.info("QR Code Scan Abbruch");
+          const toast = this.toastCtrl.create({
+              message: this.qrError,
+              duration: 3000
+          });
+          toast.present();
       });
   }
 }

@@ -29,7 +29,6 @@ export class ReservationsPage implements OnInit {
                 translate: TranslateService) {
         translate.setDefaultLang('de');
         this.usedRestaurants = [];
-
     }
 
     /**
@@ -51,14 +50,11 @@ export class ReservationsPage implements OnInit {
         this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
             .subscribe(
                 res => {
-
                     this.reservations = res.json();
                     if(this.reservations.length > 0){
                         this.collectUsedRestaurants();
                         ReservationsPage.sortByCollectTime(this.reservations)
                      }
-
-
                 },
                 err => console.error(err)
             );

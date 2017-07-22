@@ -27,9 +27,7 @@
         "login": "Einloggen",
         "register": "Registrieren",
         "passwordReset": "Passwort Vergessen",
-        "securityToken": "Sicherheitstoken Anfordern",
-        "loginSuccessful": "Login Erfolgreich",
-        "loginError": "E-Mail und/oder Passwort nicht bekannt"
+        "securityToken": "Sicherheitstoken Anfordern"
     },
     "OrderDetailsPage": {
         "title": "Warenkorb",
@@ -76,8 +74,38 @@
     "menu": "Menü",
     "qrscan": "Abholcode scannen",
     "isOpen": "Jetzt geöffnet",
+    "isClosed": "Jetzt geschlossen",
     "onlyFavs": "Nur Favoriten",
     "kitchen": "Küche",
     "close": "Schließen",
-    "enterAdress": "Adresse eingeben"
+    "enterAdress": "Adresse eingeben",
+    "info": "Info",
+    "donationInfo": "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Mit jedem Klick auf das plus-Zeichen wird Ihre Spende so gewählt, dass sie den Gesamtbetrag auf die nächsten 10 Cent aufrundet.",
+    "phone": "Telefon",
+    "distance": "Entfernung",
+    "address": "Adresse",
+    "Success": {
+        "logoutSuccess": "Logout erfolgt",
+        "login": "Login Erfolgreich",
+        "order": "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
+        "passwordReset": "Eine E-Mail mit der Passwortwiederherstellung wurde an Sie gesandt!",
+        "register": "Registrierung erfolgreich!",
+        "confirmOrder": "Bestellung erfolgreich bestätigt!"
+    },
+    "Error": {
+        "emptyOrder": "Sie können keine leere Bestellung absenden.",
+        "favorize": "Konnte Restaurant nicht als Favorit setzen.",
+        "deFavorize": "Konnte Restaurant nicht als Favorit entfernen.",
+        "login": "E-Mail und/oder Passwort nicht bekannt",
+        "connection": "Verbindungsfehler",
+        "noValidEmail": "Keine gültige E-Mail Adresse!",
+        "noValidPassword": "Passwort entspricht nicht den Passwortrichtlinien: mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen",
+        "usedEmail": "E-Mail adresse bereits vergeben.",
+        "confirmPassword": "Passwörter stimmen nicht überein",
+        "termsAndCondition": "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Geschäftsbedingungen.",
+        "confirmOrderRestaurant": "Fehler: Restaurant nicht gefunden!",
+        "confirmOrderOffer": "Fehler: Angebot nicht gefunden!",
+        "qr": "Fehler beim Scannen des QR-Codes"
+    }
+
 }

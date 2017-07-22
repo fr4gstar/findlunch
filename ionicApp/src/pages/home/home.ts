@@ -33,6 +33,12 @@ export class HomePage {
     public allRestaurants: Array<Restaurant>;
     private _customLocationMarker: any;
 
+    private address;
+    private distance;
+    private kitchen;
+    private phone;
+    private openedNow;
+    private closedNow;
     constructor(private navCtrl: NavController,
                 private modalCtrl: ModalController,
                 private http: Http,
@@ -41,9 +47,29 @@ export class HomePage {
                 private events: Events,
                 private platform: Platform,
                 private zone: NgZone,
-                translate: TranslateService
+                private translate: TranslateService
     ) {
         translate.setDefaultLang('de');
+
+        this.translate.get('phone').subscribe(
+            value => { this.phone = value }
+        )
+        this.translate.get('address').subscribe(
+            value => { this.address = value }
+        )
+        this.translate.get('distance').subscribe(
+            value => { this.distance = value }
+        )
+        this.translate.get('kitchen').subscribe(
+            value => { this.kitchen = value }
+        )
+        this.translate.get('isClosed').subscribe(
+            value => { this.closedNow = value }
+        )
+        this.translate.get('isOpen').subscribe(
+            value => { this.openedNow = value }
+        )
+
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);
@@ -206,11 +232,11 @@ export class HomePage {
                 let infoDiv = document.createElement("div");
                 infoDiv.innerHTML = `<div style="display: inline-block">
 <div style="font-size: large; font-weight: bold; margin-bottom: 5px">${restaurant.name}</div>
-<div style="display: inline-block">Adresse: ${restaurant.street} ${restaurant.streetNumber}<br/>
-Telefon: ${restaurant.phone}<br/>
-Küche: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
-Entfernung: ${restaurant.distance}m<br/>
-<span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? "Jetzt geöffnet" : "Aktuell geschlossen"}</span><div/>
+<div style="display: inline-block">${this.address}: ${restaurant.street} ${restaurant.streetNumber}<br/>
+${this.phone}: ${restaurant.phone}<br/>
+${this.kitchen}: ${restaurant.kitchenTypes.map(type => type.name).join(', ')}<br/>
+${this.distance}: ${restaurant.distance}m<br/>
+<span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? this.openedNow : this.closedNow}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
                     this._map.setClickable(false);

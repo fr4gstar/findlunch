@@ -23,6 +23,8 @@ export class LoginPage {
     private restaurant: Restaurant;
     private loginError;
     private loginSuccessful;
+    private connectionError;
+    private passwordResetSuccess;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
@@ -35,11 +37,17 @@ export class LoginPage {
         translate.setDefaultLang('de');
         this.popThisPage = navParams.get("comeBack");
         this.restaurant = null;
-        this.translate.get('LoginPage.loginError').subscribe(
-            (res: string) => { this.loginError = res }
+        this.translate.get('Error.login').subscribe(
+            value => { this.loginError = value }
         )
-        this.translate.get('LoginPage.loginSuccessful').subscribe(
-            key => { this.loginSuccessful = key }
+        this.translate.get('Success.login').subscribe(
+            value => { this.loginSuccessful = value }
+        )
+        this.translate.get('Error.connection').subscribe(
+            value => { this.connectionError = value }
+        )
+        this.translate.get('Success.passwordReset').subscribe(
+            value => { this.passwordResetSuccess = value }
         )
     }
 
@@ -120,10 +128,10 @@ export class LoginPage {
                         let msg;
                         switch (res.json()) {
                             case 0:
-                                msg = "Eine E-Mail mit der Passwortwiederherstellung wurde an Sie gesandt!"
+                                msg = this.passwordResetSuccess;
                                 break;
                             default:
-                                msg = "Verbindungsfehler!"
+                                msg = this.connectionError;
                                 break;
                         }
                         const toast = this.toastCtrl.create({

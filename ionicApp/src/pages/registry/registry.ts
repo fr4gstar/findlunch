@@ -22,14 +22,48 @@ export class RegistryPage {
     popThisPage: boolean;
     restaurant: Restaurant;
 
+    private noValidEmail;
+    private noValidPassword;
+    private usedEmail;
+    private connectionError;
+
+    private confirmPasswordError;
+    private termsAndConditionError;
+    private registerSuccess;
+
     constructor(private auth: AuthService,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
                 private navParams: NavParams,
                 private iab: InAppBrowser,
                 private loading: LoadingService,
-                translate: TranslateService) {
+                private translate: TranslateService) {
         translate.setDefaultLang('de');
+
+        this.translate.get('Error.noValidEmail').subscribe(
+            value => { this.noValidEmail = value }
+        )
+        this.translate.get('Error.noValidPassword').subscribe(
+            value => { this.noValidPassword = value }
+        )
+        this.translate.get('Error.usedEmail').subscribe(
+            value => { this.usedEmail = value }
+        )
+        this.translate.get('Error.connection').subscribe(
+            value => { this.connectionError = value }
+        )
+        this.translate.get('Error.confirmPassword').subscribe(
+            value => { this.confirmPasswordError = value }
+        )
+        this.translate.get('Error.termsAndCondition').subscribe(
+            value => { this.termsAndConditionError = value }
+        )
+        this.translate.get('Success.register').subscribe(
+            value => { this.registerSuccess = value }
+        )
+
+
+
         this.popThisPage = navParams.get("comeBack");
         this.termsAndConditionsChecked = false;
     }
@@ -41,11 +75,11 @@ export class RegistryPage {
      */
     public onRegisterClicked(username: string, password: string, password2: string) {
         if (!this.passwordsIdentical(password, password2)) {
-            alert("Passwörter stimmen nicht überein");
+            alert(this.confirmPasswordError);
 
         } else if (!this.termsAndConditionsChecked) {
             const toast = this.toastCtrl.create({
-                message: "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Beschäftsbedniungenen",
+                message: this.termsAndConditionError,
                 duration: 3000
             });
             toast.present();
@@ -55,7 +89,7 @@ export class RegistryPage {
 
             this.auth.register(username, password).then(result => {
                 const toast = this.toastCtrl.create({
-                    message: "Registrierung und Login erfolgreich!",
+                    message: this.registerSuccess,
                     duration: 3000
                 });
                 toast.present();
@@ -77,18 +111,17 @@ export class RegistryPage {
                 .catch(error => {
                     switch (error) {
                         case "1" :
-                            alert("keine gültige E-Mail Adresse");
+                            alert(this.noValidEmail);
                             break;
                         case "2" :
-                            alert("Passwort entspricht nicht den Passwortrichtlinien: \n" +
-                                "mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen");
+                            alert(this.noValidPassword);
                             break;
                         case "3" :
-                            alert("E-Mail adresse bereits vergeben.");
+                            alert(this.usedEmail);
                             break;
 
                         default :
-                            alert("Anfrage fehlgeschlagen");
+                            alert(this.connectionError);
 
                     }
                     loader.dismiss();
