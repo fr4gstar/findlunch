@@ -7,6 +7,7 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
+import {LoadingService} from "../../providers/loading-service";
 import LatLng = google.maps.LatLng;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
@@ -39,7 +40,8 @@ export class HomePage {
                 private popService: FilterPopoverService,
                 private events: Events,
                 private platform: Platform,
-                private zone: NgZone
+                private zone: NgZone,
+                private loading: LoadingService
     ) {
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
@@ -152,33 +154,42 @@ export class HomePage {
      */
     private fetchRestaurants(latLng: LatLng) {
 
-        // build authentication header...
-        let user = window.localStorage.getItem("username");
-        let token = window.localStorage.getItem(user);
-        let options;
-        if (token) {
-            let headers = new Headers({
-                'Content-Type': 'application/json',
-                "Authorization": "Basic " + token
-            });
+        // setup loading spinner
+        let loader = this.loading.prepareLoader();
+        loader.present().then(() => {
 
-            options = new RequestOptions({
-                headers: headers,
-                method: RequestMethod.Get
-            });
-        }
+            // build authentication header...
+            let user = window.localStorage.getItem("username");
+            let token = window.localStorage.getItem(user);
+            let options;
+            if (token) {
+                let headers = new Headers({
+                    'Content-Type': 'application/json',
+                    "Authorization": "Basic " + token
+                });
 
-
-        // do not filter by radius, because there are just a few restaurants.
-        // in the future it could filter by using the visible map-area.
-        this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(
-            res => {
-                this.zone.run(() => {       // needed for enabling filter-button in header dynamically
-                    this.allRestaurants = res.json();
-                    this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
+                options = new RequestOptions({
+                    headers: headers,
+                    method: RequestMethod.Get
                 });
             }
-        )
+
+
+            // do not filter by radius, because there are just a few restaurants.
+            // in the future it could filter by using the visible map-area.
+            this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(
+                res => {
+                    this.zone.run(() => {       // needed for enabling filter-button in header dynamically
+                        this.allRestaurants = res.json();
+
+                        // remove loading spinner
+                        loader.dismiss();
+
+                        this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
+                    });
+                }
+            )
+        });
     }
 
 
