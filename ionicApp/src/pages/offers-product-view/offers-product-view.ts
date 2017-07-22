@@ -6,6 +6,7 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {Http} from "@angular/http";
 import {OffersService} from "../offers/OffersService";
+import {TranslateService} from "@ngx-translate/core";
 
 /**
  * Page for showing the details of a specific offer.
@@ -27,13 +28,14 @@ export class OffersProductViewPage {
       public navParams: NavParams,
       private cartService: CartService,
       private http: Http,
-      public offersService: OffersService
+      public offersService: OffersService,
+      private translate: TranslateService
   ) {
-    this.restaurant = navParams.get("restaurant");
-    this.offer = navParams.get("offer");
-
+      translate.setDefaultLang('de');
+      this.restaurant = navParams.get("restaurant");
+      this.offer = navParams.get("offer");
     // get cart for this restaurant
-    this.cart = cartService.getCart(this.restaurant.id);
+      this.cart = cartService.getCart(this.restaurant.id);
   }
 
   addToCart(offer: Offer) {

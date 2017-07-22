@@ -6,6 +6,7 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {LoadingService} from "../../providers/loading-service";
 import {Restaurant} from "../../model/Restaurant";
 import {OrderDetailsPage} from "../order-details/orderdetails";
+import {TranslateService} from "@ngx-translate/core";
 
 
 @Component({
@@ -26,7 +27,9 @@ export class RegistryPage {
                 private navCtrl: NavController,
                 private navParams: NavParams,
                 private iab: InAppBrowser,
-                private loading: LoadingService) {
+                private loading: LoadingService,
+                translate: TranslateService) {
+        translate.setDefaultLang('de');
         this.popThisPage = navParams.get("comeBack");
         this.termsAndConditionsChecked = false;
     }

@@ -3,22 +3,22 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Registrieren</ion-title>
+        <ion-title>{{ 'RegistryPage.title' | translate }}</ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content padding>
 
     <ion-list>
         <ion-item>
-            <ion-label floating>E-Mail</ion-label>
+            <ion-label floating>{{ 'email' | translate }}</ion-label>
             <ion-input #userName type="text"></ion-input>
         </ion-item>
         <ion-item>
-            <ion-label floating>Passwort</ion-label>
+            <ion-label floating>{{ 'password' | translate }}</ion-label>
             <ion-input #password type="password"></ion-input>
         </ion-item>
         <ion-item>
-            <ion-label floating>Passwort bestätigen</ion-label>
+            <ion-label floating>{{ 'RegistryPage.confirmPassword' | translate }}</ion-label>
             <ion-input #password2 type="password"></ion-input>
         </ion-item>
         <div>&nbsp;</div>
@@ -28,16 +28,13 @@
                     <ion-checkbox color="blue" checked="false" [(ngModel)]="termsAndConditionsChecked"></ion-checkbox>
                 </ion-col>
                 <ion-col>
-                    <div>Ich habe die
-                        <div id="agb-link" (click)="goToTermsAndConditions()">allgemeinen Geschäftsbedingungen</div>
-                        gelesen und stimme ihnen hiermit zu
-                    </div>
+                    <div>{{ 'RegistryPage.termsAndConditions1' | translate }} <div id="agb-link" (click)="goToTermsAndConditions()">{{ 'RegistryPage.termsAndConditions' | translate }}</div> {{ 'RegistryPage.termsAndConditions2' | translate }}</div>
                 </ion-col>
             </ion-row>
         </ion-grid>
     </ion-list>
     <button ion-button full (click)='onRegisterClicked(userName.value,password.value,password2.value)'>
-        REGISTRIERUNG ABSENDEN
+        {{ 'RegistryPage.register' | translate }}
     </button>
 
 

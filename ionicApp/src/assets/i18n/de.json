@@ -23,7 +23,6 @@
     },
     "LoginPage": {
         "title": "Login",
-        "email": "E-Mail",
         "password": "Passwort",
         "login": "Einloggen",
         "register": "Registrieren",
@@ -31,5 +30,42 @@
         "securityToken": "Sicherheitstoken Anfordern",
         "loginSuccessful": "Login Erfolgreich",
         "loginError": "E-Mail und/oder Passwort nicht bekannt"
-    }
+    },
+    "OrderDetailsPage": {
+        "title": "Warenkorb",
+        "subtitle": "Ihr Warenkorb für",
+        "headline1": "Bezeichnung",
+        "headline2": "Menge",
+        "headline3": "Preis",
+        "donation": "Freiwillige Spende",
+        "total": "Gesamtpreis",
+        "tax": "inkl. 19%MwSt",
+        "payWithPoints": "Mit Treuepunkten bezahlen",
+        "points": "Sie haben bei {{name}} derzeit {{points}} Punkte. Um diese Bestellung mit Treuepunkten zu bezahlen benötigen Sie {{nPoints}}",
+        "pickUpTime": "Abholen um (Wunschzeit)",
+        "clock": "Uhr",
+        "isClosed": "Das ausgewählte Restaurant hat leider gerade geschlossen.",
+        "isNotLoggedIn": "Sie müssen eingeloggt sein um eine Bestellung abzusenden!",
+        "order": "Bestellen",
+        "login": "Login",
+        "register": "Registrieren"
+    },
+    "RegistryPage": {
+        "title": "Registrieren",
+        "termsAndConditions": "allgemeinen Geschäftsbedingungen",
+        "termsAndConditions1": "Ich habe die",
+        "termsAndConditions2": "gelesen und stimme ihnen hiermit zu.",
+        "register": "REGISTRIERUNG ABSENDEN",
+        "confirmPassword": "Passwort bestätigen"
+    },
+    "OffersProductViewPage": {
+        "priceInPoints": "Preis in Treuepunkten",
+        "prepTime": "Zubereitungszeit",
+        "addToCart": "Zum Warenkorb Hinzufügen"
+    },
+    "containsAllergenics": "Enthaltene Allergene",
+    "containsAdditives": "Enthaltene Zusatzstoffe",
+    "password" : "Password",
+    "email": "E-Mail",
+    "price": "Preis"
 }

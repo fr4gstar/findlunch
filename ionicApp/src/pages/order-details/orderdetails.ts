@@ -13,6 +13,7 @@ import {Reservation} from "../../model/Reservation";
 import {HomePage} from "../home/home";
 
 import {LoadingService} from "../../providers/loading-service";
+import {TranslateService} from "@ngx-translate/core";
 
 
 /**
@@ -40,7 +41,7 @@ export class OrderDetailsPage {
     public nowOpen;
     public now;
     public earliestPickUp;
-
+    private param;
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -49,7 +50,9 @@ export class OrderDetailsPage {
                 private cartService: CartService,
                 private auth: AuthService,
                 private alertCtrl: AlertController,
-                private loading: LoadingService) {
+                private loading: LoadingService,
+                translate: TranslateService) {
+        translate.setDefaultLang('de');
         this.restaurant = navParams.get("restaurant");
         //TODO: ftr_reservation
         this.reservation = {
@@ -67,13 +70,10 @@ export class OrderDetailsPage {
             collectTime: null,
         };
 
-
-
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
         if(this.auth.getLoggedIn()){
             this.calcNeededPoints();
             this.getUserPoints();
-
         }
 
         this.nowOpen = this.restaurant.currentlyOpen;
@@ -307,6 +307,12 @@ export class OrderDetailsPage {
                         if (!(reply.length === 0)) {
                             this.userPoints = reply[0].points;
                         }
+                        // set param for html
+                        this.param = {
+                            name: this.restaurant.name,
+                            points: this.userPoints,
+                            nPoints: this.neededPoints
+                        };
                         // boolean whether enough points to pay order with points
                         // has to wait for the getUserPoints query
                         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
