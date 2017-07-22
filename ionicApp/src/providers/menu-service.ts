@@ -16,7 +16,6 @@ export class MenuService {
     {title: 'Meine Bestellungen', component: ReservationsPage},//TODO: noch anzulegen
     {title: 'Meine Bonuspunkte', component: BonusPage},
     {title: 'Restaurants', component: RestaurantsPage}, //TODO: noch rauszunehmen, gerade nur für debugging
-
   ];
 
   guestPages = [
@@ -24,8 +23,6 @@ export class MenuService {
     {title: 'Login', component: LoginPage},
     {title: 'Registrieren', component: RegistryPage},
     {title: 'Restaurants', component: RestaurantsPage} //TODO: noch rauszunehmen, gerade nur für debugging
-
-
   ];
 
   constructor() {

@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Info</ion-title>
+    <ion-title>{{ 'RestaurantViewPage.title' | translate }}</ion-title>
       <ion-buttons end>
 
           <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
@@ -36,7 +36,7 @@
   </div>
 
   <div style="padding: 10px">
-    <ion-icon name="time"> Öffnungszeiten:</ion-icon>
+    <ion-icon name="time"> {{ 'RestaurantViewPage.openingTimes' | translate }}:</ion-icon>
     <div *ngFor="let opened of restaurant.timeSchedules">
         {{opened.dayOfWeek.name}}: {{opened.offerStartTime.toString().substr(11, 15)}} - {{opened.offerEndTime.toString().substr(11, 15)}}
     </div>

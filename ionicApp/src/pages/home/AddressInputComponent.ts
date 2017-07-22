@@ -3,6 +3,7 @@ import {ViewController} from "ionic-angular";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
 import ComponentRestrictions = google.maps.places.ComponentRestrictions;
 import {} from '@types/googlemaps';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'AddressInputComponent',
@@ -15,7 +16,12 @@ export class AddressInputComponent implements OnInit {
     autocomplete;
     service = new google.maps.places.AutocompleteService();
 
-    constructor(public viewCtrl: ViewController, private zone: NgZone, private geocoder: NativeGeocoder) {
+    constructor(
+        public viewCtrl: ViewController,
+        private zone: NgZone,
+        private geocoder: NativeGeocoder,
+        private translate: TranslateService) {
+        translate.setDefaultLang('de');
         this.autocompleteItems = [];
         this.autocomplete = {
             query: ''

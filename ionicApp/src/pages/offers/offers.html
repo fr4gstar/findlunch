@@ -48,7 +48,7 @@
         </ion-list>
         <ion-row>
             <ion-col class="allergenics-area-border">
-                <h6 class="allergenics-header">Allergene</h6>
+                <h6 class="allergenics-header">{{ 'allergenics' | translate }}</h6>
                 <ion-row *ngFor="let allerg of allergenics$ | async" class="allergenics">
                     {{allerg.shortKey}} {{allerg.name}}
                 </ion-row>
@@ -56,7 +56,7 @@
         </ion-row>
         <ion-row>
             <ion-col>
-                <h6 class="allergenics-header">Zusatzstoffe</h6>
+                <h6 class="allergenics-header">{{ 'additives' | translate }}</h6>
                 <div *ngFor="let additive of additives$ | async" class="allergenics">
                     {{additive.shortKey}} {{additive.name}}
                 </div>

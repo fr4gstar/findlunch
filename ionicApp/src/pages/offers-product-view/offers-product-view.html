@@ -53,18 +53,18 @@
             </ion-col>
             <ion-col class="icon-subtext">
                 <div class="toLeft">
-                    Preis in Treuepunkten
+                    {{ 'OffersProductViewPage.priceInPoints' | translate }}
                 </div>
             </ion-col>
             <ion-col class="icon-subtext">
-                Zubereitungszeit
+                {{ 'OffersProductViewPage.prepTime' | translate }}
             </ion-col>
         </ion-row>
 
 
         <ion-row>
             <ion-col>
-                <h6 class="allergenics-header">Enthaltene Allergene</h6>
+                <h6 class="allergenics-header">{{ 'containsAllergenics' | translate }}</h6>
                 <ion-row *ngFor="let allerg of offer.allergenic" class="allergenics">
                     {{allerg.shortKey}} {{allerg.name}}
                 </ion-row>
@@ -74,7 +74,7 @@
 
         <ion-row>
             <ion-col>
-                <h6 class="allergenics-header">Enthaltene Zusatzstoffe</h6>
+                <h6 class="allergenics-header">{{ 'containsAdditives' | translate }}</h6>
                 <div *ngFor="let add of offer.additives" class="allergenics">
                     {{add.shortKey}} {{add.name}}
                 </div>
@@ -84,7 +84,7 @@
 
         <ion-row margin-top>
             <button ion-button block (click)="addToCart(offer)">
-                zum Warenkorb hinzufügen
+                {{ 'OffersProductViewPage.addToCart' | translate }}
             </button>
         </ion-row>
     </ion-grid>

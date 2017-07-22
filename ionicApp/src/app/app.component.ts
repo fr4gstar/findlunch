@@ -4,12 +4,11 @@ import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
-import {Push} from "@ionic-native/push";
 import {QRService} from "../providers/QRService";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
 import {PushService} from "../providers/push-service";
-
+import {TranslateService} from "@ngx-translate/core";
 /**
  * Initialize the application.
  * 1. Verifies the user from the local storage.
@@ -25,7 +24,7 @@ export class MyApp {
      * @type {HomePage}
      */
     rootPage: any = HomePage;
-
+    private logoutSuccess;
     pages: Array<{ title: string, component: any }>;
 
     /**
@@ -56,10 +55,16 @@ export class MyApp {
                 public qr: QRService,
                 public iab: InAppBrowser,
                 public alertCtrl: AlertController,
-                private push: PushService) {
+                private push: PushService,
+                private translate: TranslateService) {
 
+        translate.setDefaultLang('de');
         this.auth.verifyUser();
         this.push.pushSetup();
+
+        this.translate.get('Success.logoutSuccess').subscribe(
+            value => { this.logoutSuccess = value }
+        )
 
         //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
         document.addEventListener('resume', () => {
@@ -78,7 +83,7 @@ export class MyApp {
     public logout() {
         this.auth.logout();
         const toast = this.toastCtrl.create({
-            message: "Logout erfolgt",
+            message: this.logoutSuccess,
             duration: 3000
         });
         toast.present();
@@ -109,3 +114,4 @@ export class MyApp {
     }
 
 }
+

@@ -9,7 +9,7 @@ import {LoadingService} from "../../providers/loading-service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {PushService} from "../../providers/push-service";
-
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'login-page',
@@ -21,6 +21,10 @@ export class LoginPage {
     popThisPage: boolean;
     private counterPasswordWrong: number = 0;
     private restaurant: Restaurant;
+    private loginError;
+    private loginSuccessful;
+    private connectionError;
+    private passwordResetSuccess;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
@@ -28,10 +32,23 @@ export class LoginPage {
                 private http: Http,
                 private navParams: NavParams,
                 private loading: LoadingService,
-                private push: PushService) {
-
+                private push: PushService,
+                private translate: TranslateService) {
+        translate.setDefaultLang('de');
         this.popThisPage = navParams.get("comeBack");
         this.restaurant = null;
+        this.translate.get('Error.login').subscribe(
+            value => { this.loginError = value }
+        )
+        this.translate.get('Success.login').subscribe(
+            value => { this.loginSuccessful = value }
+        )
+        this.translate.get('Error.connection').subscribe(
+            value => { this.connectionError = value }
+        )
+        this.translate.get('Success.passwordReset').subscribe(
+            value => { this.passwordResetSuccess = value }
+        )
     }
 
 
@@ -42,9 +59,8 @@ export class LoginPage {
 
             this.auth.login(userName, password).then(data => {
                 if (data) {
-
                     const toast = this.toastCtrl.create({
-                        message: "Login Erfolgreich",
+                        message: this.loginSuccessful,
                         duration: 3000
                     });
                     toast.present();
@@ -64,7 +80,7 @@ export class LoginPage {
                     }
                 } else {
                     loader.dismiss();
-                    alert("E-Mail und/oder Passwort nicht bekannt");
+                    alert(this.loginError);
                 }
             })
         })
@@ -112,10 +128,10 @@ export class LoginPage {
                         let msg;
                         switch (res.json()) {
                             case 0:
-                                msg = "Eine E-Mail mit der Passwortwiederherstellung wurde an Sie gesandt!"
+                                msg = this.passwordResetSuccess;
                                 break;
                             default:
-                                msg = "Verbindungsfehler!"
+                                msg = this.connectionError;
                                 break;
                         }
                         const toast = this.toastCtrl.create({

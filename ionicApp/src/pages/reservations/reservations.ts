@@ -4,6 +4,7 @@ import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {ReservationViewPage} from "../reservation-view/reservation-view";
 import {Reservation} from "../../model/Reservation";
+import {TranslateService} from "@ngx-translate/core";
 
 /**
  * This pages loads and shows all reservation of an user.
@@ -24,10 +25,10 @@ export class ReservationsPage implements OnInit {
      * @param http
      */
     constructor(public navCtrl: NavController,
-                private http: Http) {
-
+                private http: Http,
+                translate: TranslateService) {
+        translate.setDefaultLang('de');
         this.usedRestaurants = [];
-
     }
 
     /**
@@ -49,14 +50,11 @@ export class ReservationsPage implements OnInit {
         this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
             .subscribe(
                 res => {
-
                     this.reservations = res.json();
                     if(this.reservations.length > 0){
                         this.collectUsedRestaurants();
                         ReservationsPage.sortByCollectTime(this.reservations)
                      }
-
-
                 },
                 err => console.error(err)
             );

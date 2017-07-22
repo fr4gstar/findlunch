@@ -3,6 +3,7 @@ import {ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "../../providers/QRService";
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * This pages loads and shows the points of an user per restaurant.
@@ -29,8 +30,10 @@ export class BonusPage {
     constructor(
       private toastCtrl: ToastController,
       private http: Http,
-      private qr: QRService) {
-    this.loadPoints();
+      private qr: QRService,
+      translate: TranslateService) {
+      this.loadPoints();
+      translate.setDefaultLang('de');
     }
 
   /**
@@ -64,7 +67,7 @@ export class BonusPage {
     this.http.get(`${SERVER_URL}/api/get_points`, options)
     .subscribe(
       res => this.points = res.json(),
-      err => console.error("Punkte Holen Fehlgeschlagen " + err)
+      err => console.error("Getting userPoints error" + err)
     )
   }
 }

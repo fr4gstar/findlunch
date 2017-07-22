@@ -3,19 +3,19 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Warenkorb</ion-title>
+        <ion-title>{{ 'OrderDetailsPage.title' | translate }}</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <h2 padding-left>Ihr Warenkorb für {{restaurant.name}}</h2>
+    <h2 padding-left>{{ 'OrderDetailsPage.subtitle' | translate }} {{restaurant.name}}</h2>
 
 
   <ion-grid id="orderDetails">
     <ion-row id="überschrift">
-      <ion-col col-7>Bezeichnung</ion-col>
-      <ion-col col-3>Menge</ion-col>
-      <ion-col col-2>Preis</ion-col>
+      <ion-col col-7>{{ 'OrderDetailsPage.headline1' | translate }}</ion-col>
+      <ion-col col-3>{{ 'OrderDetailsPage.headline2' | translate }}</ion-col>
+      <ion-col col-2>{{ 'OrderDetailsPage.headline3' | translate }}</ion-col>
     </ion-row>
     <ion-row id="gericht" *ngFor="let item of reservation.items">
       <ion-col col-7>{{item.title}}</ion-col>
@@ -31,7 +31,7 @@
     <ion-row id="spende">
       <ion-col col-7 color="primary" text-wrap>
         <span item-left color="primary">
-          Freiwillige Spende <ion-icon class="info-icon" name="ios-information-circle-outline" (click)="showDonationInfo()"></ion-icon>
+          {{ 'OrderDetailsPage.donation' | translate }}<ion-icon class="info-icon" name="ios-information-circle-outline" (click)="showDonationInfo()"></ion-icon>
         </span>
       </ion-col>
       <ion-col col-5 text-wrap>
@@ -42,7 +42,7 @@
     </ion-row>
     <ion-row id="gesamt">
       <ion-col col-7 color="primary">
-        Gesamtpreis
+          {{ 'OrderDetailsPage.total' | translate }}
       </ion-col>
       <ion-col col-2>
       </ion-col>
@@ -52,7 +52,7 @@
     </ion-row>
     <ion-row id="mehrwertsteuer">
       <ion-col col-6>
-        inkl. 19%MwSt
+         {{ 'OrderDetailsPage.tax' | translate }}
       </ion-col>
       <ion-col col-4>
       </ion-col>
@@ -66,30 +66,29 @@
 
 
     <ion-item *ngIf="this.auth.getLoggedIn()">
-        <ion-label>Mit Treuepunkten bezahlen</ion-label>
+        <ion-label>{{ 'OrderDetailsPage.payWithPoints' | translate }}</ion-label>
         <ion-toggle checked="false" [(ngModel)]="this.payWithPoints" disabled="{{!this.morePointsThanNeeded}}"></ion-toggle>
     </ion-item>
-    <div *ngIf="this.auth.getLoggedIn()">Sie haben bei {{restaurant.name}} derzeit {{this.userPoints}} Punkte. Um diese Bestellung mit Treuepunkten zu
-        bezahlen
-        benötigen Sie {{this.neededPoints}} Punkte
+    <div *ngIf="this.auth.getLoggedIn()">
+        {{ 'OrderDetailsPage.points' | translate:param }}
     </div>
     <ion-item *ngIf="this.nowOpen">
-        <ion-label >Abholen um (Wunschzeit)</ion-label>
+        <ion-label>{{ 'OrderDetailsPage.pickUpTime' | translate }}</ion-label>
         <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min="{{this.earliestPickUp}}" max={{this.closingTime}} [(ngModel)]="this.pickUpTimeISOFormat"></ion-datetime>
-        <span item-right>Uhr</span>
+        <span item-right>{{ 'OrderDetailsPage.clock' | translate }}</span>
     </ion-item>
     <ion-item *ngIf="!this.nowOpen" text-wrap>
-        Das ausgewählte Restaurant hat leider gerade geschlossen.
+        {{ 'OrderDetailsPage.isClosed' | translate }}
     </ion-item>
     <ion-item *ngIf="!this.auth.getLoggedIn()" text-wrap>
-        Sie müssen eingeloggt sein um eine Bestellung abzusenden!
+        {{ 'OrderDetailsPage.isNotLoggedIn' | translate }}
     </ion-item>
 
 
-    <button id="bestellen" *ngIf="this.auth.getLoggedIn()" ion-button (click)="sendOrder()">Bestellen</button>
+    <button id="bestellen" *ngIf="this.auth.getLoggedIn()" ion-button (click)="sendOrder()">{{ 'OrderDetailsPage.order' | translate }}</button>
     <div id="notLoggedIn" *ngIf="!this.auth.getLoggedIn()">
-        <button  ion-button full (click)="goToLogin()">Login</button>
-        <button  ion-button full (click)="goToRegister()">Registrieren</button>
+        <button  ion-button full (click)="goToLogin()">{{ 'OrderDetailsPage.login' | translate }}</button>
+        <button  ion-button full (click)="goToRegister()">{{ 'OrderDetailsPage.register' | translate }}</button>
     </div>
 
 </ion-content>
