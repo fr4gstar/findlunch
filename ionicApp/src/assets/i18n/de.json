@@ -1,7 +1,7 @@
 {
     "title" : "FindLunch",
     "BonusPage": {
-        "title": "Bonuspunkte"
+        "title": "Meine Bonuspunkte"
     },
     "RestaurantViewPage": {
         "title": "Info",
@@ -63,9 +63,21 @@
         "prepTime": "Zubereitungszeit",
         "addToCart": "Zum Warenkorb Hinzufügen"
     },
+    "home": "Home",
     "containsAllergenics": "Enthaltene Allergene",
     "containsAdditives": "Enthaltene Zusatzstoffe",
+    "allergenics": "Allergene",
+    "additives": "Zusatzstoffe",
     "password" : "Password",
     "email": "E-Mail",
-    "price": "Preis"
+    "price": "Preis",
+    "imprint": "Impressum",
+    "faq": "FAQ",
+    "menu": "Menü",
+    "qrscan": "Abholcode scannen",
+    "isOpen": "Jetzt geöffnet",
+    "onlyFavs": "Nur Favoriten",
+    "kitchen": "Küche",
+    "close": "Schließen",
+    "enterAdress": "Adresse eingeben"
 }

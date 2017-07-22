@@ -42,7 +42,7 @@ private pushObject: PushObject;
                         title: notification.title,
                         message: notification.message,
                         buttons: [{
-                            text: 'Okay',
+                            text: 'Ok',
                             role: 'cancel'
                         }],
                     });
@@ -73,6 +73,6 @@ private pushObject: PushObject;
                     )
             });
 
-        this.pushObject.on('error').subscribe(error => console.log('Error with Push plugin' + error));
+        this.pushObject.on('error').subscribe(error => console.error('Error with Push plugin: ' + error));
     }
 }

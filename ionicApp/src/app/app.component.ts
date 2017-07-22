@@ -4,12 +4,11 @@ import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
-import {Push} from "@ionic-native/push";
 import {QRService} from "../providers/QRService";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
 import {PushService} from "../providers/push-service";
-
+import {TranslateService} from "@ngx-translate/core";
 /**
  * Initialize the application.
  * 1. Verifies the user from the local storage.
@@ -56,8 +55,10 @@ export class MyApp {
                 public qr: QRService,
                 public iab: InAppBrowser,
                 public alertCtrl: AlertController,
-                private push: PushService) {
+                private push: PushService,
+                translate: TranslateService) {
 
+        translate.setDefaultLang('de');
         this.auth.verifyUser();
         this.push.pushSetup();
 
@@ -109,3 +110,4 @@ export class MyApp {
     }
 
 }
+

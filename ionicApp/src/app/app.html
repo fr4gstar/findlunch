@@ -1,7 +1,7 @@
 <ion-menu [content]="content" (ionClose)="onMenuClosed()" (ionOpen)="onMenuOpened()">
   <ion-header>
     <ion-toolbar color="dark">
-      <ion-title>Menu</ion-title>
+      <ion-title>{{ 'menu' | translate }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -16,7 +16,7 @@
            {{p.title}}
           </button>
           <button color="findlunch" menuClose ion-item (click)="this.qr.onQRClicked(event)">
-            Abholcode scannen
+              {{ 'qrscan' | translate }}
           </button>
         </div>
 
@@ -29,10 +29,10 @@
 
       <ion-item-group>
         <button color="findlunch"  ion-item (click)="goToImpressum()">
-          Impressum
+            {{ 'imprint' | translate }}
         </button>
         <button color="findlunch"  ion-item (click)="goToFaq()">
-          FAQ
+            {{ 'faq' | translate }}
         </button>
       </ion-item-group>
 

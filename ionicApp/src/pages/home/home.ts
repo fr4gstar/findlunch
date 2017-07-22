@@ -8,6 +8,7 @@ import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
 import LatLng = google.maps.LatLng;
+import {TranslateService} from "@ngx-translate/core";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -39,8 +40,10 @@ export class HomePage {
                 private popService: FilterPopoverService,
                 private events: Events,
                 private platform: Platform,
-                private zone: NgZone
+                private zone: NgZone,
+                translate: TranslateService
     ) {
+        translate.setDefaultLang('de');
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);

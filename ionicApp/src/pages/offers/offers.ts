@@ -10,6 +10,7 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {CartService} from "../../services/CartService";
 import {AuthService} from "../../providers/auth-service";
+import {TranslateService} from "@ngx-translate/core";
 
 
 /**
@@ -34,8 +35,10 @@ export class OffersPage implements OnInit {
                 private navCtrl: NavController,
                 private http: Http,
                 public auth: AuthService,
-                private platform: Platform
+                private platform: Platform,
+                translate: TranslateService
     ) {
+        translate.setDefaultLang('de');
         this.restaurant = navParams.get("restaurant");
 
         // disable animation, because it causes problems with displaying the map on iOS
