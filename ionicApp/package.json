@@ -99,6 +99,9 @@
                 "API_KEY_FOR_IOS": "AIzaSyChZUcKHflDgjQ3fhhHBzws4cAFjEncBz0",
                 "LOCATION_WHEN_IN_USE_DESCRIPTION": "Show your location on the map",
                 "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Trace your location on the map"
+            },
+            "phonegap-plugin-push": {
+                "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"
             }
         },
         "platforms": [
