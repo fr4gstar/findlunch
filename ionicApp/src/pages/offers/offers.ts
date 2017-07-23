@@ -11,6 +11,7 @@ import {SERVER_URL} from "../../app/app.module";
 import {CartService} from "../../services/CartService";
 import {AuthService} from "../../providers/auth-service";
 import {TranslateService} from "@ngx-translate/core";
+import {LoadingService} from "../../providers/loading-service";
 
 
 /**
@@ -39,14 +40,18 @@ export class OffersPage implements OnInit {
                 private http: Http,
                 public auth: AuthService,
                 private platform: Platform,
-                private translate: TranslateService
-    ) {
+                private loading: LoadingService,
+                private translate: TranslateService) {
         translate.setDefaultLang('de');
         this.translate.get('Error.favorize').subscribe(
-            (res: string) => { this.errorFavorize = res }
+            (res: string) => {
+                this.errorFavorize = res
+            }
         )
         this.translate.get('Error.deFavorize').subscribe(
-            (res: string) => { this.errorDeFavorize = res }
+            (res: string) => {
+                this.errorDeFavorize = res
+            }
         )
 
         this.restaurant = navParams.get("restaurant");
@@ -87,25 +92,22 @@ export class OffersPage implements OnInit {
      */
     public toggleIsFavourite() {
 
-        let user = window.localStorage.getItem("username");
-        let token = window.localStorage.getItem(user);
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic " + token
-        });
-
-        let options = new RequestOptions({
-            headers: headers,
-        });
-
+        let loader = this.loading.prepareLoader();
+        loader.present();
         // unset as favorite
         if (this.restaurant.isFavorite) {
+
+            let options = this.auth.prepareHttpOptions("delete");
             this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = false;
+                        //dismiss loading spinner
+                        loader.dismiss();
+
+
                     }
-                    else throw new Error("Unknown return value from server: "+ res.json())
+                    else throw new Error("Unknown return value from server: " + res.json())
                 },
                 err => {
                     alert(this.errorDeFavorize);
@@ -115,12 +117,16 @@ export class OffersPage implements OnInit {
         }
         // set as favorite
         else {
+            let options = this.auth.prepareHttpOptions("put");
             this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = true;
+                        //dismiss loading spinner
+                        loader.dismiss();
+
                     }
-                    else throw new Error("Unknown return value from server: "+ res.json());
+                    else throw new Error("Unknown return value from server: " + res.json());
                 },
                 err => {
                     alert(this.errorFavorize);
