@@ -119,35 +119,39 @@ export class AuthService {
     /**
      * prepares the options object for http-requests. If user is logged in, authentication header
      * is sent along
-     * @param RequestMethod
+     * @param ReqMethod
+     * string that gets
      * get, put, delete
      */
-    private prepareHttpOptions(ReqMethod: string) : RequestOptions {
+    public prepareHttpOptions(ReqMethod: string): RequestOptions {
 
         let options;
         let headers;
 
-        // build authentication header...
-        if (this.loggedIn) {
+        if (this.getLoggedIn()) {
             let user = window.localStorage.getItem("username");
             let token = window.localStorage.getItem(user);
-            let headers = new Headers({
+            headers = new Headers({
                 'Content-Type': 'application/json',
                 "Authorization": "Basic " + token
             });
         }
         let httpMethod;
-        switch(ReqMethod.toLowerCase()){
-            case "get": httpMethod = RequestMethod.Get;
-                        break;
-
-            case "put": httpMethod = RequestMethod.Put;
+        switch (ReqMethod.toLowerCase()) {
+            case "get":
+                httpMethod = RequestMethod.Get;
                 break;
 
-            case "del": httpMethod = RequestMethod.Delete;
+            case "put":
+                httpMethod = RequestMethod.Put;
                 break;
 
-            default: break;
+            case "del" || "delete":
+                httpMethod = RequestMethod.Delete;
+                break;
+            default:
+                console.log("provided requestmethod unknown");
+                break;
 
         }
 

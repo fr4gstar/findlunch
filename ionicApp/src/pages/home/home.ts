@@ -212,12 +212,12 @@ export class HomePage {
                         this.allRestaurants = res.json();
 
                         // remove loading spinner
+                        loader.dismiss();
 
                         this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
                     });
                 }
             )
-            loader.dismiss();
         });
     }
 
