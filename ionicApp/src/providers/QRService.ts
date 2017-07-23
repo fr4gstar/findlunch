@@ -33,16 +33,16 @@ export class QRService {
       translate.setDefaultLang('de');
       this.translate.get('Success.confirmOrder').subscribe(
           value => { this.confirmOrderSuccess = value }
-      )
+      );
       this.translate.get('Error.confirmOrderRestaurant').subscribe(
           value => { this.restaurantNotFound = value }
-      )
+      );
       this.translate.get('Error.confirmOrderOffer').subscribe(
           value => { this.offerNotFound = value }
-      )
+      );
       this.translate.get('Error.qr').subscribe(
           value => { this.qrError = value }
-      )
+      );
   }
 
   /**
@@ -84,7 +84,6 @@ export class QRService {
                   msg = this.offerNotFound;
                   break;
               }
-
               const toast = this.toastCtrl.create({
                 message: msg,
                 duration: 3000
@@ -92,7 +91,12 @@ export class QRService {
               toast.present();
             },
             (err) => {
-                console.info("QR scan abort!");
+                console.info("QR scan abort or server response error!");
+                const toast = this.toastCtrl.create({
+                    message: this.qrError,
+                    duration: 3000
+                });
+                toast.present();
             }
           )
       }, (err) => {
