@@ -17,12 +17,14 @@ export class QRService {
     private restaurantNotFound;
     private offerNotFound;
     private qrError;
+
   /**
-   *  Initialize modules
+   *  Initialize modules and sets the language translation settings
    *
    * @param barcodeScanner for scanning
    * @param toastCtrl for displaying messages
    * @param http for requests
+   * @param translate for internationalization feature
    */
   constructor(
     private barcodeScanner: BarcodeScanner,
@@ -56,6 +58,7 @@ export class QRService {
    * - the devices barcode scanner got a problem.
    *
    * @param event
+   * @return promise of barcode result
    */
   public onQRClicked(event) {
     let headers = new Headers({

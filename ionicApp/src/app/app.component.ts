@@ -9,6 +9,8 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
 import {PushService} from "../providers/push-service";
 import {TranslateService} from "@ngx-translate/core";
+import {SERVER_URL} from "../app/app.module";
+
 /**
  * Initialize the application.
  * 1. Verifies the user from the local storage.
@@ -31,6 +33,7 @@ export class MyApp {
      * Initialize modules.
      * 1. Verify user
      * 2. Push setup - firebase
+     * 3. Translation settings
      *
      * @param platform
      * @param statusBar
@@ -44,6 +47,7 @@ export class MyApp {
      * @param qr
      * @param iab
      * @param alertCtrl
+     * @param translate
      */
     constructor(public platform: Platform,
                 public statusBar: StatusBar,
@@ -64,7 +68,7 @@ export class MyApp {
 
         this.translate.get('Success.logoutSuccess').subscribe(
             value => { this.logoutSuccess = value }
-        )
+        );
 
         //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
         document.addEventListener('resume', () => {
@@ -80,6 +84,9 @@ export class MyApp {
         this.nav.setRoot(page.component);
     }
 
+    /**
+     * Logout function
+     */
     public logout() {
         this.auth.logout();
         const toast = this.toastCtrl.create({
@@ -90,26 +97,42 @@ export class MyApp {
         this.nav.setRoot(this.rootPage);
     }
 
+    /**
+     * Handles on menu closed action
+     */
     onMenuClosed() {
         this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, true);
     }
 
+    /**
+     * Handles on menu opened action
+     */
     onMenuOpened() {
         this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, false);
     }
 
+    /**
+     * Opens a url in the inapp browser
+     * @param url
+     */
     openUrl(url) {
         this.platform.ready().then(() => {
             let browser = this.iab.create(url);
         });
     }
 
+    /**
+     * Handles on menu closed action
+     */
     goToImpressum() {
-        this.openUrl("https://shrouded-dusk-87807.herokuapp.com/about_findlunch");
+        this.openUrl(`${SERVER_URL}/api/confirm_reservation/about_findlunch`);
     }
 
+    /**
+     * Opens the faq site
+     */
     goToFaq() {
-        this.openUrl("https://shrouded-dusk-87807.herokuapp.com/faq_customer");
+        this.openUrl(`${SERVER_URL}/api/confirm_reservation/faq_customer`);
 
     }
 

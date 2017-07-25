@@ -11,6 +11,13 @@ export class PushService {
 
 private pushObject: PushObject;
 
+    /**
+     *  Initialize modules and setup push function
+     *
+     * @param push
+     * @param alertCtrl
+     * @param http
+     */
     constructor(public push: Push,
                 private alertCtrl: AlertController,
                 private http: Http) {
@@ -32,6 +39,9 @@ private pushObject: PushObject;
         this.notificationSetup();
     }
 
+    /**
+     *  Setup of the display of the push notification
+     */
     notificationSetup() {
         this.pushObject.on('notification')
             .subscribe((notification: any) => {
@@ -51,6 +61,9 @@ private pushObject: PushObject;
             });
     }
 
+    /**
+     * Register push token at backend, when user is logged in
+     */
     pushSetup() {
         let user = window.localStorage.getItem("username");
         let token = window.localStorage.getItem(user);

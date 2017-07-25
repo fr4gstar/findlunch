@@ -7,7 +7,7 @@ import {LoadingService} from "../../providers/loading-service";
 import {Restaurant} from "../../model/Restaurant";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {TranslateService} from "@ngx-translate/core";
-
+import {SERVER_URL} from "../../app/app.module";
 
 @Component({
     selector: 'registry',
@@ -42,25 +42,25 @@ export class RegistryPage {
 
         this.translate.get('Error.noValidEmail').subscribe(
             value => { this.noValidEmail = value }
-        )
+        );
         this.translate.get('Error.noValidPassword').subscribe(
             value => { this.noValidPassword = value }
-        )
+        );
         this.translate.get('Error.usedEmail').subscribe(
             value => { this.usedEmail = value }
-        )
+        );
         this.translate.get('Error.connection').subscribe(
             value => { this.connectionError = value }
-        )
+        );
         this.translate.get('Error.confirmPassword').subscribe(
             value => { this.confirmPasswordError = value }
-        )
+        );
         this.translate.get('Error.termsAndCondition').subscribe(
             value => { this.termsAndConditionError = value }
-        )
+        );
         this.translate.get('Success.register').subscribe(
             value => { this.registerSuccess = value }
-        )
+        );
 
 
 
@@ -146,8 +146,11 @@ export class RegistryPage {
         return (password === password2);
     }
 
+    /**
+     * Opens the terms and conditions site via inapp browser
+     */
     public goToTermsAndConditions() {
-        let browser = this.iab.create("https://shrouded-dusk-87807.herokuapp.com/terms");
+        let browser = this.iab.create(`${SERVER_URL}+/terms`);
     }
 }
 
