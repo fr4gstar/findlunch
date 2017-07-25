@@ -4,6 +4,7 @@ import {Push, PushObject, PushOptions} from "@ionic-native/push";
 import {RequestMethod, Http, Headers, RequestOptions} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
 import {AlertController} from "ionic-angular";
+import {AuthService} from "./auth-service";
 
 
 @Injectable()
@@ -13,6 +14,7 @@ private pushObject: PushObject;
 
     constructor(public push: Push,
                 private alertCtrl: AlertController,
+                private auth: AuthService,
                 private http: Http) {
 
         const pushOptions: PushOptions = {
@@ -52,17 +54,8 @@ private pushObject: PushObject;
     }
 
     pushSetup() {
-        let user = window.localStorage.getItem("username");
-        let token = window.localStorage.getItem(user);
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic " + token
-        });
-
-        let options = new RequestOptions({
-            headers: headers,
-            method: RequestMethod.Put
-        });
+        //prepare RequestOptions
+        let options = this.auth.prepareHttpOptions("put");
 
         this.pushObject.on('registration')
             .subscribe((registration: any) => {

@@ -121,7 +121,7 @@ export class AuthService {
      * is sent along, otherwise RequestOptions get sent along "empty".
      * @param ReqMethod
      * string that represents the http-method used
-     * get, put, delete
+     * get, put, delete, post
      */
     public prepareHttpOptions(ReqMethod: string): RequestOptions {
 
@@ -149,8 +149,13 @@ export class AuthService {
             case "del" || "delete":
                 httpMethod = RequestMethod.Delete;
                 break;
+
+            case "post":
+                httpMethod = RequestMethod.Post;
+                break;
+
             default:
-                console.log("provided requestmethod unknown");
+                console.log("provided request method unknown");
                 break;
 
         }
