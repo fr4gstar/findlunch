@@ -191,8 +191,8 @@ export class HomePage {
         loader.present().then(() => {
 
             // build authentication header...
-            let options= this.auth.prepareHttpOptions("get");
-            
+            let options= this.auth.prepareHttpOptions(RequestMethod.Get);
+
             // do not filter by radius, because there are just a few restaurants.
             // in the future it could filter by using the visible map-area.
             this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options).subscribe(

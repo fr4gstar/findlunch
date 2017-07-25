@@ -55,7 +55,7 @@ private pushObject: PushObject;
 
     pushSetup() {
         //prepare RequestOptions
-        let options = this.auth.prepareHttpOptions("put");
+        let options = this.auth.prepareHttpOptions(RequestMethod.Post);
 
         this.pushObject.on('registration')
             .subscribe((registration: any) => {

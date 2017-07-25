@@ -65,7 +65,7 @@ export class QRService {
       .then((barcodeData) => {
 
         //preparing Requestoptions
-        let options = this.auth.prepareHttpOptions("put");
+        let options = this.auth.prepareHttpOptions(RequestMethod.Put);
 
         this.http.get(`${SERVER_URL}/api/confirm_reservation/`+barcodeData.text, options)
           .subscribe(

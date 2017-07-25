@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {SERVER_URL} from "../../app/app.module";
-import {Http} from "@angular/http";
+import {Http, RequestMethod} from "@angular/http";
 
 import {Restaurant} from "../../model/Restaurant";
 import {AuthService} from "../../providers/auth-service";
@@ -63,7 +63,7 @@ export class RestaurantViewPage {
         // unset as favorite
         if (this.restaurant.isFavorite) {
 
-            let options = this.auth.prepareHttpOptions("delete");
+            let options = this.auth.prepareHttpOptions(RequestMethod.Delete);
             this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
                 res => {
                     if (res.json() === 0) {
@@ -83,7 +83,7 @@ export class RestaurantViewPage {
         }
         // set as favorite
         else {
-            let options = this.auth.prepareHttpOptions("put");
+            let options = this.auth.prepareHttpOptions(RequestMethod.Put);
             this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
                 res => {
                     if (res.json() === 0) {

@@ -214,7 +214,7 @@ export class OrderDetailsPage {
                 delete payload.items;
 
                 //prepare RequestOptions for http-call
-                let options = this.auth.prepareHttpOptions("post");
+                let options = this.auth.prepareHttpOptions(RequestMethod.Post);
 
                 this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
                     (res) => {
@@ -302,7 +302,7 @@ export class OrderDetailsPage {
         loader.present().then(res => {
 
             //prepare RequestOptions
-            let options = this.auth.prepareHttpOptions("get");
+            let options = this.auth.prepareHttpOptions(RequestMethod.Get);
 
             this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
                 .subscribe(

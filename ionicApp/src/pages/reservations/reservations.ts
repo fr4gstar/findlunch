@@ -44,7 +44,7 @@ export class ReservationsPage implements OnInit {
         loader.present();
 
         //put together the options for http-call
-        let options = this.auth.prepareHttpOptions("get");
+        let options = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
             .subscribe(
                 res => {

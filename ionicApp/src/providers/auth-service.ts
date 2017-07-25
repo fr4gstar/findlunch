@@ -123,7 +123,7 @@ export class AuthService {
      * string that represents the http-method used
      * get, put, delete, post
      */
-    public prepareHttpOptions(ReqMethod: string): RequestOptions {
+    public prepareHttpOptions(ReqMethod: RequestMethod): RequestOptions {
 
         let options;
         let headers;
@@ -136,33 +136,10 @@ export class AuthService {
                 "Authorization": "Basic " + token
             });
         }
-        let httpMethod;
-        switch (ReqMethod.toLowerCase()) {
-            case "get":
-                httpMethod = RequestMethod.Get;
-                break;
-
-            case "put":
-                httpMethod = RequestMethod.Put;
-                break;
-
-            case "del" || "delete":
-                httpMethod = RequestMethod.Delete;
-                break;
-
-            case "post":
-                httpMethod = RequestMethod.Post;
-                break;
-
-            default:
-                console.log("provided request method unknown");
-                break;
-
-        }
 
         options = new RequestOptions({
             headers: headers,
-            method: httpMethod
+            method: ReqMethod
         })
 
         return options;

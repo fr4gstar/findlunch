@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {ToastController} from "ionic-angular";
-import {Http} from "@angular/http";
+import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "../../providers/QRService";
 import {TranslateService} from '@ngx-translate/core';
@@ -60,7 +60,7 @@ export class BonusPage {
        loader.present();
 
        //prepare http-options
-        let options = this.auth.prepareHttpOptions("get");
+        let options = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/get_points`, options)
             .subscribe(
                 res => {
