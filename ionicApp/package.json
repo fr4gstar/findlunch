@@ -1,7 +1,7 @@
 {
-    "name": "ionic-hello-world",
-    "version": "0.0.0",
-    "author": "Ionic Framework",
+    "name": "FindLunch",
+    "version": "1.0.0",
+    "author": "David Sauter - Skanny Morandi - Sergej Bardin",
     "homepage": "http://ionicframework.com/",
     "private": true,
     "scripts": {
@@ -79,7 +79,7 @@
         "ionic-plugin-keyboard"
     ],
     "cordovaPlatforms": [],
-    "description": "findLunch: An Ionic project",
+    "description": "FindLunch: An Ionic project",
     "cordova": {
         "plugins": {
             "cordova-plugin-console": {},

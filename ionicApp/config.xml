@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="de.findlunch.findlunch" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
-    <name>findLunch</name>
-    <description>An awesome Ionic/Cordova app.</description>
+<widget id="de.findlunch.findlunch" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>FindLunch</name>
+    <description>FindLunch is a food service.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
     <access origin="*" />
