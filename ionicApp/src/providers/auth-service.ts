@@ -118,9 +118,9 @@ export class AuthService {
 
     /**
      * prepares the options object for http-requests. If user is logged in, authentication header
-     * is sent along
+     * is sent along, otherwise RequestOptions get sent along "empty".
      * @param ReqMethod
-     * string that gets
+     * string that represents the http-method used
      * get, put, delete
      */
     public prepareHttpOptions(ReqMethod: string): RequestOptions {

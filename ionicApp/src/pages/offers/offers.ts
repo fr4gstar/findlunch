@@ -6,7 +6,7 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 import {Observable} from "rxjs/Observable";
-import {Headers, Http, RequestOptions} from "@angular/http";
+import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {CartService} from "../../services/CartService";
 import {AuthService} from "../../providers/auth-service";

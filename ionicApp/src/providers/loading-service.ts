@@ -12,7 +12,9 @@ export class LoadingService {
     }
 
     prepareLoader(): Loading {
-        let loader = this.loadingCtrl.create({});
+        let loader = this.loadingCtrl.create({
+            spinner: "circles"
+        });
 
         return loader;
 
