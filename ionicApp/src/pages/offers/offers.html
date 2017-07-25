@@ -29,7 +29,7 @@
 
     <ion-content>
         <ion-list id="foodMenu">
-            <ion-item *ngFor="let category of categories" text-wrap (click)="toggleGroup(category)"
+            <ion-item *ngFor="let category of categories" text-wrap no-lines="" (click)="toggleGroup(category)"
                       [ngClass]="{active: isGroupShown(category)}">
                 <ion-list-header>
                     {{category}}
@@ -38,7 +38,7 @@
                 </ion-list-header>
                 <div *ngIf="isGroupShown(category)">
                     <div *ngFor='let offer of offers[category]'>
-                        <ion-item (click)="onOfferClicked($event, offer)">
+                        <ion-item (click)="onOfferClicked($event, offer)" no-lines>
                             <span>{{offer.title}}<sup class="exponent-allergenics">{{offerService.getALGsAndADDsOfOffer(offer)}}</sup></span>
                             <span item-right>{{offer.price | currency:'EUR':true}}</span>
                         </ion-item>

@@ -57,22 +57,30 @@ export class OrderDetailsPage {
                 private translate: TranslateService) {
         translate.setDefaultLang('de');
         this.translate.get('Error.emptyOrder').subscribe(
-            value => { this.emptyOrder = value }
+            value => {
+                this.emptyOrder = value
+            }
         )
         this.translate.get('Success.order').subscribe(
-            value => { this.successOrder = value }
+            value => {
+                this.successOrder = value
+            }
         )
         this.translate.get('info').subscribe(
-            value => { this.info = value }
+            value => {
+                this.info = value
+            }
         )
         this.translate.get('donationInfo').subscribe(
-            value => { this.donationInfo = value }
+            value => {
+                this.donationInfo = value
+            }
         )
 
         this.restaurant = navParams.get("restaurant");
 
         this.reservation = {
-            id:0,
+            id: 0,
             donation: 0,
             totalPrice: 0,
             usedPoints: false,
@@ -87,7 +95,7 @@ export class OrderDetailsPage {
         };
 
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
-        if(this.auth.getLoggedIn()){
+        if (this.auth.getLoggedIn()) {
             this.calcNeededPoints();
             this.getUserPoints();
         }
@@ -170,7 +178,8 @@ export class OrderDetailsPage {
     }
 
     /**
-     * Sends the current order to the server. This requires authentication.
+     * Sends the current order to the server. While request is running, loading-animation active.
+     *
      */
     sendOrder() {
         if (this.reservation.items.length === 0) {
@@ -180,15 +189,6 @@ export class OrderDetailsPage {
 
             //starts the loading spinner
             loader.present().then(res => {
-
-
-                let user = window.localStorage.getItem("username");
-                let token = window.localStorage.getItem(user);
-                let headers = new Headers({
-                    'Content-Type': 'application/json',
-                    "Authorization": "Basic " + token
-                });
-                let options = new RequestOptions({headers: headers});
 
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
@@ -212,6 +212,9 @@ export class OrderDetailsPage {
                     });
                 });
                 delete payload.items;
+
+                //prepare RequestOptions for http-call
+                let options = this.auth.prepareHttpOptions(RequestMethod.Post);
 
                 this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
                     (res) => {
@@ -272,18 +275,12 @@ export class OrderDetailsPage {
         alert.present();
     }
 
-  /**
-   * Lets the user enter his desired pickup time.
-   * /TODO: Only valid times should be able to be chosen.
-   */
-
-
     /**
      * Sends the user to the Loginpage. After successful Login he is automatically
-     * coming back to this order-details-page
+     * coming back to this order-details-page.
      */
     public goToLogin() {
-        this.navCtrl.push(LoginPage, {comeBack: true, restaurant:this.restaurant});
+        this.navCtrl.push(LoginPage, {comeBack: true, restaurant: this.restaurant});
     }
 
     /**
@@ -291,7 +288,7 @@ export class OrderDetailsPage {
      * involved Login he is automatically coming back to this order-details-page
      */
     public goToRegister() {
-        this.navCtrl.push(RegistryPage, {comeBack: true, restaurant:this.restaurant});
+        this.navCtrl.push(RegistryPage, {comeBack: true, restaurant: this.restaurant});
     }
 
     /**
@@ -299,19 +296,13 @@ export class OrderDetailsPage {
      * Sets the information whether its possible to pay the order with points
      */
     public getUserPoints() {
-        let user = window.localStorage.getItem("username");
-        let token = window.localStorage.getItem(user);
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic " + token
-        });
-        let options = new RequestOptions({
-            headers: headers,
-            method: RequestMethod.Get
-        });
 
+        //start loading animation
         let loader = this.loading.prepareLoader();
         loader.present().then(res => {
+
+            //prepare RequestOptions
+            let options = this.auth.prepareHttpOptions(RequestMethod.Get);
 
             this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
                 .subscribe(
@@ -335,7 +326,7 @@ export class OrderDetailsPage {
                     err => {
                         console.error(err);
 
-                })
+                    })
             loader.dismiss();
         })
     }

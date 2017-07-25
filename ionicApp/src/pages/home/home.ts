@@ -10,6 +10,7 @@ import {AddressInputComponent} from "./AddressInputComponent";
 import {LoadingService} from "../../providers/loading-service";
 import LatLng = google.maps.LatLng;
 import {TranslateService} from "@ngx-translate/core";
+import {AuthService} from "../../providers/auth-service";
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -49,6 +50,7 @@ export class HomePage {
                 private platform: Platform,
                 private zone: NgZone,
                 private loading: LoadingService,
+                private auth: AuthService,
                 private translate: TranslateService
     ) {
         translate.setDefaultLang('de');
@@ -178,7 +180,8 @@ export class HomePage {
     }
 
     /**
-     * Fetches the restaurants from the server using the provided coordinates7
+     * Fetches the restaurants from the server using the provided coordinates. Initiates a loading
+     * animation while fetching
      * @param latLng location as LatLng-object
      */
     private fetchRestaurants(latLng: LatLng) {
@@ -188,21 +191,7 @@ export class HomePage {
         loader.present().then(() => {
 
             // build authentication header...
-            let user = window.localStorage.getItem("username");
-            let token = window.localStorage.getItem(user);
-            let options;
-            if (token) {
-                let headers = new Headers({
-                    'Content-Type': 'application/json',
-                    "Authorization": "Basic " + token
-                });
-
-                options = new RequestOptions({
-                    headers: headers,
-                    method: RequestMethod.Get
-                });
-            }
-
+            let options= this.auth.prepareHttpOptions(RequestMethod.Get);
 
             // do not filter by radius, because there are just a few restaurants.
             // in the future it could filter by using the visible map-area.

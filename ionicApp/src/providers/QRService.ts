@@ -4,7 +4,7 @@ import {Headers, Http, RequestOptions, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 import {TranslateService} from "@ngx-translate/core";
-
+import {AuthService} from "./auth-service";
 /**
  * Handles the barcode scanner function of the device.
  * With the barcode scanner it is possible to scan qr codes
@@ -30,6 +30,7 @@ export class QRService {
     private barcodeScanner: BarcodeScanner,
     private toastCtrl: ToastController,
     private http: Http,
+    private auth: AuthService,
     private translate: TranslateService
   ) {
       translate.setDefaultLang('de');
@@ -50,6 +51,7 @@ export class QRService {
   /**
    * Handles the barcode scanner function of the device.
    * Sends a request with a qr code to the backend.
+   * While request is underway,
    * There will displayed a message if:
    * - succesfully confirmed an reservation
    * - there is no restaurant(qr code unknown)
@@ -61,17 +63,13 @@ export class QRService {
    * @return promise of barcode result
    */
   public onQRClicked(event) {
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-      "Authorization": "Basic aW9uaWNAaW9uaWMuY29tOiExMjM0NTY3OE5p"
-    });
 
-    let options = new RequestOptions({
-      headers: headers,
-      method: RequestMethod.Put
-    });
     return this.barcodeScanner.scan()
       .then((barcodeData) => {
+
+        //preparing Requestoptions
+        let options = this.auth.prepareHttpOptions(RequestMethod.Put);
+
         this.http.get(`${SERVER_URL}/api/confirm_reservation/`+barcodeData.text, options)
           .subscribe(
             (res) => {

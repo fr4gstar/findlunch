@@ -5,6 +5,8 @@ import {SERVER_URL} from "../../app/app.module";
 import {ReservationViewPage} from "../reservation-view/reservation-view";
 import {Reservation} from "../../model/Reservation";
 import {TranslateService} from "@ngx-translate/core";
+import {AuthService} from "../../providers/auth-service";
+import {LoadingService} from "../../providers/loading-service";
 
 /**
  * This pages loads and shows all reservation of an user.
@@ -26,37 +28,38 @@ export class ReservationsPage implements OnInit {
      */
     constructor(public navCtrl: NavController,
                 private http: Http,
+                private auth: AuthService,
+                private loading: LoadingService,
                 translate: TranslateService) {
         translate.setDefaultLang('de');
         this.usedRestaurants = [];
     }
 
     /**
-     * Loads the reservation of an user.
+     * Loads the reservation(s) of a user.
      */
     ngOnInit() {
-        let user = window.localStorage.getItem("username");
-        let token = window.localStorage.getItem(user);
-        let headers = new Headers({
-            'Content-Type': 'application/json',
-            "Authorization": "Basic " + token
-        });
+        //prepare a loading spinner
+        let loader = this.loading.prepareLoader();
+        loader.present();
 
-        let options = new RequestOptions({
-            headers: headers,
-            method: RequestMethod.Get
-        });
-
+        //put together the options for http-call
+        let options = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
             .subscribe(
                 res => {
                     this.reservations = res.json();
-                    if(this.reservations.length > 0){
+                    if (this.reservations.length > 0) {
                         this.collectUsedRestaurants();
                         ReservationsPage.sortByCollectTime(this.reservations)
-                     }
+                    }
+                    loader.dismiss();
                 },
-                err => console.error(err)
+                err => {
+
+                    console.error(err)
+                    loader.dismiss();
+                }
             );
     }
 

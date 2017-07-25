@@ -36,7 +36,6 @@
         "@types/googlemaps": "^3.26.16",
         "autoprefixer": "^7.1.2",
         "cordova-android": "^6.2.3",
-        "cordova-ios": "^4.4.0",
         "cordova-plugin-add-swift-support": "^1.6.0",
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.7",
@@ -108,8 +107,7 @@
             }
         },
         "platforms": [
-            "android",
-            "ios"
+            "android"
         ]
     }
 }
