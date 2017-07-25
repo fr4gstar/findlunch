@@ -31,6 +31,33 @@ To start the application, right click on the "App" class found within the base p
 ### profiles
 The Webapp give the possibility to create a jar File depend on a given profile ("prod" or "testinstance"). Therefore navigate to "Run as" and select "Maven build..". Afterwards insert as goal "package" and the chosen profile ("prod" or "testinstance") then click the "Run" button.
 
+## Ionic hybrid App (Android and iOS App)
+The Ionic hybrid application is based on following technologies:
+ * Ionic 3
+ * Cordova v7
+ * Google Play services Maps
+ * Google Play services Places
+ * Firebase Cloud Messaging
+
+### Start App
+Installing dependencies and prepare plugins:
+```bash
+    ionic cordova prepare
+```
+
+For running the application in an iOS/Android emulator make sure you have installed one!
+##### iOS
+ ```bash
+     ionic cordova run ios --emulator
+ ```
+##### Android
+ ```bash
+      ionic cordova run android --emulator
+  ```
+
+To start the application on a device use '--device' instead of '--emulator'. More information at 
+http://ionicframework.com/docs/intro/deploying/
+
 ## Android App
 The Android application is based on the following technologies:
   * Spring for Android
