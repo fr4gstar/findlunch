@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {Offer} from "../../model/Offer";
-import {CartService} from "../../services/CartService";
+import {CartService} from "../../shared/cart.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {OffersService} from "../offers/offers.service";

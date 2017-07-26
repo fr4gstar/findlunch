@@ -2,12 +2,12 @@ import {Component, ViewChild} from "@angular/core";
 import {AlertController, Events, Nav, Platform, ToastController} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {AuthService} from "../providers/auth-service";
-import {MenuService} from "../providers/menu-service";
-import {QRService} from "../providers/QRService";
+import {AuthService} from "../shared/auth.service";
+import {MenuService} from "../shared/menu.service";
+import {QRService} from "../pages/bonus/qr.service";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
-import {PushService} from "../providers/push-service";
+import {PushService} from "../shared/push.service";
 import {TranslateService} from "@ngx-translate/core";
 import {SERVER_URL} from "../app/app.module";
 

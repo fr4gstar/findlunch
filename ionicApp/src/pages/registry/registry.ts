@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
 import {NavController, NavParams, ToastController} from "ionic-angular";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import {HomePage} from "../home/home";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
-import {LoadingService} from "../../providers/loading-service";
+import {LoadingService} from "../../shared/loading.service";
 import {Restaurant} from "../../model/Restaurant";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {TranslateService} from "@ngx-translate/core";

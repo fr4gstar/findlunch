@@ -1,10 +1,13 @@
-import {Component} from "@angular/core";
-import {Http, RequestMethod} from "@angular/http";
+import {Component, OnInit} from "@angular/core";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {QRService} from "../../providers/QRService";
+import {QRService} from "./qr.service";
 import {TranslateService} from '@ngx-translate/core';
-import {LoadingService} from "../../providers/loading-service";
-import {AuthService} from "../../providers/auth-service";
+import {LoadingService} from "../../shared/loading.service";
+import {AuthService} from "../../shared/auth.service";
+import {Event} from "_debugger";
+import {Loading} from "ionic-angular";
+import {Error} from "tslint/lib/error";
 
 /**
  * This pages loads and shows the points of an user per restaurant.
@@ -14,60 +17,49 @@ import {AuthService} from "../../providers/auth-service";
 @Component({
     templateUrl: 'bonus.html'
 })
-
-//TODO: Typisierung der Methoden
-
-export class BonusPage {
-
-    //TODO: Comment to points array
+export class BonusPage implements OnInit {
     public points: Object[];
-
-
     constructor(private http: Http,
                 private qr: QRService,
                 private auth: AuthService,
                 private loading: LoadingService,
-                translate: TranslateService) {
-
-        //TODO: loadpoints into onInit method
-        this.loadPoints();
+                private translate: TranslateService) {
         translate.setDefaultLang('de');
     }
-
+    public ngOnInit() : void {
+        this.loadPoints();
+    }
     /**
      * Opens the barcode scanner(camera) of the device via service
      *
      */
-    onQRClicked(event) {
-        this.qr.onQRClicked(event).then(
-            () => {
-                //TODO: check whether this.loadpoints()
+    private onQRClicked (event: Event) : void {
+        this.qr.onQRClicked(event)
+            .then(() => {
                 this.loadPoints();
-            }
-        );
+            });
     }
-
     /**
      * Loads available points of an authorized user per restaurant
      */
-    loadPoints() {
+    private loadPoints () : void {
         //prepare and start loading spinner
-        let loader = this.loading.prepareLoader();
+        const loader: Loading = this.loading.prepareLoader();
         loader.present();
 
         //prepare http-options
-        let options = this.auth.prepareHttpOptions(RequestMethod.Get);
+        const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/get_points`, options)
             .retry(2)
             .subscribe(
-                res => {
-                    this.points = res.json()
+                (res: Response) => {
+                    this.points = res.json();
                     loader.dismiss();
                 },
-                err => {
-                    console.error("Getting userPoints error" + err);
+                (err: Error) => {
+                    console.error("Getting user points error!", err);
                     loader.dismiss();
                 }
-            )
+            );
     }
 }

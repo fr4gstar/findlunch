@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
+import {Error} from "tslint/lib/error";
 
 
 @Injectable()
@@ -39,7 +40,7 @@ export class AuthService {
         let options = new RequestOptions({headers: headers});
         return new Promise(resolve => {
             this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
-                (res) => {
+                (res: Response) => {
                     window.localStorage.setItem("username", username);
                     window.localStorage.setItem(username, encodedCredentials);
                     this.userName = window.localStorage.getItem("username");
@@ -48,8 +49,6 @@ export class AuthService {
                     resolve(true);
                 }, (err) => {
                     resolve(err.body);
-
-
                 })
         })
     }

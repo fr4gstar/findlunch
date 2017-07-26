@@ -14,8 +14,6 @@ export class ReservationViewPage {
     public offers = [];
     public restaurant: Restaurant;
     public points = 0;
-
-
     /**
      * Initialize modules and displays the points earned for this order
      * @param navParams
@@ -25,9 +23,5 @@ export class ReservationViewPage {
         this.restaurant = this.reservation.restaurant;
         this.points = this.reservation.points;
         this.offers= this.reservation.reservation_offers;
-        debugger;
-           console.log(this.offers[0].offer.amount);
-           console.log(this.offers[0]);
-
     }
 }

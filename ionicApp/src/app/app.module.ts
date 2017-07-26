@@ -5,15 +5,14 @@ import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
-import {RestaurantsPage} from "../pages/restaurants/restaurants";
 import {BonusPage} from "../pages/bonus/bonus";
 import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
 import {OffersProductPage} from "../pages/offers-product-view/offers-product-view";
 import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
-import {AuthService} from "../providers/auth-service";
-import {MenuService} from "../providers/menu-service";
+import {AuthService} from "../shared/auth.service";
+import {MenuService} from "../shared/menu.service";
 import {OffersService} from "../pages/offers/offers.service";
 import {ReservationsPage} from "../pages/reservations/reservations";
 import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
@@ -21,22 +20,20 @@ import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
 import {Http, HttpModule} from "@angular/http";
 import {BarcodeScanner} from "@ionic-native/barcode-scanner";
-import {QRService} from "../providers/QRService";
+import {QRService} from "../pages/bonus/qr.service";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
-import {CartService} from "../services/CartService";
+import {CartService} from "../shared/cart.service";
 import {Push} from "@ionic-native/push";
-import {LoadingService} from "../providers/loading-service";
-import {PushService} from "../providers/push-service";
-import {TranslateService} from 'ng2-translate/ng2-translate';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {LoadingService} from "../shared/loading.service";
+import {PushService} from "../shared/push.service";
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 
@@ -49,7 +46,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         HomePage,
         OffersPage,
         BonusPage,
-        RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
@@ -82,7 +78,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         HomePage,
         OffersPage,
         BonusPage,
-        RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
@@ -95,7 +90,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
     ],
     providers: [
         StatusBar,
-        Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         FilterPopoverService,
@@ -110,7 +104,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         MenuService,
         InAppBrowser,
         PushService,
-        TranslateService,
         LoadingService
     ]
 
@@ -118,6 +111,6 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
 export class AppModule {
 }
 
-export function createTranslateLoader(http: Http) {
+export function createTranslateLoader(http: Http): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

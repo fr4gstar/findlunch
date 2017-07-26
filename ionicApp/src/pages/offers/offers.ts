@@ -8,10 +8,10 @@ import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 import {Observable} from "rxjs/Observable";
 import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {CartService} from "../../services/CartService";
-import {AuthService} from "../../providers/auth-service";
+import {CartService} from "../../shared/cart.service";
+import {AuthService} from "../../shared/auth.service";
 import {TranslateService} from "@ngx-translate/core";
-import {LoadingService} from "../../providers/loading-service";
+import {LoadingService} from "../../shared/loading.service";
 
 
 /**

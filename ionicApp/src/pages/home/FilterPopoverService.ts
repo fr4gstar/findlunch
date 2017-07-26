@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {KitchenType} from "../../model/KitchenType";
 import {Http} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import "rxjs/Rx";
 
 @Injectable()

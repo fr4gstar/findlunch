@@ -1,24 +1,19 @@
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
-import {Push, PushObject, PushOptions} from "@ionic-native/push";
-import {RequestMethod, Http, Headers, RequestOptions} from "@angular/http";
+import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
+import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
-import {AlertController} from "ionic-angular";
-import {AuthService} from "./auth-service";
-
-
+import {Alert, AlertController} from "ionic-angular";
+import {AuthService} from "./auth.service";
+import {Error} from "tslint/lib/error";
+/**
+ * Initializing push and notfication settings.
+ * @author Sergej Bardin
+ */
 @Injectable()
 export class PushService {
 
-private pushObject: PushObject;
-
-    /**
-     *  Initialize modules and setup push function
-     *
-     * @param push
-     * @param alertCtrl
-     * @param http
-     */
+    private pushObject: PushObject;
     constructor(public push: Push,
                 private alertCtrl: AlertController,
                 private auth: AuthService,
@@ -27,7 +22,7 @@ private pushObject: PushObject;
         const pushOptions: PushOptions = {
             android: {
                 senderID: '343682752512',
-                icon: '',
+                icon: 'ic_notify',
                 vibrate: true
             },
             ios: {
@@ -44,21 +39,20 @@ private pushObject: PushObject;
     /**
      *  Setup of the display of the push notification
      */
-    notificationSetup() {
+    public notificationSetup(): void {
         this.pushObject.on('notification')
-            .subscribe((notification: any) => {
-
+            .subscribe((notification: EventResponse) => {
                 // Foreground handling
                 if (notification.additionalData.foreground) {
-                    let youralert = this.alertCtrl.create({
+                    const alert: Alert = this.alertCtrl.create({
                         title: notification.title,
                         message: notification.message,
                         buttons: [{
                             text: 'Ok',
                             role: 'cancel'
-                        }],
+                        }]
                     });
-                    youralert.present();
+                    alert.present();
                 }
             });
     }
@@ -66,19 +60,21 @@ private pushObject: PushObject;
     /**
      * Register push token at backend, when user is logged in
      */
-    pushSetup() {
+    public pushSetup(): void {
         //prepare RequestOptions
-        let options = this.auth.prepareHttpOptions(RequestMethod.Post);
+        const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Post);
 
         this.pushObject.on('registration')
-            .subscribe((registration: any) => {
+            .subscribe((registration: EventResponse) => {
                 this.http.get(`${SERVER_URL}/api/submitToken/${registration.registrationId}`, options)
+                    .retry(2)
                     .subscribe(
-                        res => res,
-                        err => console.error(err)
-                    )
+                        (res: Response) => {
+                            console.warn("Device registered at firebase", res);
+                        },
+                        (err: Error) => console.error(err)
+                    );
             });
-
-        this.pushObject.on('error').subscribe(error => console.error('Error with Push plugin: ' + error));
+        this.pushObject.on('error').subscribe((error: Error) => console.error("Error with push plugin or firebase", error));
     }
 }

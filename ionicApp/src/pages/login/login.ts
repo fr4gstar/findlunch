@@ -3,12 +3,12 @@ import {NavController, NavParams, ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import {SERVER_URL} from "../../app/app.module";
-import {LoadingService} from "../../providers/loading-service";
+import {LoadingService} from "../../shared/loading.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
-import {PushService} from "../../providers/push-service";
+import {PushService} from "../../shared/push.service";
 import { TranslateService } from '@ngx-translate/core';
 
 /**

@@ -7,9 +7,9 @@ import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
-import {LoadingService} from "../../providers/loading-service";
+import {LoadingService} from "../../shared/loading.service";
 import {TranslateService} from "@ngx-translate/core";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import LatLng = google.maps.LatLng;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";

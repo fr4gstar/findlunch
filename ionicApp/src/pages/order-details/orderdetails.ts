@@ -2,15 +2,14 @@ import {Component} from "@angular/core";
 import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
-import {CartService} from "../../services/CartService";
+import {CartService} from "../../shared/cart.service";
 import {Offer} from "../../model/Offer";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import {Restaurant} from "../../model/Restaurant";
 import {LoginPage} from "../login/login";
 import {RegistryPage} from "../registry/registry";
 import {Reservation} from "../../model/Reservation";
-
-import {LoadingService} from "../../providers/loading-service";
+import {LoadingService} from "../../shared/loading.service";
 import {TranslateService} from "@ngx-translate/core";
 
 

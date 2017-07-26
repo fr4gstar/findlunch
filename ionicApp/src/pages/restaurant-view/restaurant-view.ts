@@ -2,12 +2,10 @@ import {Component} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {SERVER_URL} from "../../app/app.module";
 import {Http, RequestMethod} from "@angular/http";
-
 import {Restaurant} from "../../model/Restaurant";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import {TranslateService} from "@ngx-translate/core";
-import {LoadingService} from "../../providers/loading-service";
-
+import {LoadingService} from "../../shared/loading.service";
 
 /**
  * This pages displays the information of a restaurant.
@@ -40,14 +38,14 @@ export class RestaurantViewPage {
         translate.setDefaultLang('de');
         this.translate.get('Error.favorize').subscribe(
             (res: string) => {
-                this.errorFavorize = res
+                this.errorFavorize = res;
             }
-        )
+        );
         this.translate.get('Error.deFavorize').subscribe(
             (res: string) => {
-                this.errorDeFavorize = res
+                this.errorDeFavorize = res;
             }
-        )
+        );
 
         this.restaurant = navParams.get("restaurant");
         this.openingTime = this.restaurant.timeSchedules;
@@ -58,12 +56,12 @@ export class RestaurantViewPage {
      */
     public toggleIsFavourite() {
 
-        let loader = this.loading.prepareLoader();
+        const loader = this.loading.prepareLoader();
         loader.present();
         // unset as favorite
         if (this.restaurant.isFavorite) {
 
-            let options = this.auth.prepareHttpOptions(RequestMethod.Delete);
+            const options = this.auth.prepareHttpOptions(RequestMethod.Delete);
             this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
                 res => {
                     if (res.json() === 0) {
@@ -71,19 +69,18 @@ export class RestaurantViewPage {
                         //dismiss loading spinner
                         loader.dismiss();
 
-
                     }
-                    else throw new Error("Unknown return value from server: " + res.json())
+                    else throw new Error("Unknown return value from server: " + res.json());
                 },
                 err => {
                     alert(this.errorDeFavorize);
                     console.error(err);
                 }
-            )
+            );
         }
         // set as favorite
         else {
-            let options = this.auth.prepareHttpOptions(RequestMethod.Put);
+            const options = this.auth.prepareHttpOptions(RequestMethod.Put);
             this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
                 res => {
                     if (res.json() === 0) {
@@ -97,7 +94,7 @@ export class RestaurantViewPage {
                 err => {
                     alert(this.errorFavorize);
                     console.error(err);
-                })
+                });
         }
     }
 }

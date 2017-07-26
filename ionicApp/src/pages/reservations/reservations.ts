@@ -5,8 +5,8 @@ import {SERVER_URL} from "../../app/app.module";
 import {ReservationViewPage} from "../reservation-view/reservation-view";
 import {Reservation} from "../../model/Reservation";
 import {TranslateService} from "@ngx-translate/core";
-import {AuthService} from "../../providers/auth-service";
-import {LoadingService} from "../../providers/loading-service";
+import {AuthService} from "../../shared/auth.service";
+import {LoadingService} from "../../shared/loading.service";
 
 /**
  * This pages loads and shows all reservation of an user.
