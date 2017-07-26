@@ -43,8 +43,6 @@ export class OffersPage implements OnInit {
                 private platform: Platform,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        //TODO: transfer translate to onInit
-        translate.setDefaultLang(APP_LANG);
 
         this.restaurant = navParams.get("restaurant");
 

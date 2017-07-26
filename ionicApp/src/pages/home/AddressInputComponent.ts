@@ -20,14 +20,10 @@ export class AddressInputComponent implements OnInit {
         private zone: NgZone,
         private geocoder: NativeGeocoder,
         private translate: TranslateService) {
-        translate.setDefaultLang('de');
         this.autocompleteItems = [];
         this.autocomplete = {
             query: ''
         };
-    }
-
-    ngOnInit() {
     }
 
     dismiss() {

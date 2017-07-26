@@ -30,7 +30,6 @@ export class OffersProductPage {
       public offersService: OffersService,
       private translate: TranslateService
   ) {
-      translate.setDefaultLang(APP_LANG);
       this.restaurant = navParams.get("restaurant");
       this.offer = navParams.get("offer");
     // get cart for this restaurant

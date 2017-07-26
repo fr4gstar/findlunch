@@ -42,8 +42,6 @@ export class LoginPage implements OnInit {
         this.popThisPage = navParams.get("comeBack");
         //TODO check why
         this.restaurant = null;
-
-        translate.setDefaultLang(APP_LANG);
     }
 
     public ngOnInit(): void {

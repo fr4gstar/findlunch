@@ -37,8 +37,6 @@ export class RegistryPage implements OnInit {
                 private iab: InAppBrowser,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang(APP_LANG);
-
         this.popThisPage = navParams.get("comeBack");
         this.termsAndConditionsChecked = false;
     }

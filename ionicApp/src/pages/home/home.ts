@@ -52,8 +52,6 @@ export class HomePage implements OnInit{
                 private auth: AuthService,
                 private translate: TranslateService
     ) {
-        translate.setDefaultLang(APP_LANG);
-
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
                 this._map.setClickable(false);

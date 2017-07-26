@@ -25,7 +25,6 @@ export class BonusPage implements OnInit {
                 private auth: AuthService,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang(APP_LANG);
     }
     public ngOnInit() : void {
         this.translate.get('Error.points').subscribe(

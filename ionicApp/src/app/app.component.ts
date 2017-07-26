@@ -23,7 +23,7 @@ import {SERVER_URL, APP_LANG} from "../app/app.module";
 })
 
 
-export class MyApp implements OnInit{
+export class MyApp implements OnInit {
     @ViewChild(Nav) nav: Nav;
     /**
      * Sets the first site of the app
@@ -46,21 +46,21 @@ export class MyApp implements OnInit{
                 private push: PushService,
                 private translate: TranslateService) {
         translate.setDefaultLang(APP_LANG);
-    }
-
-    public ngOnInit(): void {
         this.auth.verifyUser();
         this.push.pushSetup();
-
-        this.translate.get('Success.logoutSuccessMsg').subscribe(
-            (value: string) => { this.strLogoutSuccess = value; }
-        );
 
         document.addEventListener('resume', () => {
             this.auth.verifyUser();
             this.push.pushSetup();
         });
     }
+
+    public ngOnInit(): void {
+        this.translate.get('Success.logoutSuccessMsg').subscribe(
+            (value: string) => { this.strLogoutSuccess = value; }
+        );
+    }
+
     /**
      * opens the clicked page. Reset the content nav to have just this page.
      * @param page

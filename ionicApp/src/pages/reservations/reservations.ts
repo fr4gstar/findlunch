@@ -25,7 +25,6 @@ export class ReservationsPage implements OnInit {
                 private auth: AuthService,
                 private loading: LoadingService,
                 translate: TranslateService) {
-        translate.setDefaultLang(APP_LANG);
         this.usedRestaurants = [];
     }
 

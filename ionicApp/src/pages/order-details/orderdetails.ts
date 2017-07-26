@@ -53,8 +53,6 @@ export class OrderDetailsPage implements OnInit {
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang(APP_LANG);
-
         this.restaurant = navParams.get("restaurant");
 
         this.reservation = {

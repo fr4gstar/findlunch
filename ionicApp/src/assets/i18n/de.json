@@ -56,7 +56,7 @@
         "register": "REGISTRIERUNG ABSENDEN",
         "confirmPassword": "Passwort bestätigen"
     },
-    "OffersProductViewPage": {
+    "OffersProductPage": {
         "priceInPoints": "Preis in Treuepunkten",
         "prepTime": "Zubereitungszeit",
         "addToCart": "Zum Warenkorb Hinzufügen"

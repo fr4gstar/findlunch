@@ -36,8 +36,6 @@ export class RestaurantViewPage implements OnInit {
                 private http: Http,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang(APP_LANG);
-
         this.restaurant = navParams.get("restaurant");
         this.openingTime = this.restaurant.timeSchedules;
     }

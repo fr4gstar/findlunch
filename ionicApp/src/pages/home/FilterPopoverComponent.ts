@@ -12,6 +12,5 @@ export class FilterPopoverComponent {
                 public auth: AuthService,
                 private translate: TranslateService
 ) {
-        translate.setDefaultLang('de');
     }
 }

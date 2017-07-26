@@ -41,7 +41,7 @@ export class MenuService {
           this.customerPages = [
               {title: this.strHome, component: HomePage},
               {title: this.strMyOrders, component: ReservationsPage},
-              {title: this.strLogin, component: BonusPage}
+              {title: this.strMyPoints, component: BonusPage}
           ];
 
           this.guestPages = [

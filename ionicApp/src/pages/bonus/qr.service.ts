@@ -27,7 +27,6 @@ export class QRService implements OnInit{
     private auth: AuthService,
     private translate: TranslateService
   ) {
-      translate.setDefaultLang(APP_LANG);
   }
   public ngOnInit(): void {
       this.translate.get('Success.confirmOrder').subscribe(
