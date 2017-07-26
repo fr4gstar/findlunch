@@ -33,7 +33,6 @@ export class MyApp implements OnInit {
     private strLogoutSuccess: string;
     pages: Array<{ title: string, component: any }>;
 
-
     constructor(public platform: Platform,
                 public statusBar: StatusBar,
                 public splashScreen: SplashScreen,
@@ -46,12 +45,19 @@ export class MyApp implements OnInit {
                 private push: PushService,
                 private translate: TranslateService) {
         translate.setDefaultLang(APP_LANG);
+        // TODO Promise then pushSetup test
         this.auth.verifyUser();
-        this.push.pushSetup();
+            /*.then(
+            //() => this.push.pushSetup()
+        );
+        */
 
         document.addEventListener('resume', () => {
+            // TODO Promise then pushSetup test
             this.auth.verifyUser();
-            this.push.pushSetup();
+            /*.then(
+                //() => this.push.pushSetup()
+            );*/
         });
     }
 

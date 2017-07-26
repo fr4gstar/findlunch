@@ -9,7 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
     templateUrl: 'AddressInputComponent.html'
 })
 
-export class AddressInputComponent implements OnInit {
+export class AddressInputComponent {
 
     autocompleteItems;
     autocomplete;

@@ -72,7 +72,7 @@ export class RestaurantViewPage implements OnInit {
                       throw new Error("Unknown return value from server: " + res.json());
                     }
                 },
-                (err: Error) => {
+                    (err: Error) => {
                     alert(this.strErrorDeFavorize);
                     console.error(err);
                 }
@@ -80,7 +80,9 @@ export class RestaurantViewPage implements OnInit {
         } else {
             // set as favorite
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
+            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options)
+                .retry(2)
+                .subscribe(
                 (res: Response) => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = true;
