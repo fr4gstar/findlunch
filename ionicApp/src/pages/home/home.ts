@@ -1,6 +1,6 @@
 import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
@@ -8,9 +8,9 @@ import {FilterPopoverComponent} from "./FilterPopoverComponent";
 import {FilterPopoverService} from "./FilterPopoverService";
 import {AddressInputComponent} from "./AddressInputComponent";
 import {LoadingService} from "../../providers/loading-service";
-import LatLng = google.maps.LatLng;
 import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../providers/auth-service";
+import LatLng = google.maps.LatLng;
 
 export const ANDROID_API_KEY = "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI";
 export const EVENT_TOPIC_MAP_CLICKABLE = "map:clickable";
@@ -205,6 +205,10 @@ export class HomePage {
 
                         this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
                     });
+                },
+                err => {
+                    loader.dismiss();
+                    console.error("Error fetching restaurants", err);
                 }
             )
         });
