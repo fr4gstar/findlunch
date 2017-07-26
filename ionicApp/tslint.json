@@ -26,7 +26,11 @@
     "newline-before-return": false,
     "no-increment-decrement": false,
     "no-backbone-get-set-outside-model": false,
-    "quotemark": false
+    "quotemark": false,
+    "no-relative-imports": false,
+    "ordered-imports": false,
+    "missing-jsdoc": false,
+    "component-class-suffix": [true, "Page", "Component"]
   },
   "rulesDirectory": [
     "node_modules/codelyzer"
