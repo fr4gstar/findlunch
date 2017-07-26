@@ -16,6 +16,11 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: 'login.html'
 
 })
+
+/**
+ * Page that lets the user enter his account credentials and gives him access to the
+ * logged-in user functionalities and pages.
+ */
 export class LoginPage {
 
     popThisPage: boolean;
@@ -51,7 +56,12 @@ export class LoginPage {
         )
     }
 
-
+    /**
+     * Logs the user in.
+     *
+     * @param userName
+     * @param password
+     */
     public login(userName: string, password: string) {
         this.counterPasswordWrong++;
         let loader = this.loading.prepareLoader();
