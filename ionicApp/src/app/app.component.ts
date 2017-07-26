@@ -1,5 +1,5 @@
-import {Component, ViewChild} from "@angular/core";
-import {AlertController, Events, Nav, Platform, ToastController} from "ionic-angular";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {AlertController, Events, Nav, Platform, Toast, ToastController} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {AuthService} from "../shared/auth.service";
@@ -9,7 +9,7 @@ import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
 import {PushService} from "../shared/push.service";
 import {TranslateService} from "@ngx-translate/core";
-import {SERVER_URL} from "../app/app.module";
+import {SERVER_URL, APP_LANG} from "../app/app.module";
 
 /**
  * Initialize the application.
@@ -23,14 +23,14 @@ import {SERVER_URL} from "../app/app.module";
 })
 
 
-export class MyApp {
+export class MyApp implements OnInit{
     @ViewChild(Nav) nav: Nav;
     /**
      * Sets the first site of the app
      * @type {HomePage}
      */
     rootPage: any = HomePage;
-    private logoutSuccessMsg :string;
+    private strLogoutSuccess: string;
     pages: Array<{ title: string, component: any }>;
 
 
@@ -45,26 +45,22 @@ export class MyApp {
                 public iab: InAppBrowser,
                 private push: PushService,
                 private translate: TranslateService) {
+        translate.setDefaultLang(APP_LANG);
+    }
 
-        //TODO: export languge to variable that is imported to all classes
-        translate.setDefaultLang('de');
-
-
-        //TODO verifyUser und pushsetup and translate.get  methods in OnInit
+    public ngOnInit(): void {
         this.auth.verifyUser();
         this.push.pushSetup();
 
         this.translate.get('Success.logoutSuccessMsg').subscribe(
-            value => { this.logoutSuccessMsg = value }
+            (value: string) => { this.strLogoutSuccess = value; }
         );
 
-       document.addEventListener('resume', () => {
+        document.addEventListener('resume', () => {
             this.auth.verifyUser();
             this.push.pushSetup();
-        })
-
+        });
     }
-
     /**
      * opens the clicked page. Reset the content nav to have just this page.
      * @param page
@@ -80,11 +76,11 @@ export class MyApp {
      * Logs the user out. After that a toast is shown that logout was successful.
      * After logout view gets sent back to rootPage.
      */
-    public logout() {
+    public logout(): void {
         this.auth.logout();
 
-        const toast = this.toastCtrl.create({
-            message: this.logoutSuccessMsg,
+        const toast: Toast = this.toastCtrl.create({
+            message: this.strLogoutSuccess,
             duration: 3000
         });
         toast.present();
@@ -96,7 +92,7 @@ export class MyApp {
      * TODO: replace generic comment
      * Handles on menu closed action
      */
-    onMenuClosed() {
+    public onMenuClosed(): void {
         this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, true);
     }
 
@@ -104,7 +100,7 @@ export class MyApp {
      * TODO: replace generic comment
      * Handles on menu opened action
      */
-    onMenuOpened() {
+    public onMenuOpened(): void {
         this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, false);
     }
 
@@ -124,14 +120,14 @@ export class MyApp {
     /**
      * opens in app browser on about url
      */
-    goToImpressum() {
+    public goToImprint(): void {
         this.openUrl(`${SERVER_URL}/api/confirm_reservation/about_findlunch`);
     }
 
     /**
      *  opens in app browser on Faq url
      */
-    goToFaq() {
+    public goToFaq(): void {
         this.openUrl(`${SERVER_URL}/api/confirm_reservation/faq_customer`);
 
     }

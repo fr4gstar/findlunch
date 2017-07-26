@@ -1,7 +1,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Toast, ToastController} from "ionic-angular";
 import {Http, RequestOptions, RequestMethod, Response} from "@angular/http";
-import {SERVER_URL} from "../../app/app.module";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
 import {BarcodeScanner, BarcodeScanResult} from '@ionic-native/barcode-scanner';
 import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../shared/auth.service";
@@ -27,7 +27,7 @@ export class QRService implements OnInit{
     private auth: AuthService,
     private translate: TranslateService
   ) {
-      translate.setDefaultLang('de');
+      translate.setDefaultLang(APP_LANG);
   }
   public ngOnInit(): void {
       this.translate.get('Success.confirmOrder').subscribe(
@@ -93,7 +93,7 @@ export class QRService implements OnInit{
                 toast.present();
             }
           );
-        }, (err: Error) => {
+        },  (err: Error) => {
           const toast: Toast = this.toastCtrl.create({
               message: this.strQRError,
               duration: 3000

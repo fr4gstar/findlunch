@@ -6,6 +6,7 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {OffersService} from "../offers/offers.service";
 import {TranslateService} from "@ngx-translate/core";
+import {APP_LANG} from "../../app/app.module";
 
 /**
  * Page for showing the details of a specific offer.
@@ -18,7 +19,7 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class OffersProductPage {
 
-  public cart: Array<Object>;
+  public cart: Object[];
   public restaurant: Restaurant;
   public offer: Offer;
 
@@ -29,7 +30,7 @@ export class OffersProductPage {
       public offersService: OffersService,
       private translate: TranslateService
   ) {
-      translate.setDefaultLang('de');
+      translate.setDefaultLang(APP_LANG);
       this.restaurant = navParams.get("restaurant");
       this.offer = navParams.get("offer");
     // get cart for this restaurant

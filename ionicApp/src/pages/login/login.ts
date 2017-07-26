@@ -1,10 +1,10 @@
-import {Component} from "@angular/core";
-import {NavController, NavParams, ToastController} from "ionic-angular";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Component, OnInit} from "@angular/core";
+import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
+import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../shared/auth.service";
-import {SERVER_URL} from "../../app/app.module";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
 import {LoadingService} from "../../shared/loading.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
@@ -14,24 +14,21 @@ import { TranslateService } from '@ngx-translate/core';
 /**
  * Page that lets the user enter his account credentials and gives him access to the
  * logged-in user functionalities and pages.
- * @author Skanny Morandi
+ * @author Skanny Morandi - Sergej Bardin
  */
-
-//TODO: Typisierung Methoden
 @Component({
     templateUrl: 'login.html'
 
 })
 
-export class LoginPage {
-
+export class LoginPage implements OnInit {
     private popThisPage: boolean;
     private counterPasswordWrong: number = 0;
     private restaurant: Restaurant;
-    private loginErrorMsg: string;
-    private loginSuccessfulMsg: string;
-    private connectionErrorMsg: string;
-    private passwordResetSuccessMsg: string;
+    private strLoginError: string;
+    private strLoginSuccessful: string;
+    private strConnectionError: string;
+    private strPasswordResetSuccess: string;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
@@ -46,20 +43,18 @@ export class LoginPage {
         //TODO check why
         this.restaurant = null;
 
-        //TODO: transfer translate to onInit
-        translate.setDefaultLang('de');
+        translate.setDefaultLang(APP_LANG);
+    }
+
+    public ngOnInit(): void {
         this.translate.get('Error.login').subscribe(
-            value => { this.loginErrorMsg = value }
-        )
+            (value: string)  => { this.strLoginError = value; });
         this.translate.get('Success.login').subscribe(
-            value => { this.loginSuccessfulMsg = value }
-        )
+            (value: string) => { this.strLoginSuccessful = value; });
         this.translate.get('Error.connection').subscribe(
-            value => { this.connectionErrorMsg = value }
-        )
+            (value: string) => { this.strConnectionError = value; });
         this.translate.get('Success.passwordReset').subscribe(
-            value => { this.passwordResetSuccessMsg = value }
-        )
+            (value: string) => { this.strPasswordResetSuccess = value; });
     }
 
     /**
@@ -69,15 +64,15 @@ export class LoginPage {
      * @param userName
      * @param password
      */
-    public login(userName: string, password: string) {
+    public login(userName: string, password: string): void {
         this.counterPasswordWrong++;
-        let loader = this.loading.prepareLoader();
-        loader.present().then(res => {
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present().then((res: Response) => {
 
             this.auth.login(userName, password).then(data => {
                 if (data) {
-                    const toast = this.toastCtrl.create({
-                        message: this.loginSuccessfulMsg,
+                    const toast: Toast = this.toastCtrl.create({
+                        message: this.strLoginSuccessful,
                         duration: 3000
                     });
                     toast.present();
@@ -97,17 +92,16 @@ export class LoginPage {
                     }
                 } else {
                     loader.dismiss();
-                    alert(this.loginErrorMsg);
+                    alert(this.strLoginError);
                 }
-            })
-        })
-
+            });
+        });
     }
 
     /**
      * sends user to RegisterPage
      */
-    public goToRegisterPage() {
+    public goToRegisterPage(): void {
         this.navCtrl.push(RegistryPage);
     }
 
@@ -116,30 +110,22 @@ export class LoginPage {
      * entered wrong
      * @param username = email adress of user
      */
-    public isEmptyUser(username) {
-        //TODO: check whether its enough to
-        // return !(username && this.counterPasswordWrong >= 1)
-        if (username && this.counterPasswordWrong >= 1) {
-            return false;
-        }
-        return true;
-    };
+    public isEmptyUser(username: string): boolean {
+         return !(username && this.counterPasswordWrong >= 1);
+    }
 
         /**
          * Requesting a password reset by the backend
          * @param username = email adress of user
          */
-    public sendPasswordReset(username)
-        {
-            let headers = new Headers({
+    public sendPasswordReset(username: string): void {
+            const headers: Headers = new Headers({
                 'Content-Type': 'application/json'
             });
 
-            let user = {
-                username: username
-            };
+            const user: Object = {username: username};
 
-            let options = new RequestOptions({
+            const options: RequestOptions = new RequestOptions({
                 headers: headers,
                 method: RequestMethod.Post,
                 body: JSON.stringify(user)
@@ -148,26 +134,27 @@ export class LoginPage {
             this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
                 .retry(2)
                 .subscribe(
-                    (res) => {
-                        let msg;
+                    (res: Response) => {
+                        let msg: string;
                         switch (res.json()) {
                             case 0:
-                                msg = this.passwordResetSuccessMsg;
+                                msg = this.strPasswordResetSuccess;
                                 break;
                             default:
-                                msg = this.connectionErrorMsg;
+                                msg = this.strConnectionError;
                                 break;
                         }
-                        const toast = this.toastCtrl.create({
+                        const toast: Toast = this.toastCtrl.create({
                             message: msg,
                             duration: 3000
                         });
                         toast.present();
-                    }, (err) => {
-                        console.error(err)
-                        //TODO: inform user
+                    },
+                    (err: Error) => {
+                        console.error(err);
+                        alert(this.strConnectionError);
                     }
-                )
+                );
         }
 
     }

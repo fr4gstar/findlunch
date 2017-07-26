@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {NavController} from "ionic-angular";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
-import {SERVER_URL} from "../../app/app.module";
+import {Loading, NavController} from "ionic-angular";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
 import {ReservationViewPage} from "../reservation-view/reservation-view";
 import {Reservation} from "../../model/Reservation";
 import {TranslateService} from "@ngx-translate/core";
@@ -10,61 +10,56 @@ import {LoadingService} from "../../shared/loading.service";
 
 /**
  * This pages loads and shows all reservation of an user.
- * @author Sergej Bardin - bardin@hm.edu
+ * @author Sergej Bardin & Skanny Morandi
  */
 @Component({
     selector: 'reservations-page',
     templateUrl: 'reservations.html'
 })
 export class ReservationsPage implements OnInit {
-    public reservations;
+    public reservations: Reservation[];
     public usedRestaurants: String[];
 
-
-    /**
-     * Initialize modules
-     * @param navCtrl
-     * @param http
-     */
     constructor(public navCtrl: NavController,
                 private http: Http,
                 private auth: AuthService,
                 private loading: LoadingService,
                 translate: TranslateService) {
-        translate.setDefaultLang('de');
+        translate.setDefaultLang(APP_LANG);
         this.usedRestaurants = [];
     }
 
     /**
      * Loads the reservation(s) of a user.
      */
-    ngOnInit() {
+    public ngOnInit(): void {
         //prepare a loading spinner
-        let loader = this.loading.prepareLoader();
+        const loader: Loading = this.loading.prepareLoader();
         loader.present();
 
         //put together the options for http-call
-        let options = this.auth.prepareHttpOptions(RequestMethod.Get);
+        const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
+            .retry(2)
             .subscribe(
-                res => {
+                (res: Response) => {
                     this.reservations = res.json();
                     if (this.reservations.length > 0) {
                         this.collectUsedRestaurants();
-                        ReservationsPage.sortByCollectTime(this.reservations)
+                        ReservationsPage.sortByCollectTime(this.reservations);
                     }
                     loader.dismiss();
                 },
-                err => {
-
-                    console.error(err)
+                (err: Error) => {
+                    console.error(err);
                     loader.dismiss();
                 }
             );
     }
 
+    // TODO
     public collectUsedRestaurants() {
-        for (let reservation of this.reservations) {
+        for (const reservation of this.reservations) {
             if (this.usedRestaurants.indexOf(reservation.restaurant.name) === -1) {
                 this.usedRestaurants.push(reservation.restaurant.name);
             }
@@ -80,13 +75,12 @@ export class ReservationsPage implements OnInit {
     public onReservationClicked(event, reservation: String) {
         this.navCtrl.push(ReservationViewPage, {reservation: reservation});
     }
-
-
+    // TODO
     private static sortByCollectTime(reservations: Reservation[]) {
         reservations.sort((a, b) => {
             if (a.collectTime > b.collectTime) return -1;
             if (b.collectTime > a.collectTime) return 1;
             return 0;
-        })
+        });
     }
 }

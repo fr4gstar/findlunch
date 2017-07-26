@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
-import {Http, RequestMethod} from "@angular/http";
-import {SERVER_URL} from "../../app/app.module";
-import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
+import {Component, OnInit} from "@angular/core";
+import {Http, RequestMethod, RequestOptions} from "@angular/http";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {Alert, AlertController, Loading, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../shared/cart.service";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../shared/auth.service";
@@ -12,7 +12,6 @@ import {Reservation} from "../../model/Reservation";
 import {LoadingService} from "../../shared/loading.service";
 import {TranslateService} from "@ngx-translate/core";
 
-
 /**
  * Page for showing an overview of the cart and the amount of items in it.
  * It calculates and shows the total price to pay and provides a way to donate.
@@ -22,14 +21,12 @@ import {TranslateService} from "@ngx-translate/core";
     selector: 'order-details',
     templateUrl: 'order-details.html'
 })
-export class OrderDetailsPage {
+export class OrderDetailsPage implements OnInit {
     //TODO: clarify variables
     public reservation: Reservation;
-    public restaurant: Restaurant;
+    public restaurant;
     public pickUpTime;
     public pickUpTimeISOFormat;
-
-
     public userPoints = 0;
     public neededPoints = 0;
     public morePointsThanNeeded;
@@ -42,10 +39,10 @@ export class OrderDetailsPage {
     public earliestPickUp;
     private param;
 
-    private donationInfo;
-    private info;
-    private successOrder;
-    private emptyOrder;
+    private strDonationInfo: string;
+    private strInfo: string;
+    private strSuccessOrder: string;
+    private strEmptyOrder: string;
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -56,28 +53,7 @@ export class OrderDetailsPage {
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        //TODO transfer translate to onInit
-        translate.setDefaultLang('de');
-        this.translate.get('Error.emptyOrder').subscribe(
-            value => {
-                this.emptyOrder = value
-            }
-        )
-        this.translate.get('Success.order').subscribe(
-            value => {
-                this.successOrder = value
-            }
-        )
-        this.translate.get('info').subscribe(
-            value => {
-                this.info = value
-            }
-        )
-        this.translate.get('donationInfo').subscribe(
-            value => {
-                this.donationInfo = value
-            }
-        )
+        translate.setDefaultLang(APP_LANG);
 
         this.restaurant = navParams.get("restaurant");
 
@@ -93,7 +69,7 @@ export class OrderDetailsPage {
             restaurant: this.restaurant,
             bill: null,
             reservationStatus: null,
-            collectTime: null,
+            collectTime: null
         };
 
         this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
@@ -108,6 +84,28 @@ export class OrderDetailsPage {
 
     }
 
+    public ngOnInit(): void {
+        this.translate.get('Error.emptyOrder').subscribe(
+            (value: string) => {
+                this.strEmptyOrder = value;
+            }
+        );
+        this.translate.get('Success.order').subscribe(
+            (value: string) => {
+                this.strSuccessOrder = value;
+            }
+        );
+        this.translate.get('info').subscribe(
+            (value: string) => {
+                this.strInfo = value;
+            }
+        );
+        this.translate.get('donationInfo').subscribe(
+            (value: string) => {
+                this.strDonationInfo = value;
+            }
+        );
+    }
     /**
      * Increases the amount of one given offer. Also checks for the max-limit.
      * Points needed to "pay with points" for entire order gets recalculated.
@@ -116,14 +114,13 @@ export class OrderDetailsPage {
      */
     incrAmount(offer) {
         if (offer.amount >= 999) {
-            console.info("Maxmimum amount of Product reached");
+            console.warn("Maxmimum amount of Product reached");
         } else {
             offer.amount++;
             this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
             this.reservation.donation = 0;
             this.calcNeededPoints();
             this.hasEnoughPoints();
-
 
         }
     }
@@ -145,7 +142,6 @@ export class OrderDetailsPage {
         this.calcNeededPoints();
         this.hasEnoughPoints();
 
-
     }
 
     /**
@@ -154,7 +150,7 @@ export class OrderDetailsPage {
      *  - then increase by 10 Cents (1,20 -> 1,30)
      */
     incrementDonation() {
-        let newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
+        const newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
         this.reservation.donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toFixed(2));
         this.reservation.totalPrice = newTotalPrice;
     }
@@ -185,9 +181,9 @@ export class OrderDetailsPage {
      */
     sendOrder() {
         if (this.reservation.items.length === 0) {
-            alert(this.emptyOrder);
+            alert(this.strEmptyOrder);
         } else {
-            let loader = this.loading.prepareLoader();
+            const loader: Loading = this.loading.prepareLoader();
 
             //starts the loading spinner
             loader.present().then(res => {
@@ -201,7 +197,7 @@ export class OrderDetailsPage {
                     this.reservation.points = this.neededPoints;
                 }
 
-                let payload = {
+                const payload = {
                     ...this.reservation,
                     reservation_offers: []
                 };
@@ -216,14 +212,14 @@ export class OrderDetailsPage {
                 delete payload.items;
 
                 //prepare RequestOptions for http-call
-                let options = this.auth.prepareHttpOptions(RequestMethod.Post);
+                const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Post);
 
                 this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options)
                     .retry(2)
                     .subscribe(
                     (res) => {
                         const toast = this.toastCtrl.create({
-                            message: this.successOrder,
+                            message: this.strSuccessOrder,
                             duration: 3000
                         });
                         toast.present();
@@ -240,11 +236,10 @@ export class OrderDetailsPage {
                         //stop the spinner
                         loader.dismiss();
 
-                    })
+                    });
             });
         }
     }
-
 
     /**
      * Calculates the total price of a given Array of Offer-items.
@@ -262,18 +257,18 @@ export class OrderDetailsPage {
      * @param offer
      * @returns {number}
      */
-    private findItemIndex(offer) {
+    private findItemIndex(offer: Offer) {
         return this.reservation.items
-            .findIndex((item, i) => item.id === offer.id)
+            .findIndex((item, i) => item.id === offer.id);
     }
 
     /**
      * Shows explanation alert for donation option in the view
      */
-    public showDonationInfo() {
-        let alert = this.alertCtrl.create({
-            title: this.info,
-            subTitle: this.donationInfo,
+    public showDonationInfo(): void {
+        const alert: Alert = this.alertCtrl.create({
+            title: this.strInfo,
+            subTitle: this.strDonationInfo,
             buttons: ['Ok']
         });
         alert.present();
@@ -299,20 +294,20 @@ export class OrderDetailsPage {
      * Gets the Points of the user for the particular restaurant
      * Sets the information whether its possible to pay the order with points
      */
-    public getUserPoints() {
+    public getUserPoints(): void {
 
         //start loading animation
-        let loader = this.loading.prepareLoader();
+        const loader = this.loading.prepareLoader();
         loader.present().then(res => {
 
             //prepare RequestOptions
-            let options = this.auth.prepareHttpOptions(RequestMethod.Get);
+            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
 
             this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
                 .retry(2)
                 .subscribe(
                     res => {
-                        let reply = res.json();
+                        const reply = res.json();
                         //if user has no points at the restaurant yet
                         if (!(reply.length === 0)) {
                             this.userPoints = reply[0].points;
@@ -334,14 +329,14 @@ export class OrderDetailsPage {
                         //TODO alert with "points couldnt be loaded, please try later"
                         loader.dismiss();
 
-                    })
-        })
+                    });
+        });
     }
 
     //TODO: Comment
     public calcNeededPoints() {
-        let totalNeededPoints = 0;
-        for (let item of this.reservation.items) {
+        let totalNeededPoints: number = 0;
+        for (const item of this.reservation.items) {
             totalNeededPoints += (item.neededPoints * item.amount);
         }
         this.neededPoints = totalNeededPoints;
@@ -354,10 +349,9 @@ export class OrderDetailsPage {
         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
     }
 
-
     //TODO: Comment
     public calcTimings(prepTime) {
-        let date = new Date();
+        const date = new Date();
         // restaurant.timeSchedules is an Array with of Objects with opening times for single
         // days in the order of weekdays e.g. timeSchedules[0] are opening times on Monday
         //TODO: Try-catch block around, if catch send back to home with alert that
@@ -370,19 +364,17 @@ export class OrderDetailsPage {
 
         }
 
+        this.closingTime = this.restaurant.timeSchedules[day].openingTimes[0].closingTime.split(" ")[1];
+        this.openingTime = this.restaurant.timeSchedules[day].openingTimes[0].openingTime.split(" ")[1];
 
-        this.closingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].closingTime.split(" ")[1];
-        this.openingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].openingTime.split(" ")[1];
-
-
-        let prepTimeInMs = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
+        const prepTimeInMs: number = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
         date.setTime(date.getTime() + prepTimeInMs);
 
         this.pickUpTime = date;
         this.pickUpTimeISOFormat = date.toISOString();
 
         date.setTime(date.getTime() - 120 * 60 * 1000);
-        this.earliestPickUp = date.toLocaleTimeString()
+        this.earliestPickUp = date.toLocaleTimeString();
 
     }
 

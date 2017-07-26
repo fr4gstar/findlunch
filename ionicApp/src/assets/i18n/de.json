@@ -105,7 +105,8 @@
         "termsAndCondition": "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Geschäftsbedingungen.",
         "confirmOrderRestaurant": "Fehler: Restaurant nicht gefunden!",
         "confirmOrderOffer": "Fehler: Angebot nicht gefunden!",
-        "qr": "Fehler beim Scannen des QR-Codes"
+        "qr": "Fehler beim Scannen des QR-Codes",
+        "points": "Punkte konnten nicht geladen werden!"
     }
 
 }

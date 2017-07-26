@@ -1,7 +1,7 @@
-import {Component, ElementRef, NgZone, ViewChild} from "@angular/core";
+import {Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
 import {Events, ModalController, NavController, Platform, PopoverController} from "ionic-angular";
 import {Http, RequestMethod} from "@angular/http";
-import {SERVER_URL} from "../../app/app.module";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
 import {Restaurant} from "../../model/Restaurant";
 import {FilterPopoverComponent} from "./FilterPopoverComponent";
@@ -25,7 +25,7 @@ const MAP_DEFAULT_ZOOM_LEVEL = 15;
 @Component({
     templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit{
     _hasRestaurants: any;
 
     @ViewChild('map') theMap: ElementRef;
@@ -52,26 +52,7 @@ export class HomePage {
                 private auth: AuthService,
                 private translate: TranslateService
     ) {
-        translate.setDefaultLang('de');
-
-        this.translate.get('phone').subscribe(
-            value => { this.phone = value }
-        )
-        this.translate.get('address').subscribe(
-            value => { this.address = value }
-        )
-        this.translate.get('distance').subscribe(
-            value => { this.distance = value }
-        )
-        this.translate.get('kitchen').subscribe(
-            value => { this.kitchen = value }
-        )
-        this.translate.get('isClosed').subscribe(
-            value => { this.closedNow = value }
-        )
-        this.translate.get('isOpen').subscribe(
-            value => { this.openedNow = value }
-        )
+        translate.setDefaultLang(APP_LANG);
 
         this.events.subscribe(EVENT_TOPIC_MAP_CLICKABLE, eventData => {
             if (eventData === false) {
@@ -84,6 +65,21 @@ export class HomePage {
         this.platform.ready().then(() => {
             this.loadMap();
         });
+    }
+
+    public ngOnInit(): void {
+        this.translate.get('phone').subscribe(
+            (value: string) => { this.phone = value; });
+        this.translate.get('address').subscribe(
+            (value: string) => {  this.address = value; });
+        this.translate.get('distance').subscribe(
+            (value: string) => {  this.distance = value; });
+        this.translate.get('kitchen').subscribe(
+            (value: string) => {  this.kitchen = value; });
+        this.translate.get('isClosed').subscribe(
+            (value: string) => {  this.closedNow = value; });
+        this.translate.get('isOpen').subscribe(
+            (value: string) => {  this.openedNow = value; });
     }
 
     public ionViewDidEnter() {

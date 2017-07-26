@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import 'rxjs/add/operator/map';
 import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
 import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
@@ -11,14 +11,16 @@ import {Error} from "tslint/lib/error";
  * @author Sergej Bardin
  */
 @Injectable()
-export class PushService {
+export class PushService implements OnInit {
 
     private pushObject: PushObject;
     constructor(public push: Push,
                 private alertCtrl: AlertController,
                 private auth: AuthService,
                 private http: Http) {
+    }
 
+    public ngOnInit(): void {
         const pushOptions: PushOptions = {
             android: {
                 senderID: '343682752512',

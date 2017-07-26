@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {NavParams} from "ionic-angular";
 import {Restaurant} from "../../model/Restaurant";
+import {Reservation} from "../../model/Reservation";
 
 /**
  * This view loads a detailed reservation page
@@ -13,7 +14,7 @@ export class ReservationViewPage {
     public reservation;
     public offers = [];
     public restaurant: Restaurant;
-    public points = 0;
+    public points: number = 0;
     /**
      * Initialize modules and displays the points earned for this order
      * @param navParams
@@ -22,6 +23,6 @@ export class ReservationViewPage {
         this.reservation = navParams.get("reservation");
         this.restaurant = this.reservation.restaurant;
         this.points = this.reservation.points;
-        this.offers= this.reservation.reservation_offers;
+        this.offers = this.reservation.reservation_offers;
     }
 }

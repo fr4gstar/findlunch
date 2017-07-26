@@ -36,9 +36,8 @@ import {PushService} from "../shared/push.service";
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
-
-export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
-
+export const SERVER_URL: string = "https://shrouded-dusk-87807.herokuapp.com";
+export const APP_LANG: string = "de";
 
 @NgModule({
     declarations: [
@@ -110,7 +109,12 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
 })
 export class AppModule {
 }
-
+/**
+ * Function prepares the loader for the translation service
+ * from './assets/i18n/*.json'.
+ * @param http
+ * @returns {TranslateHttpLoader}
+ */
 export function createTranslateLoader(http: Http): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

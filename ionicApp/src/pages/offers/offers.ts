@@ -7,7 +7,7 @@ import {Restaurant} from "../../model/Restaurant";
 import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
 import {Observable} from "rxjs/Observable";
 import {Http, RequestMethod} from "@angular/http";
-import {SERVER_URL} from "../../app/app.module";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
 import {CartService} from "../../shared/cart.service";
 import {AuthService} from "../../shared/auth.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -44,17 +44,7 @@ export class OffersPage implements OnInit {
                 private loading: LoadingService,
                 private translate: TranslateService) {
         //TODO: transfer translate to onInit
-        translate.setDefaultLang('de');
-        this.translate.get('Error.favorize').subscribe(
-            (res: string) => {
-                this.errorFavorize = res
-            }
-        )
-        this.translate.get('Error.deFavorize').subscribe(
-            (res: string) => {
-                this.errorDeFavorize = res
-            }
-        )
+        translate.setDefaultLang(APP_LANG);
 
         this.restaurant = navParams.get("restaurant");
 
@@ -62,12 +52,15 @@ export class OffersPage implements OnInit {
         platform.ready().then(() => {
             platform.registerBackButtonAction(() => {
                 this.navCtrl.pop({animate: false});
-            })
-        })
+            });
+        });
     }
 
-
-    ngOnInit() {
+    public ngOnInit(): void {
+        this.translate.get('Error.favorize').subscribe(
+            (res: string) => { this.errorFavorize = res; });
+        this.translate.get('Error.deFavorize').subscribe(
+            (res: string) => { this.errorDeFavorize = res; });
         this.offerService.getOffers(this.restaurant.id).subscribe(
             offers => {
                 this.offers = offers;

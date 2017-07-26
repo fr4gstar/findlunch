@@ -1,13 +1,14 @@
-import {Component} from "@angular/core";
-import {NavController, NavParams, ToastController} from "ionic-angular";
+import {Component, OnInit} from "@angular/core";
+import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {AuthService} from "../../shared/auth.service";
 import {HomePage} from "../home/home";
-import {InAppBrowser} from "@ionic-native/in-app-browser";
+import {InAppBrowser, InAppBrowserObject} from "@ionic-native/in-app-browser";
 import {LoadingService} from "../../shared/loading.service";
 import {Restaurant} from "../../model/Restaurant";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {TranslateService} from "@ngx-translate/core";
-import {SERVER_URL} from "../../app/app.module";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {Response} from "@angular/http";
 
 @Component({
     selector: 'registry',
@@ -16,20 +17,18 @@ import {SERVER_URL} from "../../app/app.module";
 /**
  * gets "comeback" navParam, to determine whether to send the view back to where it came from after registering
  */
-export class RegistryPage {
+export class RegistryPage implements OnInit {
+    private termsAndConditionsChecked: boolean;
+    private popThisPage: boolean;
+    private restaurant: Restaurant;
 
-    termsAndConditionsChecked: boolean;
-    popThisPage: boolean;
-    restaurant: Restaurant;
-
-    private noValidEmail;
-    private noValidPassword;
-    private usedEmail;
-    private connectionError;
-
-    private confirmPasswordError;
-    private termsAndConditionError;
-    private registerSuccess;
+    private strNoValidEmail: string;
+    private strNoValidPassword: string;
+    private strUsedEmail: string;
+    private strConnectionError: string;
+    private strConfirmPasswordError: string;
+    private strTermsAndConditionError: string;
+    private strRegisterSuccess: string;
 
     constructor(private auth: AuthService,
                 private toastCtrl: ToastController,
@@ -38,58 +37,57 @@ export class RegistryPage {
                 private iab: InAppBrowser,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang('de');
-
-        this.translate.get('Error.noValidEmail').subscribe(
-            value => { this.noValidEmail = value }
-        );
-        this.translate.get('Error.noValidPassword').subscribe(
-            value => { this.noValidPassword = value }
-        );
-        this.translate.get('Error.usedEmail').subscribe(
-            value => { this.usedEmail = value }
-        );
-        this.translate.get('Error.connection').subscribe(
-            value => { this.connectionError = value }
-        );
-        this.translate.get('Error.confirmPassword').subscribe(
-            value => { this.confirmPasswordError = value }
-        );
-        this.translate.get('Error.termsAndCondition').subscribe(
-            value => { this.termsAndConditionError = value }
-        );
-        this.translate.get('Success.register').subscribe(
-            value => { this.registerSuccess = value }
-        );
-
-
+        translate.setDefaultLang(APP_LANG);
 
         this.popThisPage = navParams.get("comeBack");
         this.termsAndConditionsChecked = false;
     }
 
+    public ngOnInit(): void {
+        this.translate.get('Error.noValidEmail').subscribe(
+            (value: string) => { this.strNoValidEmail = value; }
+        );
+        this.translate.get('Error.noValidPassword').subscribe(
+            (value: string) => { this.strNoValidPassword = value; }
+        );
+        this.translate.get('Error.usedEmail').subscribe(
+            (value: string) => { this.strUsedEmail = value; }
+        );
+        this.translate.get('Error.connection').subscribe(
+            (value: string) => { this.strConnectionError = value; }
+        );
+        this.translate.get('Error.confirmPassword').subscribe(
+            (value: string) => { this.strConfirmPasswordError = value; }
+        );
+        this.translate.get('Error.termsAndCondition').subscribe(
+            (value: string) => { this.strTermsAndConditionError = value; }
+        );
+        this.translate.get('Success.register').subscribe(
+            (value: string) => { this.strRegisterSuccess = value; }
+        );
+    }
     /**
      * Username password and password repetitions get checked and registered with the server. If registry not successful
      * suiting error message gehts displayed. if successful, logs in directly and goes either back to orderdetails or
      * homepage
      */
-    public onRegisterClicked(username: string, password: string, password2: string) {
+    public onRegisterClicked(username: string, password: string, password2: string): void {
         if (!this.passwordsIdentical(password, password2)) {
-            alert(this.confirmPasswordError);
+            alert(this.strConfirmPasswordError);
 
         } else if (!this.termsAndConditionsChecked) {
-            const toast = this.toastCtrl.create({
-                message: this.termsAndConditionError,
+            const toast: Toast = this.toastCtrl.create({
+                message: this.strTermsAndConditionError,
                 duration: 3000
             });
             toast.present();
         }
-        let loader = this.loading.prepareLoader();
-        loader.present().then(res => {
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present().then((res: Response) => {
 
             this.auth.register(username, password).then(result => {
-                const toast = this.toastCtrl.create({
-                    message: this.registerSuccess,
+                const toast: Toast = this.toastCtrl.create({
+                    message: this.strRegisterSuccess,
                     duration: 3000
                 });
                 toast.present();
@@ -108,26 +106,26 @@ export class RegistryPage {
                 }
                 loader.dismiss();
             })
-                .catch(error => {
+                .catch((error) => {
                     switch (error) {
                         case "1" :
-                            alert(this.noValidEmail);
+                            alert(this.strNoValidEmail);
                             break;
                         case "2" :
-                            alert(this.noValidPassword);
+                            alert(this.strNoValidPassword);
                             break;
                         case "3" :
-                            alert(this.usedEmail);
+                            alert(this.strUsedEmail);
                             break;
 
                         default :
-                            alert(this.connectionError);
+                            alert(this.strConnectionError);
 
                     }
                     loader.dismiss();
-                })
+                });
 
-        })
+        });
 
     }
 
@@ -142,16 +140,14 @@ export class RegistryPage {
      * whether passwords are identical
      *
      */
-    private passwordsIdentical(password: string, password2: string) {
+    private passwordsIdentical(password: string, password2: string): boolean {
         return (password === password2);
     }
 
     /**
      * Opens the terms and conditions site via inapp browser
      */
-    public goToTermsAndConditions() {
-        let browser = this.iab.create(`${SERVER_URL}+/terms`);
+    public goToTermsAndConditions(): void {
+        this.iab.create(`${SERVER_URL}+/terms`);
     }
 }
-
-

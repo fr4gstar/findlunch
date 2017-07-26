@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
-import {SERVER_URL} from "../../app/app.module";
+import {SERVER_URL, APP_LANG} from "../../app/app.module";
 import {QRService} from "./qr.service";
 import {TranslateService} from '@ngx-translate/core';
 import {LoadingService} from "../../shared/loading.service";
@@ -19,14 +19,17 @@ import {Error} from "tslint/lib/error";
 })
 export class BonusPage implements OnInit {
     public points: Object[];
+    private strLoadPointsError: string;
     constructor(private http: Http,
                 private qr: QRService,
                 private auth: AuthService,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang('de');
+        translate.setDefaultLang(APP_LANG);
     }
     public ngOnInit() : void {
+        this.translate.get('Error.points').subscribe(
+            (value: string) => { this.strLoadPointsError = value; });
         this.loadPoints();
     }
     /**
@@ -58,6 +61,7 @@ export class BonusPage implements OnInit {
                 },
                 (err: Error) => {
                     console.error("Getting user points error!", err);
+                    alert(this.strLoadPointsError);
                     loader.dismiss();
                 }
             );

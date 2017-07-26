@@ -1,6 +1,6 @@
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 import "rxjs/add/operator/map";
-
+import {APP_LANG} from "../app/app.module";
 import {HomePage} from "../pages/home/home";
 import {LoginPage} from "../pages/login/login";
 import {RegistryPage} from "../pages/registry/registry";
@@ -20,7 +20,7 @@ export class MenuService {
   private strRegister: string;
 
   constructor(private translate: TranslateService) {
-      this.translate.setDefaultLang('de');
+      this.translate.setDefaultLang(APP_LANG);
       this.translate.get('home').subscribe(
           (value: string) => { this.strHome = value; }
       );

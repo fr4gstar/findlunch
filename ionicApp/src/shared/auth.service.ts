@@ -1,14 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
-import {Error} from "tslint/lib/error";
-
-
-@Injectable()
 
 /**
  * Service that handles everything about login, verification and registration of users of the App.
  */
+@Injectable()
 export class AuthService {
     private loggedIn: boolean;
     private userName: string;
