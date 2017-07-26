@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {AlertController, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../services/CartService";
@@ -17,7 +17,7 @@ import {TranslateService} from "@ngx-translate/core";
 /**
  * Page for showing an overview of the cart and the amount of items in it.
  * It calculates and shows the total price to pay and provides a way to donate.
- * @author David Sauter, Skanny Morandi
+ * @author David Sautter, Skanny Morandi
  */
 @Component({
     selector: 'order-details',

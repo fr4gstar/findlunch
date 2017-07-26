@@ -43,7 +43,7 @@
         "cordova-plugin-datepicker": "^0.9.3",
         "cordova-plugin-device": "^1.1.6",
         "cordova-plugin-geolocation": "^2.4.3",
-        "cordova-plugin-googlemaps": "git+https://github.com/dasois/cordova-plugin-googlemaps.git#patch-1",
+        "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
         "cordova-plugin-inappbrowser": "^1.7.1",
         "cordova-plugin-nativegeocoder": "^1.0.2",
@@ -100,9 +100,7 @@
             "cordova-plugin-inappbrowser": {},
             "cordova-plugin-googlemaps": {
                 "API_KEY_FOR_ANDROID": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g",
-                "API_KEY_FOR_IOS": "AIzaSyChZUcKHflDgjQ3fhhHBzws4cAFjEncBz0",
-                "LOCATION_WHEN_IN_USE_DESCRIPTION": "Show your location on the map",
-                "LOCATION_ALWAYS_USAGE_DESCRIPTION": "Trace your location on the map"
+                "API_KEY_FOR_IOS": "AIzaSyChZUcKHflDgjQ3fhhHBzws4cAFjEncBz0"
             },
             "phonegap-plugin-push": {
                 "SENDER_ID": "1:343682752512:android:e2f9a2460fa10600"

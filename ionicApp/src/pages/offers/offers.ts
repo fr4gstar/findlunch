@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams, Platform} from "ionic-angular";
-import {OffersService} from "./OffersService";
+import {OffersService} from "./offers.service";
 import {OffersProductPage} from "../offers-product-view/offers-product-view";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
@@ -17,7 +17,7 @@ import {LoadingService} from "../../providers/loading-service";
 /**
  * Page for showing the offers of a specific restaurant in a list.
  * If the user clicks on an offer, she will get to the detail view of this offer.
- * @author David Sauter
+ * @author David Sautter
  */
 @Component({
     templateUrl: 'offers.html'

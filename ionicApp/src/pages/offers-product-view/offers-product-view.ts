@@ -11,7 +11,7 @@ import {TranslateService} from "@ngx-translate/core";
  * Page for showing the details of a specific offer.
  * Offer and restaurant-id must be provided via navParams ("restaurant", "offer").
  * This view enables adding the item to the cart and shows the number of items in cart in the header.
- * @author Daivd Sauter
+ * @author Daivd Sautter
  */
 @Component({
   templateUrl: 'offers-product-view.html'

@@ -14,7 +14,7 @@ import {OffersProductPage} from "../pages/offers-product-view/offers-product-vie
 import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
-import {OffersService} from "../pages/offers/OffersService";
+import {OffersService} from "../pages/offers/offers.service";
 import {ReservationsPage} from "../pages/reservations/reservations";
 import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 
@@ -24,7 +24,7 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
 import {CommonModule} from "@angular/common";
-import {HttpModule, Http} from "@angular/http";
+import {Http, HttpModule} from "@angular/http";
 import {BarcodeScanner} from "@ionic-native/barcode-scanner";
 import {QRService} from "../providers/QRService";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
@@ -35,9 +35,9 @@ import {CartService} from "../services/CartService";
 import {Push} from "@ionic-native/push";
 import {LoadingService} from "../providers/loading-service";
 import {PushService} from "../providers/push-service";
-import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {TranslateService} from 'ng2-translate/ng2-translate';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 
 export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";

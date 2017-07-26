@@ -6,7 +6,7 @@ import {Offer} from "../../model/Offer";
 
 /**
  * Service for getting the Offers of a restaurant from the server and caching them in RAM.
- * @author David Sauter
+ * @author David Sautter
  */
 @Injectable()
 export class OffersService {
