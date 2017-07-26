@@ -1,5 +1,4 @@
 import {Component} from "@angular/core";
-import {ToastController} from "ionic-angular";
 import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "../../providers/QRService";
@@ -10,42 +9,39 @@ import {AuthService} from "../../providers/auth-service";
 /**
  * This pages loads and shows the points of an user per restaurant.
  * Also shows the barcode scanner (qr scanner) function.
+ * @author Sergej Bardin
  */
 @Component({
-    selector: 'bonus',
     templateUrl: 'bonus.html'
 })
 
+//TODO: Typisierung der Methoden
+
 export class BonusPage {
-    /**
-     * Object with restaurant and user points
-     */
+
+    //TODO: Comment to points array
     public points: Object[];
 
-    /**
-     *  Initialize modules and loadPoints for an user.
-     *
-     * @param toastCtrl for displaying messages
-     * @param http for requests
-     * @param qr for using barcode functions
-     */
-    constructor(private toastCtrl: ToastController,
-                private http: Http,
+
+    constructor(private http: Http,
                 private qr: QRService,
                 private auth: AuthService,
                 private loading: LoadingService,
                 translate: TranslateService) {
+
+        //TODO: loadpoints into onInit method
         this.loadPoints();
         translate.setDefaultLang('de');
     }
 
     /**
      * Opens the barcode scanner(camera) of the device via service
-     * @param event
+     *
      */
     onQRClicked(event) {
         this.qr.onQRClicked(event).then(
             () => {
+                //TODO: check whether this.loadpoints()
                 this.loadPoints();
             }
         );
@@ -56,18 +52,22 @@ export class BonusPage {
      */
     loadPoints() {
         //prepare and start loading spinner
-       let loader = this.loading.prepareLoader();
-       loader.present();
+        let loader = this.loading.prepareLoader();
+        loader.present();
 
-       //prepare http-options
+        //prepare http-options
         let options = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/get_points`, options)
+            .retry(2)
             .subscribe(
                 res => {
                     this.points = res.json()
                     loader.dismiss();
                 },
-                        err => console.error("Getting userPoints error" + err)
+                err => {
+                    console.error("Getting userPoints error" + err);
+                    loader.dismiss();
+                }
             )
     }
 }

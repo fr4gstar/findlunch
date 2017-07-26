@@ -17,12 +17,14 @@ import {TranslateService} from "@ngx-translate/core";
 /**
  * Page for showing an overview of the cart and the amount of items in it.
  * It calculates and shows the total price to pay and provides a way to donate.
+ * @author David Sauter, Skanny Morandi
  */
 @Component({
     selector: 'order-details',
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage {
+    //TODO: clarify variables
     public reservation: Reservation;
     public restaurant: Restaurant;
     public pickUpTime;
@@ -55,6 +57,7 @@ export class OrderDetailsPage {
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
+        //TODO transfer translate to onInit
         translate.setDefaultLang('de');
         this.translate.get('Error.emptyOrder').subscribe(
             value => {
@@ -189,7 +192,7 @@ export class OrderDetailsPage {
 
             //starts the loading spinner
             loader.present().then(res => {
-
+                //TODO: make sure not to send entire restraurant object with backend request
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
                 if (this.auth.getLoggedIn()) {
@@ -216,7 +219,9 @@ export class OrderDetailsPage {
                 //prepare RequestOptions for http-call
                 let options = this.auth.prepareHttpOptions(RequestMethod.Post);
 
-                this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options).subscribe(
+                this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options)
+                    .retry(2)
+                    .subscribe(
                     (res) => {
                         const toast = this.toastCtrl.create({
                             message: this.successOrder,
@@ -284,7 +289,7 @@ export class OrderDetailsPage {
     }
 
     /**
-     * Sends the user to the Registry. After successful Registry and
+     * Sends the user to the Registry. After successful Registration and
      * involved Login he is automatically coming back to this order-details-page
      */
     public goToRegister() {
@@ -305,6 +310,7 @@ export class OrderDetailsPage {
             let options = this.auth.prepareHttpOptions(RequestMethod.Get);
 
             this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
+                .retry(2)
                 .subscribe(
                     res => {
                         let reply = res.json();
@@ -321,16 +327,19 @@ export class OrderDetailsPage {
                         // boolean whether enough points to pay order with points
                         // has to wait for the getUserPoints query
                         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+                        loader.dismiss();
 
                     },
                     err => {
                         console.error(err);
+                        //TODO alert with "points couldnt be loaded, please try later"
+                        loader.dismiss();
 
                     })
-            loader.dismiss();
         })
     }
 
+    //TODO: Comment
     public calcNeededPoints() {
         let totalNeededPoints = 0;
         for (let item of this.reservation.items) {
@@ -339,14 +348,21 @@ export class OrderDetailsPage {
         this.neededPoints = totalNeededPoints;
     }
 
+    /**
+     * checks whether user has enough points to pay with points
+     */
     public hasEnoughPoints() {
         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
     }
 
+
+    //TODO: Comment
     public calcTimings(prepTime) {
         let date = new Date();
         // restaurant.timeSchedules is an Array with of Objects with opening times for single
         // days in the order of weekdays e.g. timeSchedules[0] are opening times on Monday
+        //TODO: Try-catch block around, if catch send back to home with alert that
+        //TODO: Restaurant is not available atm
         let day = date.getDay();
         if (day === 0) {
             day = 1;
@@ -354,6 +370,8 @@ export class OrderDetailsPage {
             day = day - 1;
 
         }
+
+
         this.closingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].closingTime.split(" ")[1];
         this.openingTime = this.restaurant.timeSchedules[day]["openingTimes"][0].openingTime.split(" ")[1];
 

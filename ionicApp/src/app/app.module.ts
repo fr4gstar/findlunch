@@ -10,7 +10,7 @@ import {BonusPage} from "../pages/bonus/bonus";
 import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
-import {OffersProductViewPage} from "../pages/offers-product-view/offers-product-view";
+import {OffersProductPage} from "../pages/offers-product-view/offers-product-view";
 import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
 import {AuthService} from "../providers/auth-service";
 import {MenuService} from "../providers/menu-service";
@@ -40,15 +40,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 
-// online Server:
-// export const SERVER_URL = "https://findlunch.biz.tm:8444";
-
-// for web app
-// export const SERVER_URL = "https://localhost:8443";
-
-// please Change this to the respective Server
 export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
-// export const SERVER_URL = "https://192.168.178.38:8443";
 
 
 @NgModule({
@@ -61,7 +53,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
-        OffersProductViewPage,
+        OffersProductPage,
         RestaurantViewPage,
         LoginPage,
         RegistryPage,
@@ -94,7 +86,7 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
-        OffersProductViewPage,
+        OffersProductPage,
         RestaurantViewPage,
         LoginPage,
         RegistryPage,

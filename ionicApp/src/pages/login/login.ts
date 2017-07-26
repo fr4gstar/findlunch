@@ -11,25 +11,27 @@ import {Restaurant} from "../../model/Restaurant";
 import {PushService} from "../../providers/push-service";
 import { TranslateService } from '@ngx-translate/core';
 
+/**
+ * Page that lets the user enter his account credentials and gives him access to the
+ * logged-in user functionalities and pages.
+ * @author Skanny Morandi
+ */
+
+//TODO: Typisierung Methoden
 @Component({
-    selector: 'login-page',
     templateUrl: 'login.html'
 
 })
 
-/**
- * Page that lets the user enter his account credentials and gives him access to the
- * logged-in user functionalities and pages.
- */
 export class LoginPage {
 
-    popThisPage: boolean;
+    private popThisPage: boolean;
     private counterPasswordWrong: number = 0;
     private restaurant: Restaurant;
-    private loginError;
-    private loginSuccessful;
-    private connectionError;
-    private passwordResetSuccess;
+    private loginErrorMsg: string;
+    private loginSuccessfulMsg: string;
+    private connectionErrorMsg: string;
+    private passwordResetSuccessMsg: string;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
@@ -39,25 +41,30 @@ export class LoginPage {
                 private loading: LoadingService,
                 private push: PushService,
                 private translate: TranslateService) {
-        translate.setDefaultLang('de');
+
         this.popThisPage = navParams.get("comeBack");
+        //TODO check why
         this.restaurant = null;
+
+        //TODO: transfer translate to onInit
+        translate.setDefaultLang('de');
         this.translate.get('Error.login').subscribe(
-            value => { this.loginError = value }
+            value => { this.loginErrorMsg = value }
         )
         this.translate.get('Success.login').subscribe(
-            value => { this.loginSuccessful = value }
+            value => { this.loginSuccessfulMsg = value }
         )
         this.translate.get('Error.connection').subscribe(
-            value => { this.connectionError = value }
+            value => { this.connectionErrorMsg = value }
         )
         this.translate.get('Success.passwordReset').subscribe(
-            value => { this.passwordResetSuccess = value }
+            value => { this.passwordResetSuccessMsg = value }
         )
     }
 
     /**
-     * Logs the user in.
+     * Logs the user in. //TODO kein Serverzustand sondern nur zugang zu logged in seiten
+     * //TODO: Passwort zurücksetzen nach einmal wrong password
      *
      * @param userName
      * @param password
@@ -70,7 +77,7 @@ export class LoginPage {
             this.auth.login(userName, password).then(data => {
                 if (data) {
                     const toast = this.toastCtrl.create({
-                        message: this.loginSuccessful,
+                        message: this.loginSuccessfulMsg,
                         duration: 3000
                     });
                     toast.present();
@@ -90,22 +97,28 @@ export class LoginPage {
                     }
                 } else {
                     loader.dismiss();
-                    alert(this.loginError);
+                    alert(this.loginErrorMsg);
                 }
             })
         })
 
     }
 
+    /**
+     * sends user to RegisterPage
+     */
     public goToRegisterPage() {
         this.navCtrl.push(RegistryPage);
     }
 
     /**
-     * Checks the input username
+     * Checks whether there is a string in the user name field and whether password was
+     * entered wrong
      * @param username = email adress of user
      */
     public isEmptyUser(username) {
+        //TODO: check whether its enough to
+        // return !(username && this.counterPasswordWrong >= 1)
         if (username && this.counterPasswordWrong >= 1) {
             return false;
         }
@@ -133,15 +146,16 @@ export class LoginPage {
             });
 
             this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
+                .retry(2)
                 .subscribe(
                     (res) => {
                         let msg;
                         switch (res.json()) {
                             case 0:
-                                msg = this.passwordResetSuccess;
+                                msg = this.passwordResetSuccessMsg;
                                 break;
                             default:
-                                msg = this.connectionError;
+                                msg = this.connectionErrorMsg;
                                 break;
                         }
                         const toast = this.toastCtrl.create({
@@ -151,6 +165,7 @@ export class LoginPage {
                         toast.present();
                     }, (err) => {
                         console.error(err)
+                        //TODO: inform user
                     }
                 )
         }

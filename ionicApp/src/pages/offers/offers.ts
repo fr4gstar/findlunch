@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {NavController, NavParams, Platform} from "ionic-angular";
 import {OffersService} from "./OffersService";
-import {OffersProductViewPage} from "../offers-product-view/offers-product-view";
+import {OffersProductPage} from "../offers-product-view/offers-product-view";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantViewPage} from "../restaurant-view/restaurant-view";
@@ -17,6 +17,7 @@ import {LoadingService} from "../../providers/loading-service";
 /**
  * Page for showing the offers of a specific restaurant in a list.
  * If the user clicks on an offer, she will get to the detail view of this offer.
+ * @author David Sauter
  */
 @Component({
     templateUrl: 'offers.html'
@@ -42,6 +43,7 @@ export class OffersPage implements OnInit {
                 private platform: Platform,
                 private loading: LoadingService,
                 private translate: TranslateService) {
+        //TODO: transfer translate to onInit
         translate.setDefaultLang('de');
         this.translate.get('Error.favorize').subscribe(
             (res: string) => {
@@ -79,16 +81,26 @@ export class OffersPage implements OnInit {
         this.additives$ = this.http.get(SERVER_URL + "/api/all_additives").map(res => res.json());
     }
 
+    /**
+     * //TODO: write comment
+     * @param event
+     * @param offer
+     */
     public onOfferClicked(event, offer) {
-        this.navCtrl.push(OffersProductViewPage, {offer, restaurant: this.restaurant})
+        this.navCtrl.push(OffersProductPage, {offer, restaurant: this.restaurant})
     }
 
+    /**
+     * //TODO write comment
+     * @param event
+     */
     public onRestaurantClicked(event) {
         this.navCtrl.push(RestaurantViewPage, {restaurant: this.restaurant})
     }
 
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
+     * @author Skanny Morandi
      */
     public toggleIsFavourite() {
 
@@ -98,11 +110,12 @@ export class OffersPage implements OnInit {
         if (this.restaurant.isFavorite) {
 
             let options = this.auth.prepareHttpOptions(RequestMethod.Delete);
-            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options).subscribe(
+            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options)
+                .retry(2)
+                .subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = false;
-                        //dismiss loading spinner
                         loader.dismiss();
 
 
@@ -111,18 +124,21 @@ export class OffersPage implements OnInit {
                 },
                 err => {
                     alert(this.errorDeFavorize);
+                    loader.dismiss();
                     console.error(err);
+                    //TO
                 }
             )
         }
         // set as favorite
         else {
             let options = this.auth.prepareHttpOptions(RequestMethod.Put);
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options).subscribe(
+            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options)
+                .retry(2)
+                .subscribe(
                 res => {
                     if (res.json() === 0) {
                         this.restaurant.isFavorite = true;
-                        //dismiss loading spinner
                         loader.dismiss();
 
                     }
@@ -130,16 +146,25 @@ export class OffersPage implements OnInit {
                 },
                 err => {
                     alert(this.errorFavorize);
+                    loader.dismiss();
                     console.error(err);
                 })
         }
     }
 
+    /**
+     * gets the number in the cartsymbol badge
+     *
+     * @returns {number}
+     * number of items in current cart for chosen restaurant
+     */
     getCartItemCount() {
         return this.cartService.getCartItemCount(this.restaurant.id);
     }
 
-
+    /**
+     * //TODO: Comment schreiben
+     */
     toggleDetails(data) {
         if (data.showDetails) {
             data.showDetails = false;
@@ -150,6 +175,10 @@ export class OffersPage implements OnInit {
         }
     }
 
+    /**
+     * //TODO: Comment schreiben
+     * @param group
+     */
     public toggleGroup(group) {
         if (this.isGroupShown(group)) {
             this.shownGroup = null;
@@ -158,10 +187,18 @@ export class OffersPage implements OnInit {
         }
     }
 
+    /**
+     * //TODO: Comment schreiben
+     * @param group
+     * @returns {boolean}
+     */
     isGroupShown(group) {
         return this.shownGroup === group;
     }
 
+    /**
+     * sends user to the OrderDetails page, along with the restaurant object
+     */
     public goToCheckout() {
         this.navCtrl.push(OrderDetailsPage, {
             restaurant: this.restaurant

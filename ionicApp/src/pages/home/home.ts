@@ -23,7 +23,6 @@ declare var cordova: any;
 const MAP_DEFAULT_ZOOM_LEVEL = 15;
 
 @Component({
-    selector: 'page-home',
     templateUrl: 'home.html'
 })
 export class HomePage {

@@ -6,7 +6,6 @@ import {} from '@types/googlemaps';
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-    selector: 'AddressInputComponent',
     templateUrl: 'AddressInputComponent.html'
 })
 

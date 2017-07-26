@@ -15,10 +15,14 @@ import {SERVER_URL} from "../app/app.module";
  * Initialize the application.
  * 1. Verifies the user from the local storage.
  * 2. Sets the firebase-functionality of the application up.
+ * 3. Shows the Page listings for navigation according to login status of the user
+ * @author Skanny Morandi
  */
 @Component({
     templateUrl: 'app.html'
 })
+
+
 export class MyApp {
     @ViewChild(Nav) nav: Nav;
     /**
@@ -26,29 +30,10 @@ export class MyApp {
      * @type {HomePage}
      */
     rootPage: any = HomePage;
-    private logoutSuccess;
+    private logoutSuccessMsg :string;
     pages: Array<{ title: string, component: any }>;
 
-    /**
-     * Initialize modules.
-     * 1. Verify user
-     * 2. Push setup - firebase
-     * 3. Translation settings
-     *
-     * @param platform
-     * @param statusBar
-     * @param http
-     * @param splashScreen
-     * @param events
-     * @param auth
-     * @param menu
-     * @param toastCtrl
-     * @param push
-     * @param qr
-     * @param iab
-     * @param alertCtrl
-     * @param translate
-     */
+
     constructor(public platform: Platform,
                 public statusBar: StatusBar,
                 public splashScreen: SplashScreen,
@@ -58,46 +43,57 @@ export class MyApp {
                 private toastCtrl: ToastController,
                 public qr: QRService,
                 public iab: InAppBrowser,
-                public alertCtrl: AlertController,
                 private push: PushService,
                 private translate: TranslateService) {
 
+        //TODO: export languge to variable that is imported to all classes
         translate.setDefaultLang('de');
+
+
+        //TODO verifyUser und pushsetup and translate.get  methods in OnInit
         this.auth.verifyUser();
         this.push.pushSetup();
 
-        this.translate.get('Success.logoutSuccess').subscribe(
-            value => { this.logoutSuccess = value }
+        this.translate.get('Success.logoutSuccessMsg').subscribe(
+            value => { this.logoutSuccessMsg = value }
         );
 
-        //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
-        document.addEventListener('resume', () => {
+       document.addEventListener('resume', () => {
             this.auth.verifyUser();
             this.push.pushSetup();
         })
 
     }
 
+    /**
+     * opens the clicked page. Reset the content nav to have just this page.
+     * @param page
+     *  the page the user clicked
+     */
     openPage(page) {
-        // Reset the content nav to have just this page
-        // we wouldn't want the back button to show in this scenario
-        this.nav.setRoot(page.component);
+        if(page !== null){
+            this.nav.setRoot(page.component);
+        }
     }
 
     /**
-     * Logout function
+     * Logs the user out. After that a toast is shown that logout was successful.
+     * After logout view gets sent back to rootPage.
      */
     public logout() {
         this.auth.logout();
+
         const toast = this.toastCtrl.create({
-            message: this.logoutSuccess,
+            message: this.logoutSuccessMsg,
             duration: 3000
         });
         toast.present();
-        this.nav.setRoot(this.rootPage);
+
+        this.openPage(this.rootPage);
     }
 
     /**
+     * TODO: replace generic comment
      * Handles on menu closed action
      */
     onMenuClosed() {
@@ -105,6 +101,7 @@ export class MyApp {
     }
 
     /**
+     * TODO: replace generic comment
      * Handles on menu opened action
      */
     onMenuOpened() {
@@ -116,20 +113,23 @@ export class MyApp {
      * @param url
      */
     openUrl(url) {
-        this.platform.ready().then(() => {
-            let browser = this.iab.create(url);
-        });
+        if(url !== null){
+            this.platform.ready().then(() => {
+                //TODO: test whether this works without browser object
+                let browser = this.iab.create(url);
+            });
+        }
     }
 
     /**
-     * Handles on menu closed action
+     * opens in app browser on about url
      */
     goToImpressum() {
         this.openUrl(`${SERVER_URL}/api/confirm_reservation/about_findlunch`);
     }
 
     /**
-     * Opens the faq site
+     *  opens in app browser on Faq url
      */
     goToFaq() {
         this.openUrl(`${SERVER_URL}/api/confirm_reservation/faq_customer`);

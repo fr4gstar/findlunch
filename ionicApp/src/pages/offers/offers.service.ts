@@ -6,6 +6,7 @@ import {Offer} from "../../model/Offer";
 
 /**
  * Service for getting the Offers of a restaurant from the server and caching them in RAM.
+ * @author David Sauter
  */
 @Injectable()
 export class OffersService {
@@ -16,6 +17,7 @@ export class OffersService {
         this._cache = new Map();
     }
 
+    //TODO: Comment
     getOffers(restaurantId: number): Observable<Array<Offer>> {
         // get offers from cache if stored already
         if (this._cache.has(restaurantId)) return Observable.of(this._cache.get(restaurantId)).take(1);
@@ -26,6 +28,7 @@ export class OffersService {
             .do(offers => this._cache.set(restaurantId, offers))
     }
 
+    //TODO:Comment
     public getALGsAndADDsOfOffer(offer: Offer) {
         return offer.allergenic
                 .concat(offer.additives)
