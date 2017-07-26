@@ -59,6 +59,7 @@
         "phonegap-plugin-push": "^1.10.5",
         "rxjs": "5.1.1",
         "sw-toolbox": "3.4.0",
+        "tslint-microsoft-contrib": "^5.0.1",
         "zone.js": "^0.8.14"
     },
     "devDependencies": {
