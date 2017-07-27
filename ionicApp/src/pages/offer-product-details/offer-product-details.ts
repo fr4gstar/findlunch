@@ -14,7 +14,7 @@ import {TranslateService} from "@ngx-translate/core";
  * @author Daivd Sautter
  */
 @Component({
-    templateUrl: 'src/pages/offer-product-details/offer-product-details.html'
+    templateUrl: './offer-product-details.html'
 })
 export class OfferProductDetailsPage {
 

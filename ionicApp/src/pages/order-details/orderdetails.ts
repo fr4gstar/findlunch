@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {Http, RequestMethod, RequestOptions} from "@angular/http";
-import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {SERVER_URL} from "../../app/app.module";
 import {Alert, AlertController, Loading, NavController, NavParams, ToastController} from "ionic-angular";
 import {CartService} from "../../shared/cart.service";
 import {Offer} from "../../model/Offer";
@@ -24,7 +24,7 @@ import {TranslateService} from "@ngx-translate/core";
 export class OrderDetailsPage implements OnInit {
     //TODO: clarify variables
     public reservation: Reservation;
-    public restaurant;
+    public restaurant: Restaurant;
     public pickUpTime;
     public pickUpTimeISOFormat;
     public userPoints = 0;
@@ -197,7 +197,10 @@ export class OrderDetailsPage implements OnInit {
 
                 const payload = {
                     ...this.reservation,
-                    reservation_offers: []
+                    reservation_offers: [],
+                    restaurant: {
+                        id: this.reservation.restaurant.id
+                    }
                 };
                 payload.items.forEach((item) => {
                     payload.reservation_offers.push({
@@ -227,7 +230,8 @@ export class OrderDetailsPage implements OnInit {
 
                         // go back to restaurants-overview
                         this.navCtrl.popToRoot();
-                        //stops the spinner
+
+                        //stop the spinner
                         loader.dismiss();
                     }, (err) => {
                         console.error(err);

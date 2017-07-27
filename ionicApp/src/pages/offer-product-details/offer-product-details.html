@@ -21,7 +21,7 @@
     <ion-grid style="font-size: 17px;">
         <ion-row *ngIf="offer.defaultPhoto">
             <!-- Displays the product-image. It's important, that this is a jpg encoded in base64 -->
-            <img #product-image [src]="'data:image/jpg;base64,' + offer.defaultPhoto.thumbnail">
+            <img id="product-image" [src]="'data:image/jpg;base64,' + offer.defaultPhoto.thumbnail">
         </ion-row>
         <ion-row>
             <ion-col>
