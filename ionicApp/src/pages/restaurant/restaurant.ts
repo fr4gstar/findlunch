@@ -10,26 +10,20 @@ import {Error} from "tslint/lib/error";
 
 /**
  * This pages displays the information of a restaurant.
+ * @author Sergej Bardin - Skanny Morandi
  */
 @Component({
     selector: 'restaurant-view-page',
-    templateUrl: 'restaurant-view.html'
+    templateUrl: 'restaurant.html'
 
 })
-export class RestaurantViewPage implements OnInit {
-    /**
-     * Restaurant, which should be displayed on page
-     */
+export class RestaurantPage implements OnInit {
     public restaurant: Restaurant;
-    public openingTime;
+    public openingTime: Object[];
 
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
 
-    /**
-     * Initialize modules and gets restaurant from previous page.
-     * @param navParams to get restaurant
-     */
     constructor(public navCtrl: NavController,
                 private navParams: NavParams,
                 private auth: AuthService,

@@ -10,18 +10,18 @@ import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
 import {OffersProductPage} from "../pages/offers-product-view/offers-product-view";
-import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
+import {RestaurantPage} from "../pages/restaurant/restaurant";
+import {ReservationPage} from "../pages/reservation/reservation";
 import {AuthService} from "../shared/auth.service";
 import {MenuService} from "../shared/menu.service";
 import {OffersService} from "../pages/offers/offers.service";
 import {ReservationsPage} from "../pages/reservations/reservations";
-import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {OffersPage} from "../pages/offers/offers";
-import {CommonModule} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 import {Http, HttpModule} from "@angular/http";
 import {BarcodeScanner} from "@ionic-native/barcode-scanner";
 import {QRService} from "../pages/bonus/qr.service";
@@ -49,11 +49,11 @@ export const APP_LANG: string = "de";
         FilterPopoverComponent,
         AddressInputComponent,
         OffersProductPage,
-        RestaurantViewPage,
+        RestaurantPage,
         LoginPage,
         RegistryPage,
         ReservationsPage,
-        ReservationViewPage
+        ReservationPage
 
     ],
     imports: [
@@ -81,11 +81,10 @@ export const APP_LANG: string = "de";
         FilterPopoverComponent,
         AddressInputComponent,
         OffersProductPage,
-        RestaurantViewPage,
+        ReservationPage,
         LoginPage,
         RegistryPage,
-        ReservationsPage,
-        ReservationViewPage
+        ReservationsPage
     ],
     providers: [
         StatusBar,
@@ -103,7 +102,8 @@ export const APP_LANG: string = "de";
         MenuService,
         InAppBrowser,
         PushService,
-        LoadingService
+        LoadingService,
+        DatePipe
     ]
 
 })
