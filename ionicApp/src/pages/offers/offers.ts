@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {Loading, NavController, NavParams, Platform} from "ionic-angular";
 import {OffersService} from "./offers.service";
-import {OffersProductPage} from "../offers-product-view/offers-product-view";
+import {OfferProductDetailsPage} from "../offer-product-details/offer-product-details";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantPage} from "../restaurant/restaurant";
@@ -103,7 +103,7 @@ export class OffersPage implements OnInit {
      * @author Skanny Morandi
      */
     public onOfferClicked(event, offer) {
-        this.navCtrl.push(OffersProductPage, {offer, restaurant: this.restaurant})
+        this.navCtrl.push(OfferProductDetailsPage, {offer, restaurant: this.restaurant})
     }
 
     /**

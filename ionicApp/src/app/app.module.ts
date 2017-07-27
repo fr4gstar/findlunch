@@ -9,7 +9,7 @@ import {BonusPage} from "../pages/bonus/bonus";
 import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
-import {OffersProductPage} from "../pages/offers-product-view/offers-product-view";
+import {OfferProductDetailsPage} from "../pages/offer-product-details/offer-product-details";
 import {RestaurantPage} from "../pages/restaurant/restaurant";
 import {ReservationPage} from "../pages/reservation/reservation";
 import {AuthService} from "../shared/auth.service";
@@ -33,7 +33,7 @@ import {CartService} from "../shared/cart.service";
 import {Push} from "@ionic-native/push";
 import {LoadingService} from "../shared/loading.service";
 import {PushService} from "../shared/push.service";
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 export const SERVER_URL: string = "https://shrouded-dusk-87807.herokuapp.com";
@@ -48,7 +48,7 @@ export const APP_LANG: string = "de";
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
-        OffersProductPage,
+        OfferProductDetailsPage,
         RestaurantPage,
         LoginPage,
         RegistryPage,
@@ -80,7 +80,7 @@ export const APP_LANG: string = "de";
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
-        OffersProductPage,
+        OfferProductDetailsPage,
         ReservationPage,
         LoginPage,
         RegistryPage,

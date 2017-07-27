@@ -6,18 +6,17 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {OffersService} from "../offers/offers.service";
 import {TranslateService} from "@ngx-translate/core";
-import {APP_LANG} from "../../app/app.module";
 
 /**
- * Page for showing the details of a specific offer.
+ * Page for showing the details of a offered product.
  * Offer and restaurant-id must be provided via navParams ("restaurant", "offer").
- * This view enables adding the item to the cart and shows the number of items in cart in the header.
+ * This page enables adding the item to the cart and shows the number of items in cart in the header.
  * @author Daivd Sautter
  */
 @Component({
-  templateUrl: 'offers-product-view.html'
+  templateUrl: 'src/pages/offer-product-details/offer-product-details.html'
 })
-export class OffersProductPage {
+export class OfferProductDetailsPage {
 
   public cart: Object[];
   public restaurant: Restaurant;
@@ -28,7 +27,7 @@ export class OffersProductPage {
       public navParams: NavParams,
       private cartService: CartService,
       public offersService: OffersService,
-      private translate: TranslateService
+      public translate: TranslateService
   ) {
       this.restaurant = navParams.get("restaurant");
       this.offer = navParams.get("offer");
