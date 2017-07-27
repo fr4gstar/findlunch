@@ -14,40 +14,50 @@ import {TranslateService} from "@ngx-translate/core";
  * @author Daivd Sautter
  */
 @Component({
-  templateUrl: 'src/pages/offer-product-details/offer-product-details.html'
+    templateUrl: 'src/pages/offer-product-details/offer-product-details.html'
 })
 export class OfferProductDetailsPage {
 
-  public cart: Object[];
-  public restaurant: Restaurant;
-  public offer: Offer;
+    public cart: Offer[];
+    public restaurant: Restaurant;
+    public offer: Offer;
 
-  constructor(
-      public navCtrl: NavController,
-      public navParams: NavParams,
-      private cartService: CartService,
-      public offersService: OffersService,
-      public translate: TranslateService
-  ) {
-      this.restaurant = navParams.get("restaurant");
-      this.offer = navParams.get("offer");
-    // get cart for this restaurant
-      this.cart = cartService.getCart(this.restaurant.id);
-  }
-    //TODO: comment
-  addToCart(offer: Offer) {
-    this.cartService.addItemToCart(this.restaurant.id, offer);
-  }
-    //TODO: comment
-  getCartItemCount() {
-    return this.cartService.getCartItemCount(this.restaurant.id);
-  }
+    constructor(public navCtrl: NavController,
+                public navParams: NavParams,
+                private cartService: CartService,
+                public offersService: OffersService,
+                public translate: TranslateService) {
+        this.restaurant = navParams.get("restaurant");
+        this.offer = navParams.get("offer");
+        // get cart for this restaurant
+        this.cart = cartService.getCart(this.restaurant.id);
+    }
 
-    //TODO: comment
-  goToOrderDetailsPage() {
-    this.navCtrl.push(OrderDetailsPage, {
-      restaurant: this.restaurant
-    });
-  }
+    /**
+     * Adds the offer to the restaurant's cart.
+     * @param {Offer} offer offer, that should be added to the cart
+     */
+    public addToCart(offer: Offer): void {
+        this.cartService.addItemToCart(this.restaurant.id, offer);
+    }
+
+
+    /**
+     * Retrieves the number of items, that are currently in the cart for this restaurant.
+     * @returns {number} count of items in cart
+     */
+    public getCartItemCount(): number {
+        return this.cartService.getCartItemCount(this.restaurant.id);
+    }
+
+
+    /**
+     * Navigates to the order-details-page for this restaurant.
+     */
+    public goToOrderDetailsPage(): void {
+        this.navCtrl.push(OrderDetailsPage, {
+            restaurant: this.restaurant
+        });
+    }
 
 }
