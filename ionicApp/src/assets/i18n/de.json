@@ -3,7 +3,7 @@
     "BonusPage": {
         "title": "Meine Bonuspunkte"
     },
-    "RestaurantViewPage": {
+    "RestaurantPage": {
         "title": "Info",
         "openingTimes": "Öffnungszeiten"
     },
@@ -11,15 +11,13 @@
         "title": "Meine Bestellungen",
         "rejected": "Abgelehnt"
     },
-    "ReservationViewPage": {
+    "ReservationPage": {
         "title": "Bestelldetails",
         "rejected": "Abgelehnt",
         "donation": "Spende",
         "total": "Gesamt",
-        "subtitle1": "Ihre Bestellung bei",
-        "subtitle2": "vom",
-        "points1": "Sie haben für diese Bestellung",
-        "points2": "Punkte erhalten"
+        "subtitle": "Ihre Bestellung bei {{name}} vom {{collectTime}}",
+        "points": "Sie haben für diese Bestellung {{points}} Punkte erhalten."
     },
     "LoginPage": {
         "title": "Login",
@@ -31,10 +29,9 @@
     },
     "OrderDetailsPage": {
         "title": "Warenkorb",
-        "subtitle": "Ihr Warenkorb für",
-        "headline1": "Bezeichnung",
-        "headline2": "Menge",
-        "headline3": "Preis",
+        "subtitle": "Ihr Warenkorb für {{name}}",
+        "label": "Bezeichnung",
+        "amount": "Menge",
         "donation": "Freiwillige Spende",
         "total": "Gesamtpreis",
         "tax": "inkl. 19%MwSt",

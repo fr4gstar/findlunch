@@ -14,7 +14,7 @@ import {Error} from "tslint/lib/error";
  * @author Sergej Bardin
  */
 @Injectable()
-export class QRService implements OnInit{
+export class QRService implements OnInit {
     private strConfirmOrderSuccess: string;
     private strRestaurantNotFound: string;
     private strOfferNotFound: string;

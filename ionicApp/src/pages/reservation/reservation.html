@@ -3,12 +3,12 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>{{ 'ReservationViewPage.title' | translate }}</ion-title>
+        <ion-title>{{ 'ReservationPage.title' | translate }}</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <h3>{{ 'ReservationViewPage.subtitle1' | translate }} {{restaurant.name}} {{ 'ReservationViewPage.subtitle2' | translate }} {{reservation.collectTime | date:'dd.MM.yyyy'}}</h3>
+    <h3>{{ 'ReservationPage.subtitle' | translate: param }}</h3>
 
     <div *ngFor='let offer of offers;'>
         <ion-item text-wrap>
@@ -18,16 +18,16 @@
     </div>
     <div *ngIf='reservation.donation !== 0;'>
         <ion-item>
-            <span>{{ 'ReservationViewPage.donation' | translate }}</span>
+            <span>{{ 'ReservationPage.donation' | translate }}</span>
             <span item-right>{{reservation.donation | currency:'EUR':true}}</span>
         </ion-item>
     </div>
     <ion-item>
-        <span>{{ 'ReservationViewPage.total' | translate }}</span>
+        <span>{{ 'ReservationPage.total' | translate }}</span>
         <span item-right>{{reservation.totalPrice | currency:'EUR':true}}</span>
     </ion-item>
 
-    <span *ngIf='reservation.pointsCollected'>{{ 'ReservationViewPage.points1' | translate }} {{points}} {{ 'ReservationViewPage.points2' | translate }}</span>
+    <span *ngIf='reservation.pointsCollected'>{{ 'ReservationPage.points' | translate:param }}</span>
     <span style="color: blue;"
           *ngIf='reservation.reservationStatus.key === 0'>{{reservation.reservationStatus.status}}</span>
     <span style="color: green;"

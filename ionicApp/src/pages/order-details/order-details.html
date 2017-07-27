@@ -8,14 +8,14 @@
 </ion-header>
 
 <ion-content>
-    <h2 padding-left>{{ 'OrderDetailsPage.subtitle' | translate }} {{restaurant.name}}</h2>
+    <h2 padding-left>{{ 'OrderDetailsPage.subtitle' | translate: param }}</h2>
 
 
   <ion-grid id="orderDetails">
     <ion-row id="überschrift">
-      <ion-col col-7>{{ 'OrderDetailsPage.headline1' | translate }}</ion-col>
-      <ion-col col-3>{{ 'OrderDetailsPage.headline2' | translate }}</ion-col>
-      <ion-col col-2>{{ 'OrderDetailsPage.headline3' | translate }}</ion-col>
+      <ion-col col-7>{{ 'OrderDetailsPage.label' | translate }}</ion-col>
+      <ion-col col-3>{{ 'OrderDetailsPage.amount' | translate }}</ion-col>
+      <ion-col col-2>{{ 'price' | translate }}</ion-col>
     </ion-row>
     <ion-row id="gericht" *ngFor="let item of reservation.items">
       <ion-col col-7>{{item.title}}</ion-col>
