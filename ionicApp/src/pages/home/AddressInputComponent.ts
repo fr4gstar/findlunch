@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ViewController} from "ionic-angular";
 import {NativeGeocoder, NativeGeocoderForwardResult} from "@ionic-native/native-geocoder";
 import {TranslateService} from "@ngx-translate/core";
@@ -26,7 +26,6 @@ export class AddressInputComponent implements OnInit {
     private locationNotFoundErrorMsg: string;
 
     constructor(public viewCtrl: ViewController,
-                private zone: NgZone,
                 private geocoder: NativeGeocoder,
                 public translate: TranslateService) {
 
@@ -38,16 +37,17 @@ export class AddressInputComponent implements OnInit {
      * Get the string-translations on init
      */
     public ngOnInit(): void {
-        this.translate.get("locationNotFoundError").subscribe(
-            (transStr: string) => {
-                this.locationNotFoundErrorMsg = transStr;
-            },
-            (err: Error) => {
-                // this should not be happening, because if translate does not
-                // find strings, it uses the key. However something could be wrong...
-                console.error("Error: tranlate.get did fail for key locationNotFoundError with error: ", err);
-            }
-        );
+        this.translate.get("Error.locationNotFound")
+            .subscribe(
+                (transStr: string) => {
+                    this.locationNotFoundErrorMsg = transStr;
+                },
+                (err: Error) => {
+                    // this should not be happening, because if translate does not
+                    // find strings, it uses the key. However something could be wrong...
+                    console.error("Error: translate.get did fail for key Error.locationNotFound.", err);
+                }
+            );
     }
 
 
@@ -91,14 +91,7 @@ export class AddressInputComponent implements OnInit {
                 }
             },
             (predictions: AutocompletePrediction[]) => {
-                this.autocompleteItems = [];
-
-                // this needs to run in zone for Angular to trigger change-detection.
-                this.zone.run(() => {
-                    predictions.forEach((prediction: AutocompletePrediction) => {
-                        this.autocompleteItems.push(prediction);
-                    });
-                });
+                this.autocompleteItems = predictions;
             });
     }
 }

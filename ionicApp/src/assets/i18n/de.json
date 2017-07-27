@@ -58,7 +58,6 @@
         "prepTime": "Zubereitungszeit",
         "addToCart": "Zum Warenkorb Hinzufügen"
     },
-    "locationNotFoundError": "Ort wurde nicht gefunden",
     "home": "Home",
     "containsAllergenics": "Enthaltene Allergene",
     "containsAdditives": "Enthaltene Zusatzstoffe",
@@ -104,7 +103,9 @@
         "confirmOrderRestaurant": "Fehler: Restaurant nicht gefunden!",
         "confirmOrderOffer": "Fehler: Angebot nicht gefunden!",
         "qr": "Fehler beim Scannen des QR-Codes",
-        "points": "Punkte konnten nicht geladen werden!"
+        "points": "Punkte konnten nicht geladen werden!",
+        "locationNotFoundError": "Ort wurde nicht gefunden"
+
     }
 
 }

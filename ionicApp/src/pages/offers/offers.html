@@ -11,7 +11,7 @@
         </ion-title>
         <ion-buttons end>
 
-            <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
+            <button id="favorite" ion-button icon-only (click)="toggleIsFavorite()">
                 <ion-icon name="star-outline" *ngIf="this.auth.getLoggedIn()&& !restaurant.isFavorite"></ion-icon>
                 <ion-icon name="star" *ngIf="this.auth.getLoggedIn()&&restaurant.isFavorite"></ion-icon>
             </button>
