@@ -10,7 +10,7 @@ import {LoginPage} from "../pages/login/login";
 import {OrderDetailsPage} from "../pages/order-details/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
 import {OffersProductPage} from "../pages/offers-product-view/offers-product-view";
-import {RestaurantPage} from "../pages/restaurant-view/restaurant-view";
+import {RestaurantPage} from "../pages/restaurant/restaurant";
 import {ReservationPage} from "../pages/reservation/reservation";
 import {AuthService} from "../shared/auth.service";
 import {MenuService} from "../shared/menu.service";

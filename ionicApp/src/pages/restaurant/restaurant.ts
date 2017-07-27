@@ -14,7 +14,7 @@ import {Error} from "tslint/lib/error";
  */
 @Component({
     selector: 'restaurant-view-page',
-    templateUrl: 'restaurant-view.html'
+    templateUrl: 'restaurant.html'
 
 })
 export class RestaurantPage implements OnInit {

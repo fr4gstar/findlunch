@@ -4,7 +4,7 @@ import {OffersService} from "./offers.service";
 import {OffersProductPage} from "../offers-product-view/offers-product-view";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
-import {RestaurantPage} from "../restaurant-view/restaurant-view";
+import {RestaurantPage} from "../restaurant/restaurant";
 import {Observable} from "rxjs/Observable";
 import {Http, RequestMethod} from "@angular/http";
 import {SERVER_URL, APP_LANG} from "../../app/app.module";
