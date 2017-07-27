@@ -212,7 +212,8 @@ public class ReservationRestController {
 		
 		String url = getProtocol(request.isSecure()) + request.getServerName()+":"+request.getServerPort() + "/reservations";
 		
-		mailService.sendNewReservationMail(authenticatedUser, reservation, url);
+		// das Restaurant wird per Mail über die neue Reservierung benachrichtigt.
+		mailService.sendNewReservationMail(restaurant, reservation, url);
 		
 		if(reservation.isUsedPoints()){
 			//Restaurant restaurant = restaurantRepository.findById(reservation.getRestaurant().getId());
