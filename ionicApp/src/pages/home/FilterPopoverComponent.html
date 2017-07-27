@@ -1,14 +1,20 @@
 <ion-list style="margin: 0">
+
+    <!-- filtering restaurants by their kitchen-type -->
     <ion-item>
         <ion-label style="color: #000;">{{ 'kitchen' | translate }} </ion-label>
         <ion-select [(ngModel)]="service.selectedKitchenTypes" multiple="true" cancelText="Zurück">
             <ion-option *ngFor="let type of service.kitchenTypes" [value]="type">{{type.name}}</ion-option>
         </ion-select>
     </ion-item>
+
+    <!-- filter for showing only favorite restaurants; only works when user is logged in -->
     <ion-item *ngIf="this.auth.getLoggedIn()">
         <ion-label>{{ 'onlyFavs' | translate }}</ion-label>
         <ion-toggle [(ngModel)]="service.showOnlyFavorites"></ion-toggle>
     </ion-item>
+
+    <!-- filter for showing only restaurants, that are currently opened -->
     <ion-item>
         <ion-label>{{ 'isOpen' | translate }}</ion-label>
         <ion-toggle [(ngModel)]="service.showOnlyOpened"></ion-toggle>

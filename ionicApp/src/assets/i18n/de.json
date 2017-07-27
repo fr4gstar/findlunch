@@ -58,6 +58,7 @@
         "prepTime": "Zubereitungszeit",
         "addToCart": "Zum Warenkorb Hinzufügen"
     },
+    "locationNotFoundError": "Ort wurde nicht gefunden",
     "home": "Home",
     "containsAllergenics": "Enthaltene Allergene",
     "containsAdditives": "Enthaltene Zusatzstoffe",

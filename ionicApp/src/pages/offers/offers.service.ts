@@ -3,6 +3,8 @@ import {SERVER_URL} from "../../app/app.module";
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {Offer} from "../../model/Offer";
+import 'rxjs/add/operator/do';
+
 
 /**
  * Service for getting the Offers of a restaurant from the server and caching them in RAM.

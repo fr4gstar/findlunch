@@ -11,6 +11,7 @@ import {LoadingService} from "../../shared/loading.service";
 import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../shared/auth.service";
 import {KitchenType} from "../../model/KitchenType";
+import 'rxjs/add/operator/retry';
 import LatLng = google.maps.LatLng;
 
 
@@ -112,6 +113,7 @@ export class HomePage implements OnInit {
      */
     public ionViewDidEnter(): void {
         if (this.map) {
+            this.map.setClickable(true);
             cordova.fireDocumentEvent('plugin_touch', {});      // gives native map focus
         }
     }
@@ -277,7 +279,6 @@ ${this.translatedStrs.distance}: ${restaurant.distance}m<br/>
 <span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? this.translatedStrs.isOpen : this.translatedStrs.isClosed}</span><div/>
 </div>`;
                 infoDiv.addEventListener("click", () => {
-                    this.map.setClickable(false);
                     this.zone.run(() => {
                         this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
                     });

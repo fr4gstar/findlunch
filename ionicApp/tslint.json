@@ -33,7 +33,8 @@
     "no-consecutive-blank-lines": [true, 2],
     "export-name": false,
     "no-http-string": false,
-    "no-inner-html": false
+    "no-inner-html": false,
+    "no-import-side-effect": false
   },
   "rulesDirectory": [
     "node_modules/codelyzer"

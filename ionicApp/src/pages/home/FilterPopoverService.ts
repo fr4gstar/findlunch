@@ -1,26 +1,42 @@
-import {Injectable} from "@angular/core";
+import {Injectable, OnInit} from "@angular/core";
 import {KitchenType} from "../../model/KitchenType";
-import {Http} from "@angular/http";
+import {Http, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {AuthService} from "../../shared/auth.service";
-import "rxjs/Rx";
 
+/**
+ * This serves as a communication-service between the filtering popover-component and the map.
+ * It holds the state of the currently selected filters.
+ * @author David Sautter
+ */
 @Injectable()
-export class FilterPopoverService {
-  private _kitchenTypes: Array<KitchenType>;
-  public selectedKitchenTypes: Array<KitchenType>;
-  public showOnlyFavorites: boolean;
-  public showOnlyOpened: boolean;
-  public loggedIn = this.auth.getLoggedIn();
+export class FilterPopoverService implements OnInit {
 
-  constructor(private http: Http, private auth: AuthService) {
-    this.http.get(SERVER_URL + "/api/kitchen_types").subscribe(res => {
-      this._kitchenTypes = res.json();
-      this.selectedKitchenTypes = this._kitchenTypes;
-    });
-  }
+    // filter states
+    public selectedKitchenTypes: KitchenType[];
+    public showOnlyFavorites: boolean;
+    public showOnlyOpened: boolean;
 
-  get kitchenTypes() {
-    return this._kitchenTypes;
-  }
+    // all possible kitchen-types (fetched from the server)
+    public kitchenTypes: KitchenType[];
+
+
+    constructor(private http: Http) {
+    }
+
+    public ngOnInit(): void {
+        this.http.get(`${SERVER_URL}/api/kitchen_types`)
+            .retry(2)
+            .subscribe(
+                (res: Response) => {
+                    this.kitchenTypes = res.json();
+
+                    // initially select all kitchen-types
+                    this.selectedKitchenTypes = this.kitchenTypes;
+                },
+                (err: Error) => {
+                    console.error("Error fetching kitchenTypes", err);
+                    // TODO: What should happen in that case?
+                }
+            );
+    }
 }
