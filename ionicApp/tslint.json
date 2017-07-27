@@ -16,7 +16,7 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "pipe-naming": [true, "camelCase", "fl"],
-    "component-class-suffix": true,
+    "component-class-suffix": [true, "Page", "Component"],
     "directive-class-suffix": true,
     "templates-use-public": true,
     "no-access-missing-member": true,
@@ -30,7 +30,10 @@
     "no-relative-imports": false,
     "ordered-imports": false,
     "missing-jsdoc": false,
-    "component-class-suffix": [true, "Page", "Component"]
+    "no-consecutive-blank-lines": [true, 2],
+    "export-name": false,
+    "no-http-string": false,
+    "no-inner-html": false
   },
   "rulesDirectory": [
     "node_modules/codelyzer"

@@ -1,15 +1,15 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {AlertController, Events, Nav, Platform, Toast, ToastController} from "ionic-angular";
+import {Events, Nav, Platform, Toast, ToastController} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {AuthService} from "../shared/auth.service";
 import {MenuService} from "../shared/menu.service";
 import {QRService} from "../pages/bonus/qr.service";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
-import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
+import {HomePage} from "../pages/home/home";
 import {PushService} from "../shared/push.service";
 import {TranslateService} from "@ngx-translate/core";
-import {SERVER_URL, APP_LANG} from "../app/app.module";
+import {APP_LANG, SERVER_URL} from "./app.module";
 
 /**
  * Initialize the application.
@@ -92,22 +92,6 @@ export class MyApp implements OnInit {
         toast.present();
 
         this.openPage(this.rootPage);
-    }
-
-    /**
-     * TODO: replace generic comment
-     * Handles on menu closed action
-     */
-    public onMenuClosed(): void {
-        this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, true);
-    }
-
-    /**
-     * TODO: replace generic comment
-     * Handles on menu opened action
-     */
-    public onMenuOpened(): void {
-        this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, false);
     }
 
     /**
