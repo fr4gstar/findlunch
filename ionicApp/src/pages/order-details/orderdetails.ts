@@ -185,7 +185,6 @@ export class OrderDetailsPage implements OnInit {
 
             //starts the loading spinner
             loader.present().then(res => {
-                //TODO: make sure not to send entire restraurant object with backend request
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
                 if (this.auth.getLoggedIn()) {
@@ -199,7 +198,7 @@ export class OrderDetailsPage implements OnInit {
                     ...this.reservation,
                     reservation_offers: [],
                     restaurant: {
-                        id: this.reservation.restaurant.id
+                        id: this.reservation.restaurant.id      // do only send id with request payload (faster)
                     }
                 };
                 payload.items.forEach((item) => {
