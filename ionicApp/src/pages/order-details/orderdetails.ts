@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {Alert, AlertController, Loading, NavController, NavParams, ToastController} from "ionic-angular";
+import {Alert, AlertController, Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {CartService} from "../../shared/cart.service";
 import {Offer} from "../../model/Offer";
 import {AuthService} from "../../shared/auth.service";
@@ -86,21 +86,6 @@ export class OrderDetailsPage implements OnInit {
 
     }
 
-
-    /**
-     * Calculates the total price of a given Array of Offer-items.
-     * @param items
-     * @returns {number} the total price of all items respecting their amounts.
-     *
-     * @author David Sautter
-     */
-    private static calcTotalPrice(items: Offer[]): number {
-        return items
-            .map((offer: Offer) => offer.price * offer.amount)
-            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
-    }
-
-
     public ngOnInit(): void {
         this.translate.get('Error.emptyOrder').subscribe(
             (value: string) => {
@@ -139,7 +124,7 @@ export class OrderDetailsPage implements OnInit {
                 this.strFailOrder = value;
             },
             (err: Error) => {
-                    console.error("Error: translate.get did fail for key strFailOrder", err);
+                    console.error("Error: translate.get did fail for key Error.failedOrder", err);
             }
         );
         this.translate.get('Error.failedLoadPoints').subscribe(
@@ -147,7 +132,7 @@ export class OrderDetailsPage implements OnInit {
                 this.strFailedLoadPoints = value;
             },
             (err: Error) => {
-                console.error("Error: translate.get did fail for key failedLoadPoints", err);
+                console.error("Error: translate.get did fail for key Error.failedLoadPoints", err);
             }
         );
         this.translate.get('Error.openingProblem').subscribe(
@@ -155,12 +140,10 @@ export class OrderDetailsPage implements OnInit {
                 this.strOpeningProblem = value;
             },
             (err: Error) => {
-                console.error("Error: translate.get did fail for key openingProblem", err);
+                console.error("Error: translate.get did fail for key Error.openingProblem", err);
             }
         );
     }
-
-
 
     /**
      * Increases the amount of one given offer. Also checks for the max-limit.
@@ -301,7 +284,7 @@ export class OrderDetailsPage implements OnInit {
             const loader: Loading = this.loading.prepareLoader();
 
             //starts the loading spinner
-            loader.present().then(res => {
+            loader.present().then(() => {
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
                 //if logged in,
@@ -335,8 +318,8 @@ export class OrderDetailsPage implements OnInit {
                 this.http.post(`${SERVER_URL}/api/register_reservation`, JSON.stringify(payload), options)
                     .retry(2)
                     .subscribe(
-                    (res) => {
-                        const toast = this.toastCtrl.create({
+                    (res: Response) => {
+                        const toast: Toast = this.toastCtrl.create({
                             message: this.strSuccessOrder,
                             duration: 3000
                         });
@@ -350,7 +333,7 @@ export class OrderDetailsPage implements OnInit {
 
                         //stop the spinner
                         loader.dismiss();
-                    }, (err) => {
+                    }, (err: Error) => {
                         console.error(err);
                         alert(this.strFailOrder);
                         //stop the spinner
@@ -359,17 +342,6 @@ export class OrderDetailsPage implements OnInit {
                     });
             });
         }
-    }
-
-
-    /**
-     * Finds the index of this offer in the items-array of the reservation.
-     * @param offer
-     * @returns {number}
-     */
-    private findItemIndex(offer: Offer): number {
-        return this.reservation.items
-            .findIndex((item, i) => item.id === offer.id);
     }
 
     /**
@@ -405,18 +377,15 @@ export class OrderDetailsPage implements OnInit {
      * Sets the information whether its possible to pay the order with points
      */
     public getUserPoints(): void {
-
         //start loading animation
         const loader: Loading = this.loading.prepareLoader();
-        loader.present().then(res => {
-
+        loader.present().then(() => {
             //prepare RequestOptions
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
 
-            this.http.get(`${SERVER_URL}/api/get_points_restaurant/` + this.restaurant.id, options)
+            this.http.get(`${SERVER_URL}/api/get_points_restaurant/${this.restaurant.id}`, options)
                 .retry(2)
-                .subscribe(
-                    res => {
+                .subscribe((res: Response) => {
                         const reply = res.json();
                         //if user has no points at the restaurant yet
                         if (!(reply.length === 0)) {
@@ -433,8 +402,7 @@ export class OrderDetailsPage implements OnInit {
                         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
                         loader.dismiss();
 
-                    },
-                    err => {
+                    }, (err: Error) => {
                         console.error(err);
                         alert(this.strFailedLoadPoints)
                         loader.dismiss();
@@ -500,4 +468,26 @@ export class OrderDetailsPage implements OnInit {
 
     }
 
+    /**
+     * Calculates the total price of a given Array of Offer-items.
+     * @param items
+     * @returns {number} the total price of all items respecting their amounts.
+     *
+     * @author David Sautter
+     */
+    private static calcTotalPrice(items: Offer[]): number {
+        return items
+            .map((offer: Offer) => offer.price * offer.amount)
+            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
+    }
+
+    /**
+     * Finds the index of this offer in the items-array of the reservation.
+     * @param offer
+     * @returns {number}
+     */
+    private findItemIndex(offer: Offer): number {
+        return this.reservation.items
+            .findIndex((item, i) => item.id === offer.id);
+    }
 }
