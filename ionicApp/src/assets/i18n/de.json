@@ -106,6 +106,9 @@
         "points": "Punkte konnten nicht geladen werden!",
         "locationNotFound": "Ort wurde nicht gefunden",
         "mapNotSupported": "Die Karte wird auf Ihrem Device nicht unterstützt.",
-        "critical": "Kritischer Fehler"
+        "critical": "Kritischer Fehler",
+        "failedOrder": "Bestellung konnte nicht abgeschickt werden. Bitte versuchen Sie es in Kürze noch einmal",
+        "failedLoadPoints": "Ihre Punkte konnten nicht geladen werden. Bitte versuchen Sie es in Kürze noch einmal",
+        "openingProblem": "Leider steht das gewählte Restaurant im Moment nicht zur Verfügung. Bitte wählen Sie von einem Anderen, oder versuchen es später noch einmal"
     }
 }
