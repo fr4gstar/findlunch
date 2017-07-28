@@ -9,7 +9,8 @@
         "build": "ionic-app-scripts build",
         "ionic:build": "ionic-app-scripts build",
         "ionic:serve": "ionic-app-scripts serve",
-        "build_docs": "./node_modules/.bin/compodoc src -p ./tsconfig.json"
+        "build_docs": "./node_modules/.bin/compodoc src -p ./tsconfig.json",
+      "test": "./node_modules/karma/bin/karma start ./test-config/karma.conf.js"
     },
     "dependencies": {
         "@angular/common": "4.0.0",
