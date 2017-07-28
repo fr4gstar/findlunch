@@ -22,6 +22,9 @@ export class OfferProductDetailsPage {
     public restaurant: Restaurant;
     public offer: Offer;
 
+    // need this to be able to call a static function from the template
+    public getALGsAndADDsOfOffer: Function = OffersService.getALGsAndADDsOfOffer;
+
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 private cartService: CartService,
