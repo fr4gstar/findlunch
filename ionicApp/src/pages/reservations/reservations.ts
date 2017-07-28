@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController} from "ionic-angular";
+import {Alert, AlertController, Loading, NavController} from "ionic-angular";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {ReservationPage} from "../reservation/reservation";
@@ -8,6 +8,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../shared/auth.service";
 import {LoadingService} from "../../shared/loading.service";
 import {Event} from "_debugger";
+import {HomePage} from "../home/home";
 
 /**
  * This pages loads and shows all reservation of an user.
@@ -19,12 +20,16 @@ import {Event} from "_debugger";
 export class ReservationsPage implements OnInit {
     public reservations: Reservation[];
     public usedRestaurants: String[];
-    private strConnectionError: string;
+    private strReservationError: string;
+    private strGeneralError: string;
+    private strRetry: string;
+    private strCancel: string;
 
     constructor(public navCtrl: NavController,
                 private http: Http,
                 private auth: AuthService,
                 private loading: LoadingService,
+                private alertCtrl: AlertController,
                 private translate: TranslateService) {
         this.usedRestaurants = [];
     }
@@ -32,38 +37,35 @@ export class ReservationsPage implements OnInit {
      * Loads the reservation(s) of a user.
      */
     public ngOnInit(): void {
-        this.translate.get('Error.connection').subscribe(
+        this.translate.get('Error.reservation').subscribe(
             (value: string) => {
-                this.strConnectionError = value;
+                this.strReservationError = value;
                 },
             (err: Error) => {
-                console.error("Error: translate.get did fail for key Error.connection.", err);
+                console.error("Error: translate.get did fail for key Error.reservation.", err);
             });
-
-        //prepare a loading spinner
-        const loader: Loading = this.loading.prepareLoader();
-        loader.present();
-
-        //put together the options for http-call
-        const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
-        this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
-            .retry(2)
-            .subscribe(
-                (res: Response) => {
-                    this.reservations = res.json();
-                    if (this.reservations.length > 0) {
-                        this.collectUsedRestaurants();
-                        this.sortByCollectTime(this.reservations);
-                    }
-                    loader.dismiss();
-                },
-                (err: Error) => {
-                    loader.dismiss();
-                    console.error(err);
-                    alert(this.strConnectionError);
-                    // TODO homepage or reload
-                }
-            );
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strGeneralError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            });
+        this.translate.get('retry').subscribe(
+            (value: string) => {
+                this.strRetry = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key retry.", err);
+            });
+        this.translate.get('cancel').subscribe(
+            (value: string) => {
+                this.strCancel = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key cancel.", err);
+            });
+        this.loadReservations();
     }
 
     // TODO Unit testing
@@ -98,5 +100,51 @@ export class ReservationsPage implements OnInit {
             if (b.collectTime > a.collectTime) { return 1; }
             return 0;
         });
+    }
+
+    private loadReservations(): void {
+        //prepare a loading spinner
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present();
+
+        //put together the options for http-call
+        const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
+        this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
+            .retry(2)
+            .subscribe(
+                (res: Response) => {
+                    this.reservations = res.json();
+                    if (this.reservations.length > 0) {
+                        this.collectUsedRestaurants();
+                        this.sortByCollectTime(this.reservations);
+                    }
+                    loader.dismiss();
+                },
+                (err: Error) => {
+                    loader.dismiss();
+                    console.error("Error on loading reservations.", err);
+                    //noinspection TsLint
+                    const alert: Alert = this.alertCtrl.create({
+                        title: this.strGeneralError,
+                        subTitle: this.strReservationError,
+                        buttons: [
+                            {
+                                text: 'Ok',
+                                role: 'cancel',
+                                handler: () => {
+                                    this.navCtrl.setRoot(HomePage);
+                                }
+                            },
+                            {
+                                text: this.strRetry,
+                                handler: () => {
+                                    this.loadReservations();
+                                }
+                            }
+                        ]
+                    });
+                    alert.present();
+                }
+            );
     }
 }

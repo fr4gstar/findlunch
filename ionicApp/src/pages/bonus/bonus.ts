@@ -99,10 +99,10 @@ export class BonusPage implements OnInit {
                         subTitle: this.strLoadPointsError,
                         buttons: [
                             {
-                                text: this.strCancel,
+                                text: 'Ok',
                                 role: 'cancel',
                                 handler: () => {
-                                    this.navCtrl.push(HomePage);
+                                    this.navCtrl.setRoot(HomePage);
                                 }
                             },
                                 {
