@@ -58,7 +58,7 @@ export class QRService implements OnInit {
         //preparing Requestoptions
         const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
 
-        this.http.get(`${SERVER_URL}/api/confirm_reservation/` + barcodeData.text, options)
+        this.http.get(`${SERVER_URL}/api/confirm_reservation/${barcodeData.text}`, options)
             .retry(2)
             .subscribe(
               (res: Response) => {

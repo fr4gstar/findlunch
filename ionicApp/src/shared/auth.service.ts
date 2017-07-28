@@ -1,9 +1,12 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
+import {User} from "../model/User";
 
 /**
  * Service that handles everything about login, verification and registration of users of the App.
+ *
+ * @author Skanny Morandi - refactored by Sergej Bardin
  */
 @Injectable()
 export class AuthService {
@@ -11,7 +14,6 @@ export class AuthService {
     private userName: string;
 
     constructor(private http: Http) {
-
     }
 
     /**
@@ -28,13 +30,13 @@ export class AuthService {
      * result returned to the method that called the login-functionality
      */
     public login(username: string, password: string) {
-        let encodedCredentials: string = btoa(username + ":" + password);
-        let headers = new Headers({
+        const encodedCredentials: string = btoa(username + ":" + password);
+        const headers: Headers = new Headers({
             'Content-Type': 'application/json',
-            "Authorization": "Basic " + encodedCredentials
+            Authorization: "Basic " + encodedCredentials
         });
 
-        let options = new RequestOptions({headers: headers});
+        const options: RequestOptions = new RequestOptions({headers: headers});
         return new Promise(resolve => {
             this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
                 (res: Response) => {
@@ -46,8 +48,8 @@ export class AuthService {
                     resolve(true);
                 }, (err) => {
                     resolve(err.body);
-                })
-        })
+                });
+        });
     }
 
 
@@ -62,28 +64,28 @@ export class AuthService {
      */
 
     public register(username: string, password: string) {
-        let user = {
+        const user: User = {
             username: username,
             password: password
-        }
+        };
 
 
-        let headers = new Headers({
-            'Content-Type': 'application/json',
+        const headers: Headers = new Headers({
+            'Content-Type': 'application/json'
         });
-        let options = new RequestOptions({headers: headers});
+        const options: RequestOptions = new RequestOptions({headers: headers});
 
         return new Promise((resolve, reject) => {
             this.http.post(SERVER_URL + "/api/register_user", user, options).subscribe(
-                (res) => {
+                (res: Response) => {
                     //On successful registration -> login
                     this.login(username, password);
                     resolve(true);
                 }, (err) => {
                     reject(err._body);
 
-                })
-        })
+                });
+        });
     }
 
     /**
@@ -96,25 +98,25 @@ export class AuthService {
         if (window.localStorage.getItem("username") !== null) {
 
             //retrieve it...
-            let currentUser = window.localStorage.getItem("username");
-            let headers = new Headers({
+            const currentUser: string = window.localStorage.getItem("username");
+            const headers: Headers = new Headers({
                 'Content-Type': 'application/json',
                 //also retrieve the according token and put it into the header of the http-call
-                "Authorization": "Basic " + window.localStorage.getItem(currentUser)
+                Authorization: "Basic " + window.localStorage.getItem(currentUser)
             });
 
-            let options = new RequestOptions({headers: headers});
+            const options: RequestOptions = new RequestOptions({headers: headers});
             return new Promise((resolve) => {
                 this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
-                    (res) => {
+                    (res: Response) => {
                         //if verification successful..
                         this.loggedIn = true;
                         this.userName = currentUser;
                         //else..
                     }, (err) => {
                         this.logout();
-                    })
-            })
+                    });
+            });
         }
     }
 
@@ -123,7 +125,7 @@ export class AuthService {
      * @returns {boolean}
      * logged-in status of user
      */
-    public getLoggedIn() {
+    public getLoggedIn(): boolean {
         return this.loggedIn;
     }
 
@@ -132,15 +134,15 @@ export class AuthService {
      * @returns {string}
      *  username of current user
      */
-    public getUserName() {
+    public getUserName(): string {
         return this.userName;
     }
 
     /**
      * logs the current user out. Clears his username and token from the local storage.
      */
-    public logout() {
-        let currentUser = window.localStorage.getItem("username");
+    public logout(): void {
+        const currentUser: string = window.localStorage.getItem("username");
 
         //delete key-value pair stored under the key named after the most recently logged in user
         window.localStorage.removeItem(currentUser);
@@ -159,25 +161,24 @@ export class AuthService {
      * Request method that represents the http-method used
      * RequestMethod.Get .Put .Delete .Post etc.
      */
-    public prepareHttpOptions(ReqMethod: RequestMethod): RequestOptions {
+    public prepareHttpOptions(reqMethod: RequestMethod): RequestOptions {
 
-        let options;
-        let headers;
+        let options: RequestOptions;
+        let headers: Headers;
 
         if (this.getLoggedIn()) {
-            let user = window.localStorage.getItem("username");
-            let token = window.localStorage.getItem(user);
+            const user: string = window.localStorage.getItem("username");
+            const token: string = window.localStorage.getItem(user);
             headers = new Headers({
                 'Content-Type': 'application/json',
-                "Authorization": "Basic " + token
+                Authorization: "Basic " + token
             });
         }
 
         options = new RequestOptions({
             headers: headers,
-            method: ReqMethod
-        })
-
+            method: reqMethod
+        });
         return options;
     }
 }

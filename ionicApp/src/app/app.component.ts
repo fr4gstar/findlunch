@@ -10,6 +10,7 @@ import {HomePage} from "../pages/home/home";
 import {PushService} from "../shared/push.service";
 import {TranslateService} from "@ngx-translate/core";
 import {APP_LANG, SERVER_URL} from "./app.module";
+import {Page} from "ionic-angular/navigation/nav-util";
 
 /**
  * Initialize the application.
@@ -24,14 +25,14 @@ import {APP_LANG, SERVER_URL} from "./app.module";
 
 
 export class MyApp implements OnInit {
-    @ViewChild(Nav) nav: Nav;
+    @ViewChild(Nav) public nav: Nav;
     /**
      * Sets the first site of the app
      * @type {HomePage}
      */
-    rootPage: any = HomePage;
+    public rootPage: Component = HomePage;
     private strLogoutSuccess: string;
-    pages: Array<{ title: string, component: any }>;
+    private pages: { title: string, component: Component } [];
 
     constructor(public platform: Platform,
                 public statusBar: StatusBar,
@@ -47,17 +48,10 @@ export class MyApp implements OnInit {
         translate.setDefaultLang(APP_LANG);
         // TODO Promise then pushSetup test
         this.auth.verifyUser();
-            /*.then(
-            //() => this.push.pushSetup()
-        );
-        */
 
         document.addEventListener('resume', () => {
             // TODO Promise then pushSetup test
             this.auth.verifyUser();
-            /*.then(
-                //() => this.push.pushSetup()
-            );*/
         });
     }
 
@@ -72,8 +66,8 @@ export class MyApp implements OnInit {
      * @param page
      *  the page the user clicked
      */
-    openPage(page) {
-        if(page !== null){
+    public openPage(page): void {
+        if (page !== null) {
             this.nav.setRoot(page.component);
         }
     }
@@ -98,11 +92,10 @@ export class MyApp implements OnInit {
      * Opens a url in the inapp browser
      * @param url
      */
-    openUrl(url) {
-        if(url !== null){
+    public openUrl(url: string): void {
+        if (url !== null) {
             this.platform.ready().then(() => {
-                //TODO: test whether this works without browser object
-                let browser = this.iab.create(url);
+                this.iab.create(url);
             });
         }
     }
@@ -111,14 +104,14 @@ export class MyApp implements OnInit {
      * opens in app browser on about url
      */
     public goToImprint(): void {
-        this.openUrl(`${SERVER_URL}/api/confirm_reservation/about_findlunch`);
+        this.openUrl(`${SERVER_URL}/about_findlunch`);
     }
 
     /**
      *  opens in app browser on Faq url
      */
     public goToFaq(): void {
-        this.openUrl(`${SERVER_URL}/api/confirm_reservation/faq_customer`);
+        this.openUrl(`${SERVER_URL}/faq_customer`);
 
     }
 

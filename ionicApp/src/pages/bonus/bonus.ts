@@ -33,7 +33,6 @@ export class BonusPage implements OnInit {
     }
     /**
      * Opens the barcode scanner(camera) of the device via service
-     *
      */
     private onQRClicked (event: Event) : void {
         this.qr.onQRClicked(event)

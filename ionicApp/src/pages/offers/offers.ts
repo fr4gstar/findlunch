@@ -6,13 +6,15 @@ import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantPage} from "../restaurant/restaurant";
 import {Observable} from "rxjs/Observable";
-import {Http, RequestMethod, Response} from "@angular/http";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {CartService} from "../../shared/cart.service";
 import {AuthService} from "../../shared/auth.service";
 import {TranslateService} from "@ngx-translate/core";
 import {LoadingService} from "../../shared/loading.service";
 import {Offer} from "../../model/Offer";
+import {Error} from "tslint/lib/error";
+import {Event} from "_debugger";
 
 
 /**
@@ -26,16 +28,14 @@ import {Offer} from "../../model/Offer";
 export class OffersPage implements OnInit {
     public restaurant: Restaurant;
     public offers: Offer[];
-
-    public categories;
-    shownGroup = null;
-
     public allergenics$: Observable<string>;
     public additives$: Observable<string>;
+    public categories;
 
-    private errorFavorize;
-    private errorDeFavorize;
-    private connectionErrorMsg: string;
+    private shownGroup = null;
+    private strErrorFavorize: string;
+    private strErrorDeFavorize: string;
+    private strConnectionError: string;
 
     constructor(navParams: NavParams,
                 public offerService: OffersService,
@@ -64,15 +64,15 @@ export class OffersPage implements OnInit {
     public ngOnInit(): void {
         this.translate.get('Error.favorize').subscribe(
             (res: string) => {
-                this.errorFavorize = res;
+                this.strErrorFavorize = res;
             });
         this.translate.get('Error.deFavorize').subscribe(
             (res: string) => {
-                this.errorDeFavorize = res;
+                this.strErrorDeFavorize = res;
             });
         this.translate.get('Error.connection').subscribe(
             (str: string) => {
-                this.connectionErrorMsg = str;
+                this.strConnectionError = str;
             }
         );
 
@@ -87,7 +87,7 @@ export class OffersPage implements OnInit {
                 },
                 (err: Error) => {
                     console.error("Error retrieving offers of restaurant: ", this.restaurant, err);
-                    alert(this.connectionErrorMsg);
+                    alert(this.strConnectionError);
                     this.navCtrl.pop(); // go back so that the user can select another restaurant
                 }
             );
@@ -102,7 +102,7 @@ export class OffersPage implements OnInit {
      * @param offer
      * @author Skanny Morandi
      */
-    public onOfferClicked(event, offer) {
+    public onOfferClicked(event: Event, offer: Offer): void {
         this.navCtrl.push(OfferProductDetailsPage, {offer, restaurant: this.restaurant})
     }
 
@@ -111,7 +111,7 @@ export class OffersPage implements OnInit {
      * @param event
      * @author Skanny Morandi
      */
-    public onRestaurantClicked(event) {
+    public onRestaurantClicked(event: Event): void {
         this.navCtrl.push(RestaurantPage, {restaurant: this.restaurant})
     }
 
@@ -123,48 +123,46 @@ export class OffersPage implements OnInit {
         // prepare loader
         const loader: Loading = this.loading.prepareLoader();
         loader.present();
-        
+
         // unset as favorite if already favorite
         if (this.restaurant.isFavorite) {
 
-            let options = this.auth.prepareHttpOptions(RequestMethod.Delete);
-            this.http.delete(`${SERVER_URL}/api/unregister_favorite/` + this.restaurant.id, options)
+            const options: RequestOptions  = this.auth.prepareHttpOptions(RequestMethod.Delete);
+            this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}` , options)
                 .retry(2)
                 .subscribe(
                     (res: Response) => {
                         if (res.json() === 0) {
                             this.restaurant.isFavorite = false;
                             loader.dismiss();
+                        } else {
+                            throw new Error("Unknown return value from server: " + res.json());
                         }
-                        else throw new Error("Unknown return value from server: " + res.json())
                     },
-                    err => {
-                        alert(this.errorDeFavorize);
+                    (err: Error) => {
                         loader.dismiss();
                         console.error(err);
-                        //TO
-                    }
-                )
-        }
-        // set as favorite
-        else {
-            let options = this.auth.prepareHttpOptions(RequestMethod.Put);
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options)
+                        alert(this.strErrorDeFavorize);
+                        //TO DO
+                    });
+        } else {
+            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
+            this.http.put(`${SERVER_URL}/api/register_favorite/${this.restaurant.id}`, "", options)
                 .retry(2)
                 .subscribe(
-                    res => {
+                    (res: Response) => {
                         if (res.json() === 0) {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
-
+                        } else {
+                            throw new Error(`Unknown return value from server: ${res.json()}` );
                         }
-                        else throw new Error("Unknown return value from server: " + res.json());
                     },
-                    err => {
-                        alert(this.errorFavorize);
+                    (err: Error) => {
                         loader.dismiss();
                         console.error(err);
-                    })
+                        alert(this.strErrorFavorize);
+                    });
         }
     }
 
@@ -179,7 +177,7 @@ export class OffersPage implements OnInit {
     /**
      * //TODO: Comment schreiben
      */
-    toggleDetails(data) {
+    private toggleDetails(data): void {
         if (data.showDetails) {
             data.showDetails = false;
             data.icon = 'ios-add-circle-outline';
@@ -193,7 +191,7 @@ export class OffersPage implements OnInit {
      * //TODO: Comment schreiben
      * @param group
      */
-    public toggleGroup(group) {
+    private toggleGroup(group): void {
         if (this.isGroupShown(group)) {
             this.shownGroup = null;
         } else {
@@ -206,14 +204,14 @@ export class OffersPage implements OnInit {
      * @param group
      * @returns {boolean}
      */
-    isGroupShown(group) {
+    private isGroupShown(group): boolean {
         return this.shownGroup === group;
     }
 
     /**
      * sends user to the OrderDetails page, along with the restaurant object
      */
-    public goToCheckout() {
+    private goToCheckout(): void {
         this.navCtrl.push(OrderDetailsPage, {
             restaurant: this.restaurant
         });

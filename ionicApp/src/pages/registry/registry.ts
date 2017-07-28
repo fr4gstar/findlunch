@@ -2,21 +2,22 @@ import {Component, OnInit} from "@angular/core";
 import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {AuthService} from "../../shared/auth.service";
 import {HomePage} from "../home/home";
-import {InAppBrowser, InAppBrowserObject} from "@ionic-native/in-app-browser";
+import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {LoadingService} from "../../shared/loading.service";
 import {Restaurant} from "../../model/Restaurant";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {TranslateService} from "@ngx-translate/core";
-import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {SERVER_URL} from "../../app/app.module";
 import {Response} from "@angular/http";
 
+/**
+ * Register a new user function. Gets "comeback" navParam, to determine whether to send the view back
+ * to where it came from after registering.
+ * @author Skanny Morandi
+ */
 @Component({
-    selector: 'registry',
     templateUrl: 'registry.html'
 })
-/**
- * gets "comeback" navParam, to determine whether to send the view back to where it came from after registering
- */
 export class RegistryPage implements OnInit {
     private termsAndConditionsChecked: boolean;
     private popThisPage: boolean;
@@ -145,7 +146,7 @@ export class RegistryPage implements OnInit {
     /**
      * Opens the terms and conditions site via inapp browser
      */
-    public goToTermsAndConditions(): void {
-        this.iab.create(`${SERVER_URL}+/terms`);
+    private goToTermsAndConditions(): void {
+        this.iab.create(`${SERVER_URL}/terms`);
     }
 }
