@@ -1,5 +1,8 @@
 import {Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
-import {Loading, Modal, ModalController, NavController, Platform, Popover, PopoverController} from "ionic-angular";
+import {
+    Alert, AlertController, Loading, Modal, ModalController, NavController, Platform, Popover,
+    PopoverController
+} from "ionic-angular";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
 import {OffersPage} from "../offers/offers";
@@ -44,6 +47,8 @@ export class HomePage implements OnInit {
     // reference to the rendered map HTML-element
     @ViewChild('map') private theMap: ElementRef;
 
+    private strGeneralError: string;
+    private strServiceNotAvailableError: string;
 
     // noinspection TsLint - no types for current plugin-googlemaps available
     private map: any;
@@ -60,7 +65,8 @@ export class HomePage implements OnInit {
         distance: "distance",
         kitchen: "kitchen",
         isClosed: "isClosed",
-        isOpen: "isOpen"
+        isOpen: "isOpen",
+        retry: "retry"
     };
 
     //TODO device without internet -> platform exit
@@ -73,7 +79,8 @@ export class HomePage implements OnInit {
                 private zone: NgZone,
                 private loading: LoadingService,
                 private auth: AuthService,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private alertCtrl: AlertController) {
 
         // load the map as soon as the platform is ready
         this.platform.ready().then(
@@ -103,6 +110,20 @@ export class HomePage implements OnInit {
                     }
                 );
         });
+        this.translate.get('Error.serviceNotAvailable').subscribe(
+            (value: string) => {
+                this.strServiceNotAvailableError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.serviceNotAvailable.", err);
+            });
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strGeneralError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            });
     }
 
     // noinspection JSUnusedGlobalSymbols - this is an ionic view lifecycle method so it is indeed used.
@@ -235,7 +256,28 @@ export class HomePage implements OnInit {
                     (err: Error) => {
                         loader.dismiss();
                         console.error("Error fetching restaurants", err);
-                        //TODO: Prompt user. Actions: Retry, Close App
+                        //TODO: CHECK - Prompt user. Actions: Retry, Close App
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strGeneralError,
+                            subTitle: this.strServiceNotAvailableError,
+                            buttons: [
+                                {
+                                    text: 'Ok',
+                                    role: 'cancel',
+                                    handler: () => {
+                                        this.platform.exitApp();
+                                    }
+                                },
+                                {
+                                    text: this.translatedStrs.retry,
+                                    handler: () => {
+                                        this.fetchRestaurants(latLng);
+                                    }
+                                }
+                            ]
+
+                        });
+                        alert.present();
                     }
                 );
         });
