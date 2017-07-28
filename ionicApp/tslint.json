@@ -35,7 +35,8 @@
     "no-http-string": false,
     "no-inner-html": false,
     "no-import-side-effect": false,
-    "interface-name": false
+    "interface-name": false,
+    "function-name": false
   },
   "rulesDirectory": [
     "node_modules/codelyzer"
