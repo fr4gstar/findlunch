@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ResetPasswordRepository;
 
@@ -38,8 +39,8 @@ public class MailService {
 	 * @param reservatin the reservation
 	 * @param url the url to the reservation
 	 */
-	public void sendNewReservationMail(User user, Reservation reservatin, String url) {
-		SimpleMailMessage mail = configureReservtionMail(user, reservatin, url);
+	public void sendNewReservationMail(Restaurant restaurant, Reservation reservatin, String url) {
+		SimpleMailMessage mail = configureReservtionMail(restaurant, reservatin, url);
 		javaMailSender.send(mail);
 	}
 	
@@ -61,10 +62,10 @@ public class MailService {
 	 * @param url the url to the reservation
 	 * @return
 	 */
-	private SimpleMailMessage configureReservtionMail(User user, Reservation reservation, String url) {
+	private SimpleMailMessage configureReservtionMail(Restaurant restaurant, Reservation reservation, String url) {
 		ResourceBundle messages = getResurceBundel();
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(user.getUsername());
+		mail.setTo(restaurant.getEmail());
 		mail.setSubject(messages.getString("reservation.title"));
 		String text = MessageFormat.format(messages.getString("reservation.text"), url);
 		mail.setText(text);
