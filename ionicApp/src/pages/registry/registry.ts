@@ -44,25 +44,60 @@ export class RegistryPage implements OnInit {
 
     public ngOnInit(): void {
         this.translate.get('Error.noValidEmail').subscribe(
-            (value: string) => { this.strNoValidEmail = value; }
+            (value: string) => {
+                this.strNoValidEmail = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.noValidEmail.", err);
+            }
         );
         this.translate.get('Error.noValidPassword').subscribe(
-            (value: string) => { this.strNoValidPassword = value; }
+            (value: string) => {
+                this.strNoValidPassword = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.noValidPassword.", err);
+            }
         );
         this.translate.get('Error.usedEmail').subscribe(
-            (value: string) => { this.strUsedEmail = value; }
+            (value: string) => {
+                this.strUsedEmail = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.usedEmail.", err);
+            }
         );
         this.translate.get('Error.connection').subscribe(
-            (value: string) => { this.strConnectionError = value; }
+            (value: string) => {
+                this.strConnectionError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.connection.", err);
+            }
         );
         this.translate.get('Error.confirmPassword').subscribe(
-            (value: string) => { this.strConfirmPasswordError = value; }
+            (value: string) => {
+                this.strConfirmPasswordError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.confirmPassword.", err);
+            }
         );
         this.translate.get('Error.termsAndCondition').subscribe(
-            (value: string) => { this.strTermsAndConditionError = value; }
+            (value: string) => {
+                this.strTermsAndConditionError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.termsAndCondition.", err);
+            }
         );
         this.translate.get('Success.register').subscribe(
-            (value: string) => { this.strRegisterSuccess = value; }
+            (value: string) => {
+                this.strRegisterSuccess = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.register.", err);
+            }
         );
     }
     /**
@@ -84,7 +119,7 @@ export class RegistryPage implements OnInit {
         const loader: Loading = this.loading.prepareLoader();
         loader.present().then((res: Response) => {
 
-            this.auth.register(username, password).then(result => {
+            this.auth.register(username, password).then(() => {
                 const toast: Toast = this.toastCtrl.create({
                     message: this.strRegisterSuccess,
                     duration: 3000
@@ -105,7 +140,7 @@ export class RegistryPage implements OnInit {
                 }
                 loader.dismiss();
             })
-                .catch((error) => {
+                .catch((error: string) => {
                     switch (error) {
                         case "1" :
                             alert(this.strNoValidEmail);

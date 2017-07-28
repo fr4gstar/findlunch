@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
-import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {SERVER_URL} from "../../app/app.module";
 import {QRService} from "./qr.service";
 import {TranslateService} from '@ngx-translate/core';
 import {LoadingService} from "../../shared/loading.service";

@@ -104,7 +104,7 @@ export class QRService implements OnInit {
               toast.present();
             },
               (err: Error) => {
-                console.error("QR Scan: Server response error!");
+                console.error("QR Scan: Server response error!", err);
                 const toast: Toast = this.toastCtrl.create({
                     message: this.strQRError,
                     duration: 3000

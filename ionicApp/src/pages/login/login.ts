@@ -69,25 +69,22 @@ export class LoginPage implements OnInit {
             });
     }
     /**
-     * Logs the user in. //TODO kein Serverzustand sondern nur zugang zu logged in seiten
-     * //TODO: Passwort zurücksetzen nach einmal wrong password
+     * Logs the user in. LoggedIn is stateless (without session etc.).
+     * If the authentication fails it activates the password reset button.
      *
      * @param userName
      * @param password
      */
     public login(userName: string, password: string): void {
-        this.counterPasswordWrong++;
         const loader: Loading = this.loading.prepareLoader();
         loader.present().then((res: Response) => {
-            this.auth.login(userName, password).then(data => {
+            this.auth.login(userName, password).then((data: Response) => {
                 if (data) {
                     const toast: Toast = this.toastCtrl.create({
                         message: this.strLoginSuccessful,
                         duration: 3000
                     });
                     toast.present();
-                    // TODO
-                    //this.push.pushSetup();
 
                     if (this.popThisPage) {
                         this.restaurant = this.navParams.get("restaurant");
@@ -101,6 +98,7 @@ export class LoginPage implements OnInit {
                         loader.dismiss();
                     }
                 } else {
+                    this.counterPasswordWrong++;
                     loader.dismiss();
                     alert(this.strLoginError);
                 }
