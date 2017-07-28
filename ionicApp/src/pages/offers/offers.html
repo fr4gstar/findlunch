@@ -39,7 +39,7 @@
                 <div *ngIf="isGroupShown(category)">
                     <div *ngFor='let offer of offers[category]'>
                         <ion-item (click)="onOfferClicked($event, offer)" no-lines>
-                            <span>{{offer.title}}<sup class="exponent-allergenics">{{OffersService.getALGsAndADDsOfOffer(offer)}}</sup></span>
+                            <span>{{offer.title}}<sup class="exponent-allergenics">{{getALGsAndADDsOfOffer(offer)}}</sup></span>
                             <span item-right>{{offer.price | currency:'EUR':true}}</span>
                         </ion-item>
                     </div>

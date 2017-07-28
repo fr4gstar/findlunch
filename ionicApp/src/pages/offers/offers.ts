@@ -15,7 +15,7 @@ import {LoadingService} from "../../shared/loading.service";
 import {Offer} from "../../model/Offer";
 import {Error} from "tslint/lib/error";
 import {Event} from "_debugger";
-
+import 'rxjs/add/operator/catch';
 
 /**
  * Page for showing the offers of a specific restaurant in a list.
@@ -28,11 +28,15 @@ import {Event} from "_debugger";
 export class OffersPage implements OnInit {
     public restaurant: Restaurant;
     public offers: Offer[];
+
+    // need this to be able to call a static function from the template
+    public getALGsAndADDsOfOffer: Function = OffersService.getALGsAndADDsOfOffer;
     public allergenics$: Observable<string>;
     public additives$: Observable<string>;
+
     public categories: string[];
 
-    private shownGroup : string  = null;
+    private shownGroup: string = null;
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
     private strConnectionError: string;
@@ -100,10 +104,21 @@ export class OffersPage implements OnInit {
                     this.navCtrl.pop(); // go back so that the user can select another restaurant
                 }
             );
+
+
         // get the allergenics, and additives from the server
-        // TODO Error handling
-        this.allergenics$ = this.http.get(`${SERVER_URL}/api/all_allergenic`).map((res: Response) => res.json());
-        this.additives$ = this.http.get(`${SERVER_URL}/api/all_additives`).map((res: Response) => res.json());
+        this.allergenics$ = this.http.get(`${SERVER_URL}/api/all_allergenic`)
+            .map((res: Response) => res.json())
+            .catch((err: Error) => {
+                console.error("Error retrieving allergenics: ", err);
+                return Observable.of("");
+            });
+        this.additives$ = this.http.get(`${SERVER_URL}/api/all_additives`)
+            .map((res: Response) => res.json())
+            .catch((err: Error) => {
+                console.error("Error retrieving allergenics: ", err);
+                return Observable.of("");
+            });
     }
 
     /**
@@ -142,8 +157,8 @@ export class OffersPage implements OnInit {
         // unset as favorite if already favorite
         if (this.restaurant.isFavorite) {
 
-            const options: RequestOptions  = this.auth.prepareHttpOptions(RequestMethod.Delete);
-            this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}` , options)
+            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Delete);
+            this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}`, options)
                 .retry(2)
                 .subscribe(
                     (res: Response) => {
@@ -159,7 +174,7 @@ export class OffersPage implements OnInit {
                         console.error(err);
                         alert(this.strErrorDeFavorize);
                     });
-        // if not yet set as favorite, set it
+            // if not yet set as favorite, set it
         } else {
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
             this.http.put(`${SERVER_URL}/api/register_favorite/${this.restaurant.id}`, "", options)
@@ -170,7 +185,7 @@ export class OffersPage implements OnInit {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
                         } else {
-                            throw new Error(`Unknown return value from server: ${res.json()}` );
+                            throw new Error(`Unknown return value from server: ${res.json()}`);
                         }
                     },
                     (err: Error) => {
@@ -188,6 +203,7 @@ export class OffersPage implements OnInit {
     public getCartItemCount(): number {
         return this.cartService.getCartItemCount(this.restaurant.id);
     }
+
     /**
      * Toggles a food category on click and shows the food items in it
      * @param group {string}
