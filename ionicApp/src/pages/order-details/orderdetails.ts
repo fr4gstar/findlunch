@@ -169,6 +169,31 @@ export class OrderDetailsPage implements OnInit {
      *  @author: David Sautter
      */
     public incrementDonation(): void {
+        // securing input parameters
+        if (this.reservation.totalPrice === undefined || this.reservation.totalPrice === null || this.reservation.totalPrice < 0) {
+            console.error(`Tried to increment Donation, but totalPrice is: ${this.reservation.totalPrice}`);
+            return;
+        }
+        if (!this.reservation || typeof this.reservation.totalPrice !== "number" || typeof this.reservation.donation !== "number"
+        ) {
+            console.error("Input-Parameters not ok for incrementing a donation", this.reservation);
+            return;
+        }
+        if (this.reservation.totalPrice < this.reservation.donation) {
+            console.error(`Inconsistent state! totalPrice ${this.reservation.totalPrice} is smaller than donation ${this.reservation.donation}`);
+            this.translate.get("Error.critical").subscribe((errorMsg: string) => {
+                alert(errorMsg);
+                this.navCtrl.popToRoot();
+            });
+            return;
+        }
+        if (this.reservation.donation < 0) {
+            console.error(`donation was ${this.reservation.donation}. Resetting to 0`);
+            this.reservation.donation = 0;
+            return;
+        }
+
+        // do calculations
         const newTotalPrice: number = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
         this.reservation.donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toFixed(2));
         this.reservation.totalPrice = newTotalPrice;
@@ -186,6 +211,28 @@ export class OrderDetailsPage implements OnInit {
         let newTotalPrice: number;
         let donation: number;
 
+        // securing input parameters
+        if (this.reservation && this.reservation.donation <= 0) {
+            console.error("Tried to decrement a donation of value: ", this.reservation.donation);
+            this.reservation.donation = 0;
+            return;
+        }
+        if (!this.reservation || !this.reservation.totalPrice || !this.reservation.donation
+            || typeof this.reservation.totalPrice !== "number" || typeof this.reservation.donation !== "number"
+        ) {
+            console.error("Input-Parameters not ok for decrementing a donation", this.reservation);
+            return;
+        }
+        if (this.reservation.totalPrice < this.reservation.donation) {
+            console.error(`Inconsistent state! totalPrice ${this.reservation.totalPrice} is smaller than donation ${this.reservation.donation}`);
+            this.translate.get("Error.critical").subscribe((errorMsg: string) => {
+                alert(errorMsg);
+                this.navCtrl.popToRoot();
+            });
+            return;
+        }
+
+        // do calculations
         if (this.reservation.donation > 0.10) {
             newTotalPrice = Math.floor(this.reservation.totalPrice * 10 - 0.1) / 10;
             donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toFixed(2));

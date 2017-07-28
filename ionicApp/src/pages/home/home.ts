@@ -12,7 +12,6 @@ import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../shared/auth.service";
 import {KitchenType} from "../../model/KitchenType";
 import 'rxjs/add/operator/retry';
-import LatLng = google.maps.LatLng;
 
 
 // this is needed for google maps plugin v2
@@ -40,6 +39,9 @@ const MAP_DEFAULT_ZOOM_LEVEL: number = 15;
 })
 export class HomePage implements OnInit {
 
+    // show an error instead of the map if the device does not support it.
+    public showMapNotSupportedErr: boolean;
+
     // represents array of unfiltered restaurants
     public allRestaurants: Restaurant[];
 
@@ -62,7 +64,8 @@ export class HomePage implements OnInit {
         distance: "distance",
         kitchen: "kitchen",
         isClosed: "isClosed",
-        isOpen: "isOpen"
+        isOpen: "isOpen",
+        "Error.mapNotSupported": "Error.mapNotSupported"
     };
 
 
@@ -181,9 +184,10 @@ export class HomePage implements OnInit {
                 this.map.setAllGesturesEnabled(true);
                 this.map.setCompassEnabled(true);
 
-                this.map.getMyLocation(
+            // noinspection TsLint - no types for current plugin-googlemaps available
+            this.map.getMyLocation(
                     null,
-                    (pos: { latLng: LatLng }) => {
+                    (pos: any) => {
                         // get restaurants around this location
                         // currently, all restaurants are fetched, but I leave this code here (though it's slower this way),
                         // because once you start really filtering restaurants based on the location, you'll need it here.
@@ -211,7 +215,7 @@ export class HomePage implements OnInit {
      * animation while fetching. It also triggers filtering the restaurants after they were fetched.
      * @param latLng location of type LatLng
      */
-    private fetchRestaurants(latLng: LatLng): void {
+    private fetchRestaurants(latLng: {lat: number, lng: number}): void {
 
         // setup loading spinner
         const loader: Loading = this.loading.prepareLoader();
@@ -259,7 +263,7 @@ export class HomePage implements OnInit {
         restaurants.forEach((restaurant: Restaurant) => {
             // noinspection TsLint - no types for current plugin-googlemaps available
             this.map.addMarker({
-                position: new LatLng(restaurant.locationLatitude, restaurant.locationLongitude),
+                position: {lat: restaurant.locationLatitude, lng: restaurant.locationLongitude},
                 icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png'
             }, (marker: any) => {
                 // add html info window
@@ -320,7 +324,8 @@ ${this.translatedStrs.distance}: ${restaurant.distance}m<br/>
         modal.onWillDismiss((coords: Coordinates) => {
             // if the user cancels, coords will be undefined, so do nothing then
             if (coords) {
-                const latlng: LatLng = new LatLng(coords.latitude, coords.longitude);
+                // noinspection TsLint - no types for current plugin-googlemaps available
+                const latlng: any = {lat: coords.latitude, lng: coords.longitude};
 
                 // remove old marker if already set
                 if (this.customLocationMarker) {
