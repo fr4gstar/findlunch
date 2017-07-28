@@ -10,7 +10,6 @@ import {Offer} from "../../model/Offer";
  * @author Sergej Bardin
  */
 @Component({
-    selector: 'reservation-page',
     templateUrl: 'reservation.html'
 })
 export class ReservationPage {

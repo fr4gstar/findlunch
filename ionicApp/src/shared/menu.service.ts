@@ -7,11 +7,15 @@ import {RegistryPage} from "../pages/registry/registry";
 import {BonusPage} from "../pages/bonus/bonus";
 import {ReservationsPage} from "../pages/reservations/reservations";
 import {TranslateService} from "@ngx-translate/core";
-
+import {MenuPage} from "../model/MenuPage";
+/**
+ *  Preparing the menu pages
+ * @Skanny Morandi & Sergej Bardin
+ */
 @Injectable()
 export class MenuService {
-  public customerPages = [];
-  public guestPages = [];
+  public customerPages: MenuPage [];
+  public guestPages: MenuPage [];
 
   private strHome: string;
   private strMyOrders: string;
@@ -36,7 +40,7 @@ export class MenuService {
       this.translate.get('LoginPage.register').subscribe(
           (value: string) => { this.strRegister = value; }
       );
-
+      // Timeout is needed because of async translation without promise
       setTimeout(() => {
           this.customerPages = [
               {title: this.strHome, component: HomePage},

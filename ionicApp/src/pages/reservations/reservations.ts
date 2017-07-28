@@ -14,7 +14,6 @@ import {Event} from "_debugger";
  * @author Sergej Bardin & Skanny Morandi
  */
 @Component({
-    selector: 'reservations-page',
     templateUrl: 'reservations.html'
 })
 export class ReservationsPage implements OnInit {
@@ -29,7 +28,6 @@ export class ReservationsPage implements OnInit {
                 private translate: TranslateService) {
         this.usedRestaurants = [];
     }
-
     /**
      * Loads the reservation(s) of a user.
      */
@@ -50,14 +48,14 @@ export class ReservationsPage implements OnInit {
                     this.reservations = res.json();
                     if (this.reservations.length > 0) {
                         this.collectUsedRestaurants();
-                        ReservationsPage.sortByCollectTime(this.reservations);
+                        this.sortByCollectTime(this.reservations);
                     }
                     loader.dismiss();
                 },
                 (err: Error) => {
-                    console.error(err);
-                    alert();
                     loader.dismiss();
+                    console.error(err);
+                    alert(this.strConnectionError);
                 }
             );
     }
@@ -80,8 +78,8 @@ export class ReservationsPage implements OnInit {
         this.navCtrl.push(ReservationPage, {reservation: reservation});
     }
     // TODO
-    private static sortByCollectTime(reservations: Reservation[]): void {
-        reservations.sort((a, b) => {
+    public sortByCollectTime(reservations: Reservation[]): void {
+        reservations.sort((a: Reservation, b: Reservation) => {
             if (a.collectTime > b.collectTime) { return -1; }
             if (b.collectTime > a.collectTime) { return 1; }
             return 0;

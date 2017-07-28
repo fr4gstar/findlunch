@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController, NavParams} from "ionic-angular";
-import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {Loading, NavParams} from "ionic-angular";
+import {SERVER_URL} from "../../app/app.module";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {Restaurant} from "../../model/Restaurant";
 import {AuthService} from "../../shared/auth.service";
@@ -13,7 +13,6 @@ import {Error} from "tslint/lib/error";
  * @author Sergej Bardin - Skanny Morandi
  */
 @Component({
-    selector: 'restaurant-view-page',
     templateUrl: 'restaurant.html'
 
 })
@@ -24,8 +23,7 @@ export class RestaurantPage implements OnInit {
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
 
-    constructor(public navCtrl: NavController,
-                private navParams: NavParams,
+    constructor(private navParams: NavParams,
                 private auth: AuthService,
                 private http: Http,
                 private loading: LoadingService,
@@ -53,7 +51,7 @@ export class RestaurantPage implements OnInit {
         if (this.restaurant.isFavorite) {
 
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Delete);
-            this.http.delete(SERVER_URL + "/api/unregister_favorite/" + this.restaurant.id, options)
+            this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}`, options)
                 .retry(2)
                 .subscribe(
                     (res: Response) => {
@@ -63,7 +61,7 @@ export class RestaurantPage implements OnInit {
                         loader.dismiss();
 
                     } else {
-                      throw new Error("Unknown return value from server: " + res.json());
+                      throw new Error(`Unknown return value from server: ${res.json()}`);
                     }
                 },
                     (err: Error) => {
@@ -74,7 +72,7 @@ export class RestaurantPage implements OnInit {
         } else {
             // set as favorite
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
-            this.http.put(SERVER_URL + "/api/register_favorite/" + this.restaurant.id, "", options)
+            this.http.put(`${SERVER_URL}/api/register_favorite/${this.restaurant.id}`, "", options)
                 .retry(2)
                 .subscribe(
                 (res: Response) => {
@@ -84,7 +82,7 @@ export class RestaurantPage implements OnInit {
                         loader.dismiss();
 
                     } else {
-                        throw new Error("Unknown return value from server: " + res.json());
+                        throw new Error(`Unknown return value from server: ${res.json()}`);
                     }
                 },
                 (err: Error) => {

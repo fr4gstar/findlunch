@@ -4,7 +4,7 @@ import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/h
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../shared/auth.service";
-import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {SERVER_URL} from "../../app/app.module";
 import {LoadingService} from "../../shared/loading.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
@@ -20,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: 'login.html'
 
 })
-
 export class LoginPage implements OnInit {
     private popThisPage: boolean;
     private counterPasswordWrong: number = 0;
@@ -38,10 +37,7 @@ export class LoginPage implements OnInit {
                 private loading: LoadingService,
                 private push: PushService,
                 private translate: TranslateService) {
-
         this.popThisPage = navParams.get("comeBack");
-        //TODO check why
-        this.restaurant = null;
     }
 
     public ngOnInit(): void {
@@ -54,7 +50,6 @@ export class LoginPage implements OnInit {
         this.translate.get('Success.passwordReset').subscribe(
             (value: string) => { this.strPasswordResetSuccess = value; });
     }
-
     /**
      * Logs the user in. //TODO kein Serverzustand sondern nur zugang zu logged in seiten
      * //TODO: Passwort zurücksetzen nach einmal wrong password
@@ -66,7 +61,6 @@ export class LoginPage implements OnInit {
         this.counterPasswordWrong++;
         const loader: Loading = this.loading.prepareLoader();
         loader.present().then((res: Response) => {
-
             this.auth.login(userName, password).then(data => {
                 if (data) {
                     const toast: Toast = this.toastCtrl.create({
@@ -74,8 +68,8 @@ export class LoginPage implements OnInit {
                         duration: 3000
                     });
                     toast.present();
-
-                    this.push.pushSetup();
+                    // TODO
+                    //this.push.pushSetup();
 
                     if (this.popThisPage) {
                         this.restaurant = this.navParams.get("restaurant");
@@ -106,16 +100,16 @@ export class LoginPage implements OnInit {
     /**
      * Checks whether there is a string in the user name field and whether password was
      * entered wrong
-     * @param username = email adress of user
+     * @param username = email address of user
      */
     public isEmptyUser(username: string): boolean {
          return !(username && this.counterPasswordWrong >= 1);
     }
 
-        /**
-         * Requesting a password reset by the backend
-         * @param username = email adress of user
-         */
+    /**
+     * Requesting a password reset by the backend
+     * @param username = email adress of user
+     */
     public sendPasswordReset(username: string): void {
             const headers: Headers = new Headers({
                 'Content-Type': 'application/json'
