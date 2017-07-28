@@ -73,6 +73,17 @@ describe('OrderDetailsPage', () => {
         expect(consoleSpy).toHaveBeenCalled();
     });
 
+    it('increment should alert if totalPrice < donation', () => {
+        const consoleSpy: Spy = spyOn(console, "error");
+        const alertSpy: Spy = spyOn(window, "alert");
+        component.reservation.totalPrice = 1.10;
+        component.reservation.donation = 1.11;
+        component.incrementDonation();
+        fixture.detectChanges();
+        expect(consoleSpy).toHaveBeenCalled();
+        expect(alertSpy).toHaveBeenCalled();
+    });
+
     it('should not increment the donation if donation is negative and reset the donation to zero', () => {
         const consoleSpy: Spy = spyOn(console, "error");
         component.reservation.totalPrice = 1;
@@ -224,7 +235,7 @@ describe('OrderDetailsPage', () => {
         expect(consoleSpy).toHaveBeenCalled();
     });
 
-    it('should alert if totalPrice < donation', () => {
+    it('decrement should alert if totalPrice < donation', () => {
         const consoleSpy: Spy = spyOn(console, "error");
         const alertSpy: Spy = spyOn(window, "alert");
         component.reservation.totalPrice = 1.10;
