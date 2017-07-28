@@ -116,7 +116,7 @@ export class OffersPage implements OnInit {
         this.additives$ = this.http.get(`${SERVER_URL}/api/all_additives`)
             .map((res: Response) => res.json())
             .catch((err: Error) => {
-                console.error("Error retrieving allergenics: ", err);
+                console.error("Error retrieving additives: ", err);
                 return Observable.of("");
             });
     }
