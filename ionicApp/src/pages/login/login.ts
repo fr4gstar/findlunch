@@ -17,7 +17,6 @@ import { TranslateService } from '@ngx-translate/core';
  */
 @Component({
     templateUrl: 'login.html'
-
 })
 export class LoginPage implements OnInit {
     private popThisPage: boolean;
@@ -78,8 +77,9 @@ export class LoginPage implements OnInit {
      */
     public login(userName: string, password: string): void {
         const loader: Loading = this.loading.prepareLoader();
-        loader.present().then((res: Response) => {
-            this.auth.login(userName, password).then((data: Response) => {
+        loader.present().then(() => {
+            // TODO Error handling
+            this.auth.login(userName, password).subscribe((data: Response) => {
                 if (data) {
                     const toast: Toast = this.toastCtrl.create({
                         message: this.strLoginSuccessful,

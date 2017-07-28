@@ -34,13 +34,9 @@ const MAP_DEFAULT_ZOOM_LEVEL: number = 15;
  * @author David Sautter
  */
 @Component({
-    templateUrl: 'home.html',
-    selector: 'fl-home'
+    templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
-
-    // show an error instead of the map if the device does not support it.
-    public showMapNotSupportedErr: boolean;
 
     // represents array of unfiltered restaurants
     public allRestaurants: Restaurant[];
@@ -64,11 +60,10 @@ export class HomePage implements OnInit {
         distance: "distance",
         kitchen: "kitchen",
         isClosed: "isClosed",
-        isOpen: "isOpen",
-        "Error.mapNotSupported": "Error.mapNotSupported"
+        isOpen: "isOpen"
     };
 
-
+    //TODO device without internet -> platform exit
     constructor(private navCtrl: NavController,
                 private modalCtrl: ModalController,
                 private http: Http,
@@ -232,11 +227,9 @@ export class HomePage implements OnInit {
                     (res: Response) => {
                         // needed for enabling filter-button in header dynamically
                         this.zone.run(() => {
+                            loader.dismiss();
                             this.allRestaurants = res.json();
                             this.setRestaurantMarkers(this.filterRestaurants(this.allRestaurants));
-
-                            // remove loading spinner
-                            loader.dismiss();
                         });
                     },
                     (err: Error) => {
@@ -260,6 +253,7 @@ export class HomePage implements OnInit {
         });
 
         // draw new markers
+        // TODO error handling
         restaurants.forEach((restaurant: Restaurant) => {
             // noinspection TsLint - no types for current plugin-googlemaps available
             this.map.addMarker({

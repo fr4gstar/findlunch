@@ -83,7 +83,7 @@ export class AddressInputComponent implements OnInit {
             this.autocompleteItems = [];
             return;
         }
-
+        // TODO check error handling
         this.service.getPlacePredictions(
             {
                 input: this.acQuery,

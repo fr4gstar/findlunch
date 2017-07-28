@@ -2,10 +2,11 @@ import {Injectable, OnInit} from '@angular/core';
 import 'rxjs/add/operator/map';
 import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
 import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
-import {SERVER_URL} from "../app/app.module";
+import {SERVER_URL, APP_LANG} from "../app/app.module";
 import {Alert, AlertController} from "ionic-angular";
 import {AuthService} from "./auth.service";
 import {Error} from "tslint/lib/error";
+import {TranslateService} from "@ngx-translate/core";
 /**
  * Initializing push and notfication settings.
  * @author Sergej Bardin
@@ -14,10 +15,21 @@ import {Error} from "tslint/lib/error";
 export class PushService implements OnInit {
 
     private pushObject: PushObject;
+    private strPushError: string;
     constructor(public push: Push,
                 private alertCtrl: AlertController,
                 private auth: AuthService,
-                private http: Http) {
+                private http: Http,
+                private translate: TranslateService) {
+        this.translate.setDefaultLang(APP_LANG);
+        this.translate.get('Error.pushReg').subscribe(
+            (value: string) => {
+                this.strPushError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.pushReg.", err);
+            }
+        );
     }
 
     public ngOnInit(): void {
@@ -31,8 +43,7 @@ export class PushService implements OnInit {
                 alert: 'false',
                 badge: true,
                 sound: 'false'
-            },
-            windows: {}
+            }
         };
         this.pushObject = this.push.init(pushOptions);
         this.notificationSetup();
@@ -56,6 +67,7 @@ export class PushService implements OnInit {
                     });
                     alert.present();
                 }
+                // If background then display as notification
             });
     }
 
@@ -72,9 +84,12 @@ export class PushService implements OnInit {
                     .retry(2)
                     .subscribe(
                         (res: Response) => {
-                            console.warn("Device registered at firebase", res);
+                            console.warn("Device registered at backend", res);
                         },
-                        (err: Error) => console.error(err)
+                        (err: Error) => {
+                            console.error(err);
+                            alert(this.strPushError);
+                        }
                     );
             });
         this.pushObject.on('error').subscribe((error: Error) => console.error("Error with receiving push from firebase", error));

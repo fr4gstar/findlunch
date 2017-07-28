@@ -18,7 +18,8 @@ import {Error} from "tslint/lib/error";
     templateUrl: 'bonus.html'
 })
 export class BonusPage implements OnInit {
-    public points: Object[];
+    //noinspection TsLint
+    public points: any[];
     private strLoadPointsError: string;
     constructor(private http: Http,
                 private qr: QRService,
@@ -65,6 +66,7 @@ export class BonusPage implements OnInit {
                 (err: Error) => {
                     console.error("Getting user points error.", err);
                     loader.dismiss();
+                    // TODO user handling options - reload and go to home
                     alert(this.strLoadPointsError);
                 }
             );

@@ -65,6 +65,7 @@ export class MenuService {
               console.error("Error: translate.get did fail for key LoginPage.register.", err);
           }
       );
+      // TODO @David
       // Timeout is needed because of async translation without promise
       setTimeout(() => {
           this.customerPages = [

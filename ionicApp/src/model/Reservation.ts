@@ -10,6 +10,7 @@ export interface Reservation {
   pointsCollected: boolean;
   reservationNumber: number;
   items: Offer[];
+  reservation_offers?: Offer[];
   restaurant: Restaurant;
   bill: number;
   reservationStatus:

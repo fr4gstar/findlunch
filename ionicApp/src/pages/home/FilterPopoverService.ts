@@ -36,6 +36,7 @@ export class FilterPopoverService implements OnInit {
                 (err: Error) => {
                     console.error("Error fetching kitchenTypes", err);
                     // TODO: What should happen in that case?
+                    // reload or close app
                 }
             );
     }

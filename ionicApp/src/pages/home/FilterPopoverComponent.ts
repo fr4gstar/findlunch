@@ -10,6 +10,6 @@ export class FilterPopoverComponent {
 
     constructor(public service: FilterPopoverService,
                 public auth: AuthService,
-                private translate: TranslateService) {
+                public translate: TranslateService) {
     }
 }

@@ -113,7 +113,7 @@ export class QRService implements OnInit {
             }
           );
         },  (err: Error) => {
-          console.error("QR-Scan Error!");
+          console.error("QR-Scan Error!", err);
           const toast: Toast = this.toastCtrl.create({
               message: this.strQRError,
               duration: 3000

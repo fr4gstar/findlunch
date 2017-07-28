@@ -13,7 +13,8 @@ import {Offer} from "../../model/Offer";
     templateUrl: 'reservation.html'
 })
 export class ReservationPage {
-    public reservation;
+
+    public reservation: Reservation;
     public offers: Offer[];
     public restaurant: Restaurant;
     public points: number = 0;

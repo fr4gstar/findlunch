@@ -39,7 +39,7 @@ export class OffersPage implements OnInit {
     private shownGroup: string = null;
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
-    private strConnectionError: string;
+    private strOpeningError: string;
 
     constructor(navParams: NavParams,
                 public offerService: OffersService,
@@ -61,10 +61,6 @@ export class OffersPage implements OnInit {
         });
     }
 
-    /**
-     * Get translations and retrieve offers of this restaurant from the server.
-     * @author David Sautter
-     */
     public ngOnInit(): void {
         this.translate.get('Error.favorize').subscribe(
             (res: string) => {
@@ -80,12 +76,12 @@ export class OffersPage implements OnInit {
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.deFavorize.", err);
             });
-        this.translate.get('Error.connection').subscribe(
+        this.translate.get('Error.openingProblem').subscribe(
             (str: string) => {
-                this.strConnectionError = str;
+                this.strOpeningError = str;
             },
             (err: Error) => {
-                console.error("Error: translate.get did fail for key Error.connection.", err);
+                console.error("Error: translate.get did fail for key Error.openingProblem.", err);
             }
         );
 
@@ -100,7 +96,7 @@ export class OffersPage implements OnInit {
                 },
                 (err: Error) => {
                     console.error("Error retrieving offers of restaurant: ", this.restaurant, err);
-                    alert(this.strConnectionError);
+                    alert(this.strOpeningError);
                     this.navCtrl.pop(); // go back so that the user can select another restaurant
                 }
             );
@@ -166,6 +162,7 @@ export class OffersPage implements OnInit {
                             this.restaurant.isFavorite = false;
                             loader.dismiss();
                         } else {
+                            // TODO change to alert and log
                             throw new Error(`Unknown return value from server: ${res.json()}`);
                         }
                     },
@@ -185,6 +182,7 @@ export class OffersPage implements OnInit {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
                         } else {
+                            // TODO change to alert and log
                             throw new Error(`Unknown return value from server: ${res.json()}`);
                         }
                     },
@@ -204,6 +202,7 @@ export class OffersPage implements OnInit {
         return this.cartService.getCartItemCount(this.restaurant.id);
     }
 
+    // TODO toggleGroupDetails
     /**
      * Toggles a food category on click and shows the food items in it
      * @param group {string}

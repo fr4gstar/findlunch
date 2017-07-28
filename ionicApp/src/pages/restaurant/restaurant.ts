@@ -29,6 +29,7 @@ export class RestaurantPage implements OnInit {
                 private loading: LoadingService,
                 private translate: TranslateService) {
         this.restaurant = navParams.get("restaurant");
+        // TODO Backend or check null
         this.openingTime = this.restaurant.timeSchedules;
     }
 
@@ -50,6 +51,7 @@ export class RestaurantPage implements OnInit {
             }
         );
     }
+    //TODO -> service
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
      */

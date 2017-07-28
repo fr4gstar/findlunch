@@ -26,9 +26,9 @@ export class OrderDetailsPage implements OnInit {
     public restaurant: Restaurant;
     public pickUpTime: Date;
     public pickUpTimeISOFormat: string; //Date in Stringformat for backend.
-    public userPoints : number = 0;
-    public neededPoints : number = 0; //points needed to pay the current order with points
-    public morePointsThanNeeded : boolean; //user's points are more than is needed to pay with points
+    public userPoints: number = 0;
+    public neededPoints: number = 0; //points needed to pay the current order with points
+    public morePointsThanNeeded: boolean; //user's points are more than is needed to pay with points
     public payWithPoints: boolean = false;
 
     public openingTime: string; //of today the current restaurant
@@ -98,15 +98,6 @@ export class OrderDetailsPage implements OnInit {
             .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
     }
 
-    /**
-     * Finds the index of this offer in the items-array of the reservation.
-     * @param offer
-     * @returns {number}
-     */
-    private findItemIndex(offer: Offer): number {
-        return this.reservation.items
-            .findIndex((item, i) => item.id === offer.id);
-    }
 
     public ngOnInit(): void {
         this.translate.get('Error.emptyOrder').subscribe(
@@ -146,7 +137,7 @@ export class OrderDetailsPage implements OnInit {
                 this.strFailOrder = value;
             },
             (err: Error) => {
-                    console.error("Error: translate.get did fail for key Error.failedOrder", err);
+                console.error("Error: translate.get did fail for key Error.failedOrder", err);
             }
         );
         this.translate.get('Error.failedLoadPoints').subscribe(
@@ -227,6 +218,7 @@ export class OrderDetailsPage implements OnInit {
             return;
         }
         if (this.reservation.totalPrice < this.reservation.donation) {
+            //TODO deactivate tslint
             console.error(`Inconsistent state! totalPrice ${this.reservation.totalPrice} is smaller than donation ${this.reservation.donation}`);
             this.translate.get("Error.critical").subscribe((errorMsg: string) => {
                 alert(errorMsg);
@@ -301,6 +293,7 @@ export class OrderDetailsPage implements OnInit {
      * @author Skanny Morandi, David Sautter
      */
     public sendOrder(): void {
+        //TODO check reservation -> price == negative, reservation null, donation > totalprice
         //sending an empty order is not possible
         if (this.reservation.items.length === 0) {
             alert(this.strEmptyOrder);
@@ -318,8 +311,8 @@ export class OrderDetailsPage implements OnInit {
 
                     this.reservation.points = this.neededPoints;
                 }
-
-                const payload = {
+                //noinspection TsLint
+                const payload: any = {
                     ...this.reservation,
                     reservation_offers: [],
                     restaurant: {
@@ -342,28 +335,29 @@ export class OrderDetailsPage implements OnInit {
                 this.http.post(`${SERVER_URL}/api/register_reservation`, JSON.stringify(payload), options)
                     .retry(2)
                     .subscribe(
-                    (res: Response) => {
-                        const toast: Toast = this.toastCtrl.create({
-                            message: this.strSuccessOrder,
-                            duration: 3000
+                        (res: Response) => {
+                            const toast: Toast = this.toastCtrl.create({
+                                message: this.strSuccessOrder,
+                                duration: 3000
+                            });
+                            toast.present();
+
+                            // empty the cart for this restaurant
+                            this.cartService.emptyCart(this.restaurant.id);
+
+                            // go back to restaurants-overview
+                            this.navCtrl.popToRoot();
+
+                            //stop the spinner
+                            loader.dismiss();
+                        },
+                        (err: Error) => {
+                            console.error(err);
+                            alert(this.strFailOrder);
+                            //stop the spinner
+                            loader.dismiss();
+
                         });
-                        toast.present();
-
-                        // empty the cart for this restaurant
-                        this.cartService.emptyCart(this.restaurant.id);
-
-                        // go back to restaurants-overview
-                        this.navCtrl.popToRoot();
-
-                        //stop the spinner
-                        loader.dismiss();
-                    }, (err: Error) => {
-                        console.error(err);
-                        alert(this.strFailOrder);
-                        //stop the spinner
-                        loader.dismiss();
-
-                    });
             });
         }
     }
@@ -410,8 +404,10 @@ export class OrderDetailsPage implements OnInit {
 
             this.http.get(`${SERVER_URL}/api/get_points_restaurant/${this.restaurant.id}`, options)
                 .retry(2)
-                .subscribe((res: Response) => {
-                        const reply = res.json();
+                .subscribe(
+                    (res: Response) => {
+                        //noinspection TsLint
+                        const reply: any = res.json();
                         //if user has no points at the restaurant yet
                         if (!(reply.length === 0)) {
                             this.userPoints = reply[0].points;
@@ -427,11 +423,11 @@ export class OrderDetailsPage implements OnInit {
                         this.morePointsThanNeeded = this.userPoints > this.neededPoints;
                         loader.dismiss();
 
-                    }, (err: Error) => {
+                    },
+                    (err: Error) => {
                         console.error(err);
                         alert(this.strFailedLoadPoints)
                         loader.dismiss();
-
                     });
         });
     }
@@ -476,6 +472,7 @@ export class OrderDetailsPage implements OnInit {
             }
 
             this.closingTime = this.restaurant.timeSchedules[day].openingTimes[0].closingTime.split(" ")[1];
+            // TODO check needed?
             this.openingTime = this.restaurant.timeSchedules[day].openingTimes[0].openingTime.split(" ")[1];
 
             const prepTimeInMs: number = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
@@ -491,4 +488,15 @@ export class OrderDetailsPage implements OnInit {
             alert(this.strOpeningProblem);
         }
     }
+
+    /**
+     * Finds the index of this offer in the items-array of the reservation.
+     * @param offer
+     * @returns {number}
+     */
+    private findItemIndex(offer: Offer): number {
+        return this.reservation.items
+            .findIndex((item: Offer) => item.id === offer.id);
+    }
+
 }

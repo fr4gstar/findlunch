@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../app/app.module";
 import {User} from "../model/User";
+import {Observable} from "rxjs/Observable";
 
 /**
  * Service that handles everything about login, verification and registration of users of the App.
@@ -29,27 +30,21 @@ export class AuthService {
      * @returns {Promise<T>}
      * result returned to the method that called the login-functionality
      */
-    public login(username: string, password: string) {
-        const encodedCredentials: string = btoa(username + ":" + password);
+    public login(username: string, password: string): Observable<any> {
+        const encodedCredentials: string = btoa(`${username}:${password}`);
         const headers: Headers = new Headers({
             'Content-Type': 'application/json',
-            Authorization: "Basic " + encodedCredentials
+            Authorization: `Basic ${encodedCredentials}`
         });
 
         const options: RequestOptions = new RequestOptions({headers: headers});
-        return new Promise(resolve => {
-            this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
+        return this.http.get(`${SERVER_URL}/api/login_user`, options).do(
                 (res: Response) => {
                     window.localStorage.setItem("username", username);
                     window.localStorage.setItem(username, encodedCredentials);
                     this.userName = window.localStorage.getItem("username");
                     this.loggedIn = true;
-
-                    resolve(true);
-                }, (err) => {
-                    resolve(err.body);
                 });
-        });
     }
 
 
@@ -62,7 +57,7 @@ export class AuthService {
      * @returns {Promise<T>}
      *  result whether registration was successful returned to the calling method
      */
-
+    // TODO
     public register(username: string, password: string) {
         const user: User = {
             username: username,
@@ -74,7 +69,7 @@ export class AuthService {
             'Content-Type': 'application/json'
         });
         const options: RequestOptions = new RequestOptions({headers: headers});
-
+    // TODO
         return new Promise((resolve, reject) => {
             this.http.post(SERVER_URL + "/api/register_user", user, options).subscribe(
                 (res: Response) => {
@@ -93,6 +88,7 @@ export class AuthService {
      * If no more existent, logs the user out
      * @returns {Promise<T>}
      */
+    // TODO
     public verifyUser() {
         //if there is a username stored at all in the local storage...
         if (window.localStorage.getItem("username") !== null) {
@@ -104,7 +100,7 @@ export class AuthService {
                 //also retrieve the according token and put it into the header of the http-call
                 Authorization: "Basic " + window.localStorage.getItem(currentUser)
             });
-
+// TODO
             const options: RequestOptions = new RequestOptions({headers: headers});
             return new Promise((resolve) => {
                 this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
@@ -113,7 +109,9 @@ export class AuthService {
                         this.loggedIn = true;
                         this.userName = currentUser;
                         //else..
-                    }, (err) => {
+                    },
+                    (err: Error) => {
+                        console.warn("Verifiying user failed.", err);
                         this.logout();
                     });
             });
@@ -144,10 +142,11 @@ export class AuthService {
     public logout(): void {
         const currentUser: string = window.localStorage.getItem("username");
 
+        // TODO check removeItem -> try catch
         //delete key-value pair stored under the key named after the most recently logged in user
         window.localStorage.removeItem(currentUser);
-
-        //lösche den zuletzt eingeloggten usernamen gesetzt unter dem key-String "username"
+    // TODO
+        // lösche den zuletzt eingeloggten usernamen gesetzt unter dem key-String "username"
         window.localStorage.removeItem("username");
         this.loggedIn = false;
         this.userName = "";
@@ -165,7 +164,7 @@ export class AuthService {
 
         let options: RequestOptions;
         let headers: Headers;
-
+// TODO
         if (this.getLoggedIn()) {
             const user: string = window.localStorage.getItem("username");
             const token: string = window.localStorage.getItem(user);
