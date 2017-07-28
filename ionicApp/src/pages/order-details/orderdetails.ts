@@ -15,10 +15,10 @@ import {TranslateService} from "@ngx-translate/core";
 /**
  * Page for showing an overview of the cart and the amount of items in it.
  * It calculates and shows the total price to pay and provides a way to donate.
- * @author David Sautter, Skanny Morandi
+ * @author Skanny Morandi, David Sautter
  */
 @Component({
-    selector: 'order-details',
+    selector: 'fl-order-details',
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage implements OnInit {
@@ -70,7 +70,7 @@ export class OrderDetailsPage implements OnInit {
             collectTime: null
         };
 
-        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+        this.reservation.totalPrice = OrderDetailsPage.calcTotalPrice(this.reservation.items);
         if (this.auth.getLoggedIn()) {
             this.calcNeededPoints();
             this.getUserPoints();
@@ -81,6 +81,21 @@ export class OrderDetailsPage implements OnInit {
         this.calcTimings(10);
 
     }
+
+
+    /**
+     * Calculates the total price of a given Array of Offer-items.
+     * @param items
+     * @returns {number} the total price of all items respecting their amounts.
+     *
+     * @author David Sautter
+     */
+    private static calcTotalPrice(items: Offer[]): number {
+        return items
+            .map((offer: Offer) => offer.price * offer.amount)
+            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
+    }
+
 
     public ngOnInit(): void {
         this.translate.get('Error.emptyOrder').subscribe(
@@ -104,6 +119,8 @@ export class OrderDetailsPage implements OnInit {
             }
         );
     }
+
+
     /**
      * Increases the amount of one given offer. Also checks for the max-limit.
      * Points needed to "pay with points" for entire order gets recalculated.
@@ -115,13 +132,14 @@ export class OrderDetailsPage implements OnInit {
             console.warn("Maxmimum amount of Product reached");
         } else {
             offer.amount++;
-            this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+            this.reservation.totalPrice = OrderDetailsPage.calcTotalPrice(this.reservation.items);
             this.reservation.donation = 0;
             this.calcNeededPoints();
             this.hasEnoughPoints();
 
         }
     }
+
 
     /**
      * Decreases the amount of one given offer. Removes item from orders if amount will be 0.
@@ -135,36 +153,43 @@ export class OrderDetailsPage implements OnInit {
         } else {
             offer.amount--;
         }
-        this.reservation.totalPrice = this.calcTotalPrice(this.reservation.items);
+        this.reservation.totalPrice = OrderDetailsPage.calcTotalPrice(this.reservation.items);
         this.reservation.donation = 0;
         this.calcNeededPoints();
         this.hasEnoughPoints();
 
     }
 
+
     /**
      * Raises the donation by the following rules:
      *  - increase to next 10 Cents (1,12 -> 1,20)
      *  - then increase by 10 Cents (1,20 -> 1,30)
+     *
+     *  @author: David Sautter
      */
-    incrementDonation() {
-        const newTotalPrice = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
+    public incrementDonation(): void {
+        const newTotalPrice: number = Math.ceil(this.reservation.totalPrice * 10 + 0.1) / 10;
         this.reservation.donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toFixed(2));
         this.reservation.totalPrice = newTotalPrice;
     }
+
 
     /**
      * Decreases the donation by the following rules:
      *  - if donation >= 10 Cents, decrease by 10 Cents
      *  - else decrease to the total price of the items (no donation)
+     *
+     *  @author David Sautter
      */
-    decrementDonation() {
-        let newTotalPrice, donation;
+    public decrementDonation(): void {
+        let newTotalPrice: number;
+        let donation: number;
+
         if (this.reservation.donation > 0.10) {
             newTotalPrice = Math.floor(this.reservation.totalPrice * 10 - 0.1) / 10;
             donation = parseFloat((this.reservation.donation + (newTotalPrice - this.reservation.totalPrice)).toFixed(2));
-        }
-        else {
+        } else {
             newTotalPrice = this.reservation.totalPrice - this.reservation.donation;
             donation = 0;
         }
@@ -173,11 +198,14 @@ export class OrderDetailsPage implements OnInit {
 
     }
 
+
     /**
-     * Sends the current order to the server. While request is running, loading-animation active.
+     * Sends the current order to the server.
+     * While request is running, loading-animation is active.
      *
+     * @author Skanny Morandi
      */
-    sendOrder() {
+    public sendOrder(): void {
         if (this.reservation.items.length === 0) {
             alert(this.strEmptyOrder);
         } else {
@@ -242,16 +270,6 @@ export class OrderDetailsPage implements OnInit {
         }
     }
 
-    /**
-     * Calculates the total price of a given Array of Offer-items.
-     * @param items
-     * @returns {number} the total price of all items respecting their amounts.
-     */
-    private calcTotalPrice(items: Offer[]) {
-        return this.reservation.items
-            .map(offer => offer.price * offer.amount)
-            .reduce((prevOfferSum, offerSum) => prevOfferSum + offerSum, 0);
-    }
 
     /**
      * Finds the index of this offer in the items-array of the reservation.

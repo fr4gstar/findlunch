@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, NgZone, OnInit} from "@angular/core";
 import {ViewController} from "ionic-angular";
 import {NativeGeocoder, NativeGeocoderForwardResult} from "@ionic-native/native-geocoder";
 import {TranslateService} from "@ngx-translate/core";
@@ -27,6 +27,7 @@ export class AddressInputComponent implements OnInit {
 
     constructor(public viewCtrl: ViewController,
                 private geocoder: NativeGeocoder,
+                private zone: NgZone,
                 public translate: TranslateService) {
 
         this.autocompleteItems = [];
@@ -91,7 +92,8 @@ export class AddressInputComponent implements OnInit {
                 }
             },
             (predictions: AutocompletePrediction[]) => {
-                this.autocompleteItems = predictions;
+                // need to run this in a zone to inform Angular's change-detection about the new data.
+                this.zone.run(() => this.autocompleteItems = predictions);
             });
     }
 }

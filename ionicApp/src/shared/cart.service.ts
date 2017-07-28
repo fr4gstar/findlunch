@@ -2,48 +2,57 @@ import {Injectable} from "@angular/core";
 import {Offer} from "../model/Offer";
 
 /**
- * Manages all carts for all restaurants.
+ * Manages all carts for all restaurants (not just one).
+ * The carts are not stored in localStorage etc, just in the RAM, so they are lost on reload.
+ *
+ * @author David Sautter
  */
 @Injectable()
 export class CartService {
 
     // a map holding all carts for all restaurants. The key is the restaurant-id.
-    private _carts: Map<number, Array<Offer>>;
+    private carts: Map<number, Offer[]>;
 
     constructor() {
-        this._carts = new Map();
+        this.carts = new Map();
     }
 
+
     /**
-     * Gets a existing cart or creates one if none exists
-     * @param restaurantId
-     * @returns {Array<Offer>}
+     * Gets a existing cart or creates one if none exists.
+     *
+     * @param restaurantId id of the restaurant to create this cart for
+     * @returns {Offer[]} cart for this restaurant
      */
-    getCart(restaurantId: number): Array<Offer> {
-        return this._carts.get(restaurantId) || this.createCart(restaurantId);
+    public getCart(restaurantId: number): Offer[] {
+        return this.carts.get(restaurantId) || this.createCart(restaurantId);
     }
+
 
     /**
      * Calculates the size of the cart.
      * If multiple items of one offer are in the cart, it will sum up the items.
-     * @param restaurantId
+     *
+     * @param restaurantId id of the restaurant to identify the right cart
      * @returns {number} amount of items in cart
      */
-    getCartItemCount(restaurantId: number) {
+    public getCartItemCount(restaurantId: number): number {
         return this.getCart(restaurantId)
-            .map(offer => offer.amount)
-            .reduce((prevAmount, amount) => prevAmount + amount, 0)
+            .map((offer: Offer) => offer.amount)
+            .reduce((prevAmount: number, amount: number) => prevAmount + amount, 0);
     }
+
 
     /**
      * Adding an offer to a specific cart. It either increases the amount of this offer by 1
-     * or pushes a new offer to this cart with amount 1, if it doesn't exist in this cart.
-     * @param restaurantId
-     * @param offer
+     * or pushes a new offer to this cart with amount 1, if it doesn't exist in this cart yet.
+     *
+     * @param restaurantId id of the restaurant to identify the right cart
+     * @param offer the offer that shall be added to the cart
      */
-    addItemToCart(restaurantId: number, offer: Offer) {
-        let item = this.getCart(restaurantId)
-            .find((item, i) => item.id === offer.id);
+    public addItemToCart(restaurantId: number, offer: Offer): void {
+        const item: Offer = this.getCart(restaurantId)
+            .find((offerInCart: Offer) => offerInCart.id === offer.id);
 
         if (item) {
             item.amount++;
@@ -57,19 +66,22 @@ export class CartService {
 
     /**
      * Convenience-method for removing all items from a given cart (mostly after sending the order).
-     * @param restaurantId
+     * Internally it just creates a new cart for this restaurant, so the old one gets garbage collected.
+     *
+     * @param restaurantId id of the restaurant to identify the right cart
      */
-    emptyCart(restaurantId: number) {
+    public emptyCart(restaurantId: number): void {
         this.createCart(restaurantId);
     }
 
     /**
      * Creates a new cart for the provided restaurant and returns it.
-     * @param restaurantId
-     * @returns {Array<Offer>}
+     *
+     * @param restaurantId id of the restaurant to identify the right cart
+     * @returns {Offer[]} the new cart
      */
-    private createCart(restaurantId: number): Array<Offer> {
-        this._carts.set(restaurantId, []);
-        return this._carts.get(restaurantId);
+    private createCart(restaurantId: number): Offer[] {
+        this.carts.set(restaurantId, []);
+        return this.carts.get(restaurantId);
     }
 }
