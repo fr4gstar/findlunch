@@ -22,27 +22,29 @@ import {TranslateService} from "@ngx-translate/core";
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage implements OnInit {
-    //TODO: clarify variables
+
     public reservation: Reservation;
     public restaurant: Restaurant;
-    public pickUpTime;
-    public pickUpTimeISOFormat;
-    public userPoints = 0;
-    public neededPoints = 0;
-    public morePointsThanNeeded;
-    public payWithPoints = false;
+    public pickUpTime: Date;
+    public pickUpTimeISOFormat: string; //Date in Stringformat for backend.
+    public userPoints : number = 0;
+    public neededPoints : number = 0; //points needed to pay the current order with points
+    public morePointsThanNeeded : boolean; //user's points are more than is needed to pay with points
+    public payWithPoints: boolean = false;
 
-    public openingTime;
-    public closingTime;
-    public nowOpen;
-    public now;
-    public earliestPickUp;
-    private param;
-
+    public openingTime: string; //of today the current restaurant
+    public closingTime: string; //of today the current restaurant
+    public earliestPickUp: string;
+    public nowOpen: boolean;
     private strDonationInfo: string;
     private strInfo: string;
     private strSuccessOrder: string;
+    private strFailOrder: string;
     private strEmptyOrder: string;
+    private strFailedLoadPoints: string;
+    private strOpeningProblem: string;
+
+    private param: Object;
 
     constructor(private http: Http,
                 navParams: NavParams,
@@ -72,12 +74,14 @@ export class OrderDetailsPage implements OnInit {
 
         this.reservation.totalPrice = OrderDetailsPage.calcTotalPrice(this.reservation.items);
         if (this.auth.getLoggedIn()) {
+            // in order to determine whether the option of "paying with points" is activated or not
+            // these pieces of information have to be provided
             this.calcNeededPoints();
             this.getUserPoints();
         }
 
         this.nowOpen = this.restaurant.currentlyOpen;
-
+        // sets the earliest settable time in the datepicker to 10 minutes from now.
         this.calcTimings(10);
 
     }
@@ -130,7 +134,32 @@ export class OrderDetailsPage implements OnInit {
                 console.error("Error: translate.get did fail for key donationInfo.", err);
             }
         );
+        this.translate.get('Error.failedOrder').subscribe(
+            (value: string) => {
+                this.strFailOrder = value;
+            },
+            (err: Error) => {
+                    console.error("Error: translate.get did fail for key strFailOrder", err);
+            }
+        );
+        this.translate.get('Error.failedLoadPoints').subscribe(
+            (value: string) => {
+                this.strFailedLoadPoints = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key failedLoadPoints", err);
+            }
+        );
+        this.translate.get('Error.openingProblem').subscribe(
+            (value: string) => {
+                this.strOpeningProblem = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key openingProblem", err);
+            }
+        );
     }
+
 
 
     /**
@@ -139,7 +168,7 @@ export class OrderDetailsPage implements OnInit {
      * The donation is reset if this method gets executed.
      * @param offer
      */
-    incrAmount(offer) {
+    public incrAmount(offer: Offer): void {
         if (offer.amount >= 999) {
             console.warn("Maxmimum amount of Product reached");
         } else {
@@ -159,7 +188,7 @@ export class OrderDetailsPage implements OnInit {
      * The donation is reset if this method gets executed.
      * @param offer
      */
-    decreaseAmount(offer) {
+    public decreaseAmount(offer: Offer): void {
         if (offer.amount <= 1) {
             this.reservation.items.splice(this.findItemIndex(offer), 1);
         } else {
@@ -262,9 +291,10 @@ export class OrderDetailsPage implements OnInit {
      * Sends the current order to the server.
      * While request is running, loading-animation is active.
      *
-     * @author Skanny Morandi
+     * @author Skanny Morandi, David Sautter
      */
     public sendOrder(): void {
+        //sending an empty order is not possible
         if (this.reservation.items.length === 0) {
             alert(this.strEmptyOrder);
         } else {
@@ -274,6 +304,7 @@ export class OrderDetailsPage implements OnInit {
             loader.present().then(res => {
                 this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
 
+                //if logged in,
                 if (this.auth.getLoggedIn()) {
                     this.reservation.usedPoints = this.payWithPoints;
                     this.reservation.pointsCollected = !this.reservation.usedPoints;
@@ -288,7 +319,7 @@ export class OrderDetailsPage implements OnInit {
                         id: this.reservation.restaurant.id      // do only send id with request payload (faster)
                     }
                 };
-                payload.items.forEach((item) => {
+                payload.items.forEach((item: Offer) => {
                     payload.reservation_offers.push({
                         offer: {
                             id: item.id
@@ -301,7 +332,7 @@ export class OrderDetailsPage implements OnInit {
                 //prepare RequestOptions for http-call
                 const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Post);
 
-                this.http.post(SERVER_URL + "/api/register_reservation", JSON.stringify(payload), options)
+                this.http.post(`${SERVER_URL}/api/register_reservation`, JSON.stringify(payload), options)
                     .retry(2)
                     .subscribe(
                     (res) => {
@@ -321,6 +352,7 @@ export class OrderDetailsPage implements OnInit {
                         loader.dismiss();
                     }, (err) => {
                         console.error(err);
+                        alert(this.strFailOrder);
                         //stop the spinner
                         loader.dismiss();
 
@@ -335,13 +367,13 @@ export class OrderDetailsPage implements OnInit {
      * @param offer
      * @returns {number}
      */
-    private findItemIndex(offer: Offer) {
+    private findItemIndex(offer: Offer): number {
         return this.reservation.items
             .findIndex((item, i) => item.id === offer.id);
     }
 
     /**
-     * Shows explanation alert for donation option in the view
+     * Shows explanation for donation option in the view
      */
     public showDonationInfo(): void {
         const alert: Alert = this.alertCtrl.create({
@@ -356,7 +388,7 @@ export class OrderDetailsPage implements OnInit {
      * Sends the user to the Loginpage. After successful Login he is automatically
      * coming back to this order-details-page.
      */
-    public goToLogin() {
+    public goToLogin(): void {
         this.navCtrl.push(LoginPage, {comeBack: true, restaurant: this.restaurant});
     }
 
@@ -364,7 +396,7 @@ export class OrderDetailsPage implements OnInit {
      * Sends the user to the Registry. After successful Registration and
      * involved Login he is automatically coming back to this order-details-page
      */
-    public goToRegister() {
+    public goToRegister(): void {
         this.navCtrl.push(RegistryPage, {comeBack: true, restaurant: this.restaurant});
     }
 
@@ -375,7 +407,7 @@ export class OrderDetailsPage implements OnInit {
     public getUserPoints(): void {
 
         //start loading animation
-        const loader = this.loading.prepareLoader();
+        const loader: Loading = this.loading.prepareLoader();
         loader.present().then(res => {
 
             //prepare RequestOptions
@@ -404,15 +436,17 @@ export class OrderDetailsPage implements OnInit {
                     },
                     err => {
                         console.error(err);
-                        //TODO alert with "points couldnt be loaded, please try later"
+                        alert(this.strFailedLoadPoints)
                         loader.dismiss();
 
                     });
         });
     }
 
-    //TODO: Comment
-    public calcNeededPoints() {
+    /**
+     * calculates the points that are needed to pay for the order with only points
+     */
+    public calcNeededPoints(): void {
         let totalNeededPoints: number = 0;
         for (const item of this.reservation.items) {
             totalNeededPoints += (item.neededPoints * item.amount);
@@ -423,36 +457,46 @@ export class OrderDetailsPage implements OnInit {
     /**
      * checks whether user has enough points to pay with points
      */
-    public hasEnoughPoints() {
-        this.morePointsThanNeeded = this.userPoints > this.neededPoints;
+    public hasEnoughPoints(): void {
+        this.morePointsThanNeeded = this.userPoints >= this.neededPoints;
     }
 
-    //TODO: Comment
-    public calcTimings(prepTime) {
-        const date = new Date();
-        // restaurant.timeSchedules is an Array with of Objects with opening times for single
+    /**
+     * calculates the minimum and maximum time for the datepicker that lets the user choose his desired
+     * pickuptime depending on the opening times of the restaurant on the current day
+     * @param prepTime
+     *  amount of time that is needed for the order to be prepared. the time of Now + the prepTime equals
+     *  the lower threshold of the datepicker.
+     */
+    public calcTimings(prepTime: number): void {
+        const date: Date = new Date();
+        // restaurant.timeSchedules is an Array of Objects with opening time strings for single
         // days in the order of weekdays e.g. timeSchedules[0] are opening times on Monday
-        //TODO: Try-catch block around, if catch send back to home with alert that
-        //TODO: Restaurant is not available atm
-        let day = date.getDay();
-        if (day === 0) {
-            day = 1;
-        } else {
-            day = day - 1;
 
+        try {
+            let day: number = date.getDay();
+            if (day === 0) {
+                day = 1;
+            } else {
+                day = day - 1;
+
+            }
+
+            this.closingTime = this.restaurant.timeSchedules[day].openingTimes[0].closingTime.split(" ")[1];
+            this.openingTime = this.restaurant.timeSchedules[day].openingTimes[0].openingTime.split(" ")[1];
+
+            const prepTimeInMs: number = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
+            date.setTime(date.getTime() + prepTimeInMs);
+
+            this.pickUpTime = date;
+            this.pickUpTimeISOFormat = date.toISOString();
+
+            date.setTime(date.getTime() - 120 * 60 * 1000);
+            this.earliestPickUp = date.toLocaleTimeString();
+        } catch (e) {
+            console.error(e);
+            alert(this.strOpeningProblem);
         }
-
-        this.closingTime = this.restaurant.timeSchedules[day].openingTimes[0].closingTime.split(" ")[1];
-        this.openingTime = this.restaurant.timeSchedules[day].openingTimes[0].openingTime.split(" ")[1];
-
-        const prepTimeInMs: number = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
-        date.setTime(date.getTime() + prepTimeInMs);
-
-        this.pickUpTime = date;
-        this.pickUpTimeISOFormat = date.toISOString();
-
-        date.setTime(date.getTime() - 120 * 60 * 1000);
-        this.earliestPickUp = date.toLocaleTimeString();
 
     }
 
