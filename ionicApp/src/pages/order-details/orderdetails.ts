@@ -357,8 +357,8 @@ export class OrderDetailsPage implements OnInit {
     }
 
     /**
-     * Sends the user to the Loginpage. After successful Login he is automatically
-     * coming back to this order-details-page.
+     * Sends the user to the Loginpage. After successful Login by sending along the
+     * "comeBack"-boolean he is automatically coming back to this order-details-page.
      */
     public goToLogin(): void {
         this.navCtrl.push(LoginPage, {comeBack: true, restaurant: this.restaurant});
@@ -366,7 +366,8 @@ export class OrderDetailsPage implements OnInit {
 
     /**
      * Sends the user to the Registry. After successful Registration and
-     * involved Login he is automatically coming back to this order-details-page
+     * involved Login by sending along the "comeBack"-boolean he is
+     * automatically coming back to this order-details-page.
      */
     public goToRegister(): void {
         this.navCtrl.push(RegistryPage, {comeBack: true, restaurant: this.restaurant});

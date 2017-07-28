@@ -30,9 +30,9 @@ export class OffersPage implements OnInit {
     public offers: Offer[];
     public allergenics$: Observable<string>;
     public additives$: Observable<string>;
-    public categories;
+    public categories: string[];
 
-    private shownGroup = null;
+    private shownGroup : string  = null;
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
     private strConnectionError: string;
@@ -100,32 +100,37 @@ export class OffersPage implements OnInit {
                     this.navCtrl.pop(); // go back so that the user can select another restaurant
                 }
             );
-
+        //get the allergenics, and additives from the server 
         this.allergenics$ = this.http.get(`${SERVER_URL}/api/all_allergenic`).map((res: Response) => res.json());
         this.additives$ = this.http.get(`${SERVER_URL}/api/all_additives`).map((res: Response) => res.json());
     }
 
     /**
-     * //TODO: write comment
+     * Navigates to the Product details page of the clicked menu item.
      * @param event
+     *  the click
      * @param offer
+     *  the clicked offer
      * @author Skanny Morandi
      */
     public onOfferClicked(event: Event, offer: Offer): void {
-        this.navCtrl.push(OfferProductDetailsPage, {offer, restaurant: this.restaurant})
+        this.navCtrl.push(OfferProductDetailsPage, {offer, restaurant: this.restaurant});
     }
 
     /**
-     * //TODO write comment
+     * Navigate to the RestaurantPage of the restaurant whos offers are shown on click
+     * current restaurant Object is sent along
      * @param event
+     *  the click
      * @author Skanny Morandi
      */
     public onRestaurantClicked(event: Event): void {
-        this.navCtrl.push(RestaurantPage, {restaurant: this.restaurant})
+        this.navCtrl.push(RestaurantPage, {restaurant: this.restaurant});
     }
 
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
+     * Shows a loading animation while request is running
      * @author Skanny Morandi
      */
     public toggleIsFavorite(): void {
@@ -152,8 +157,8 @@ export class OffersPage implements OnInit {
                         loader.dismiss();
                         console.error(err);
                         alert(this.strErrorDeFavorize);
-                        //TO DO
                     });
+        // if not yet set as favorite, set it
         } else {
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
             this.http.put(`${SERVER_URL}/api/register_favorite/${this.restaurant.id}`, "", options)
@@ -182,25 +187,12 @@ export class OffersPage implements OnInit {
     public getCartItemCount(): number {
         return this.cartService.getCartItemCount(this.restaurant.id);
     }
-
     /**
-     * //TODO: Comment schreiben
+     * Toggles a food category on click and shows the food items in it
+     * @param group {string}
+     *  according food category
      */
-    private toggleDetails(data): void {
-        if (data.showDetails) {
-            data.showDetails = false;
-            data.icon = 'ios-add-circle-outline';
-        } else {
-            data.showDetails = true;
-            data.icon = 'ios-remove-circle-outline';
-        }
-    }
-
-    /**
-     * //TODO: Comment schreiben
-     * @param group
-     */
-    private toggleGroup(group): void {
+    private toggleGroup(group: string): void {
         if (this.isGroupShown(group)) {
             this.shownGroup = null;
         } else {
@@ -209,11 +201,14 @@ export class OffersPage implements OnInit {
     }
 
     /**
-     * //TODO: Comment schreiben
-     * @param group
+     * Returns whether the items of a food category are to be shown or hidden
+     * by being collapsed
+     * @param group {string}
+     *  the according food category
      * @returns {boolean}
+     *  boolean whether items are to be shown or not.
      */
-    private isGroupShown(group): boolean {
+    private isGroupShown(group: string): boolean {
         return this.shownGroup === group;
     }
 
