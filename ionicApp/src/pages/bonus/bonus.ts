@@ -6,8 +6,9 @@ import {TranslateService} from '@ngx-translate/core';
 import {LoadingService} from "../../shared/loading.service";
 import {AuthService} from "../../shared/auth.service";
 import {Event} from "_debugger";
-import {Loading} from "ionic-angular";
+import {Loading, Alert, AlertController, NavController} from "ionic-angular";
 import {Error} from "tslint/lib/error";
+import {HomePage} from "../home/home";
 
 /**
  * This pages loads and shows the points of an user per restaurant.
@@ -21,11 +22,16 @@ export class BonusPage implements OnInit {
     //noinspection TsLint
     public points: any[];
     private strLoadPointsError: string;
+    private strGeneralError: string;
+    private strCancel: string;
+    private strRetry: string;
     constructor(private http: Http,
                 private qr: QRService,
                 private auth: AuthService,
+                private alertCtrl: AlertController,
                 private loading: LoadingService,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private navCtrl: NavController) {
     }
     public ngOnInit() : void {
         this.translate.get('Error.points').subscribe(
@@ -34,6 +40,27 @@ export class BonusPage implements OnInit {
                 },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.points.", err);
+            });
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strGeneralError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            });
+        this.translate.get('retry').subscribe(
+            (value: string) => {
+                this.strRetry = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key retry.", err);
+            });
+        this.translate.get('cancel').subscribe(
+            (value: string) => {
+                this.strCancel = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key cancel.", err);
             });
         this.loadPoints();
     }
@@ -66,8 +93,28 @@ export class BonusPage implements OnInit {
                 (err: Error) => {
                     console.error("Getting user points error.", err);
                     loader.dismiss();
-                    // TODO user handling options - reload and go to home
-                    alert(this.strLoadPointsError);
+                    //noinspection TsLint
+                    const alert: Alert = this.alertCtrl.create({
+                        title: this.strGeneralError,
+                        subTitle: this.strLoadPointsError,
+                        buttons: [
+                            {
+                                text: this.strCancel,
+                                role: 'cancel',
+                                handler: () => {
+                                    this.navCtrl.push(HomePage);
+                                }
+                            },
+                                {
+                                    text: this.strRetry,
+                                    handler: () => {
+                                        this.loadPoints();
+                                    }
+                                }
+                            ]
+
+                    });
+                    alert.present();
                 }
             );
     }

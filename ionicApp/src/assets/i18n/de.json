@@ -81,6 +81,8 @@
     "phone": "Telefon",
     "distance": "Entfernung",
     "address": "Adresse",
+    "cancel": "Abbrechen",
+    "retry": "Erneut versuchen",
     "Success": {
         "logoutSuccess": "Logout erfolgt",
         "login": "Login Erfolgreich",
@@ -90,6 +92,7 @@
         "confirmOrder": "Bestellung erfolgreich bestätigt!"
     },
     "Error": {
+        "general": "Fehler",
         "emptyOrder": "Sie können keine leere Bestellung absenden.",
         "favorize": "Konnte Restaurant nicht als Favorit setzen.",
         "deFavorize": "Konnte Restaurant nicht als Favorit entfernen.",
@@ -112,4 +115,5 @@
         "openingProblem": "Leider steht das gewählte Restaurant im Moment nicht zur Verfügung. Bitte wählen Sie ein anderes Restaurant oder versuchen es später noch einmal",
         "pushReg": "Push-Funktionalität ist nicht gegeben. Sie erhalten keine Bestellungsbestätigung!"
     }
+
 }
