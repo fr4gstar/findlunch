@@ -77,6 +77,6 @@ export class PushService implements OnInit {
                         (err: Error) => console.error(err)
                     );
             });
-        this.pushObject.on('error').subscribe((error: Error) => console.error("Error with push plugin or firebase", error));
+        this.pushObject.on('error').subscribe((error: Error) => console.error("Error with receiving push from firebase", error));
     }
 }

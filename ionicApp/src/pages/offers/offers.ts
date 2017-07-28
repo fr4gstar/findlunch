@@ -65,14 +65,23 @@ export class OffersPage implements OnInit {
         this.translate.get('Error.favorize').subscribe(
             (res: string) => {
                 this.strErrorFavorize = res;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.favorize.", err);
             });
         this.translate.get('Error.deFavorize').subscribe(
             (res: string) => {
                 this.strErrorDeFavorize = res;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.deFavorize.", err);
             });
         this.translate.get('Error.connection').subscribe(
             (str: string) => {
                 this.strConnectionError = str;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.connection.", err);
             }
         );
 

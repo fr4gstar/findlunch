@@ -33,7 +33,12 @@ export class ReservationsPage implements OnInit {
      */
     public ngOnInit(): void {
         this.translate.get('Error.connetion').subscribe(
-            (value: string) => { this.strConnectionError = value; });
+            (value: string) => {
+                this.strConnectionError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.connetion.", err);
+            });
 
         //prepare a loading spinner
         const loader: Loading = this.loading.prepareLoader();
@@ -60,7 +65,9 @@ export class ReservationsPage implements OnInit {
             );
     }
 
-    // TODO
+    /**
+     * Saving the restaurants from reserveration to array
+     */
     public collectUsedRestaurants(): void {
         for (const reservation of this.reservations) {
             if (this.usedRestaurants.indexOf(reservation.restaurant.name) === -1) {
@@ -77,7 +84,11 @@ export class ReservationsPage implements OnInit {
     public onReservationClicked(event: Event, reservation: String): void {
         this.navCtrl.push(ReservationPage, {reservation: reservation});
     }
-    // TODO
+
+    /**
+     * Sorts several reserverations by collect time
+     * @param reservations
+     */
     public sortByCollectTime(reservations: Reservation[]): void {
         reservations.sort((a: Reservation, b: Reservation) => {
             if (a.collectTime > b.collectTime) { return -1; }

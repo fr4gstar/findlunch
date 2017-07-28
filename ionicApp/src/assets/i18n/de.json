@@ -104,8 +104,6 @@
         "confirmOrderOffer": "Fehler: Angebot nicht gefunden!",
         "qr": "Fehler beim Scannen des QR-Codes",
         "points": "Punkte konnten nicht geladen werden!",
-        "locationNotFoundError": "Ort wurde nicht gefunden"
-
+        "locationNotFound": "Ort wurde nicht gefunden"
     }
-
 }
