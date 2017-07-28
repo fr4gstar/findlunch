@@ -54,7 +54,7 @@ export class MenuService {
               this.strLogin = value;
               },
           (err: Error) => {
-              console.error("Error: translate.get did fail for key LoginPage.v.", err);
+              console.error("Error: translate.get did fail for key LoginPage.title.", err);
           }
       );
       this.translate.get('LoginPage.register').subscribe(

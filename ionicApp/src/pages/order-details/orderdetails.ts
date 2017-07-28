@@ -18,7 +18,6 @@ import {TranslateService} from "@ngx-translate/core";
  * @author Skanny Morandi, David Sautter
  */
 @Component({
-    selector: 'fl-order-details',
     templateUrl: 'order-details.html'
 })
 export class OrderDetailsPage implements OnInit {
@@ -84,6 +83,29 @@ export class OrderDetailsPage implements OnInit {
         // sets the earliest settable time in the datepicker to 10 minutes from now.
         this.calcTimings(10);
 
+    }
+
+    /**
+     * Calculates the total price of a given Array of Offer-items.
+     * @param items
+     * @returns {number} the total price of all items respecting their amounts.
+     *
+     * @author David Sautter
+     */
+    private static calcTotalPrice(items: Offer[]): number {
+        return items
+            .map((offer: Offer) => offer.price * offer.amount)
+            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
+    }
+
+    /**
+     * Finds the index of this offer in the items-array of the reservation.
+     * @param offer
+     * @returns {number}
+     */
+    private findItemIndex(offer: Offer): number {
+        return this.reservation.items
+            .findIndex((item, i) => item.id === offer.id);
     }
 
     public ngOnInit(): void {
@@ -194,6 +216,7 @@ export class OrderDetailsPage implements OnInit {
      */
     public incrementDonation(): void {
         // securing input parameters
+        // TODO check
         if (this.reservation.totalPrice === undefined || this.reservation.totalPrice === null || this.reservation.totalPrice < 0) {
             console.error(`Tried to increment Donation, but totalPrice is: ${this.reservation.totalPrice}`);
             return;
@@ -236,6 +259,7 @@ export class OrderDetailsPage implements OnInit {
         let donation: number;
 
         // securing input parameters
+        // TODO check
         if (this.reservation && this.reservation.donation <= 0) {
             console.error("Tried to decrement a donation of value: ", this.reservation.donation);
             this.reservation.donation = 0;
@@ -466,29 +490,5 @@ export class OrderDetailsPage implements OnInit {
             console.error(e);
             alert(this.strOpeningProblem);
         }
-
-    }
-
-    /**
-     * Calculates the total price of a given Array of Offer-items.
-     * @param items
-     * @returns {number} the total price of all items respecting their amounts.
-     *
-     * @author David Sautter
-     */
-    private static calcTotalPrice(items: Offer[]): number {
-        return items
-            .map((offer: Offer) => offer.price * offer.amount)
-            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
-    }
-
-    /**
-     * Finds the index of this offer in the items-array of the reservation.
-     * @param offer
-     * @returns {number}
-     */
-    private findItemIndex(offer: Offer): number {
-        return this.reservation.items
-            .findIndex((item, i) => item.id === offer.id);
     }
 }

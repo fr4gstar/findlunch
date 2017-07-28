@@ -32,12 +32,12 @@ export class ReservationsPage implements OnInit {
      * Loads the reservation(s) of a user.
      */
     public ngOnInit(): void {
-        this.translate.get('Error.connetion').subscribe(
+        this.translate.get('Error.connection').subscribe(
             (value: string) => {
                 this.strConnectionError = value;
                 },
             (err: Error) => {
-                console.error("Error: translate.get did fail for key Error.connetion.", err);
+                console.error("Error: translate.get did fail for key Error.connection.", err);
             });
 
         //prepare a loading spinner

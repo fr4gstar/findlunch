@@ -102,7 +102,7 @@ export class RegistryPage implements OnInit {
     }
     /**
      * Username password and password repetitions get checked and registered with the server. If registry not successful
-     * suiting error message gehts displayed. if successful, logs in directly and goes either back to orderdetails or
+     * suiting error message gets displayed. if successful, logs in directly and goes either back to orderdetails or
      * homepage
      */
     public onRegisterClicked(username: string, password: string, password2: string): void {
@@ -117,7 +117,7 @@ export class RegistryPage implements OnInit {
             toast.present();
         }
         const loader: Loading = this.loading.prepareLoader();
-        loader.present().then((res: Response) => {
+        loader.present().then(() => {
 
             this.auth.register(username, password).then(() => {
                 const toast: Toast = this.toastCtrl.create({

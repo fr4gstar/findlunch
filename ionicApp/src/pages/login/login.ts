@@ -8,7 +8,6 @@ import {SERVER_URL} from "../../app/app.module";
 import {LoadingService} from "../../shared/loading.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
-import {PushService} from "../../shared/push.service";
 import { TranslateService } from '@ngx-translate/core';
 
 /**
@@ -35,8 +34,8 @@ export class LoginPage implements OnInit {
                 private http: Http,
                 private navParams: NavParams,
                 private loading: LoadingService,
-                private push: PushService,
                 private translate: TranslateService) {
+        // When comeBack is true, after login user is sent back to the view he came from
         this.popThisPage = navParams.get("comeBack");
     }
 
@@ -56,7 +55,9 @@ export class LoginPage implements OnInit {
                 console.error("Error: translate.get did fail for key Success.login.", err);
             });
         this.translate.get('Error.connection').subscribe(
-            (value: string) => { this.strConnectionError = value; },
+            (value: string) => {
+                this.strConnectionError = value;
+                },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.connection.", err);
             });
@@ -85,7 +86,7 @@ export class LoginPage implements OnInit {
                         duration: 3000
                     });
                     toast.present();
-
+                    // When comeBack is true, after login user is sent back to the view he came from
                     if (this.popThisPage) {
                         this.restaurant = this.navParams.get("restaurant");
                         this.navCtrl.push(OrderDetailsPage, {
@@ -94,6 +95,7 @@ export class LoginPage implements OnInit {
                         loader.dismiss();
 
                     } else {
+                        // else go back to homePage
                         this.navCtrl.setRoot(HomePage);
                         loader.dismiss();
                     }

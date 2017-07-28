@@ -82,6 +82,7 @@ export const APP_LANG: string = "de";
         AddressInputComponent,
         OfferProductDetailsPage,
         ReservationPage,
+        RestaurantPage,
         LoginPage,
         RegistryPage,
         ReservationsPage
