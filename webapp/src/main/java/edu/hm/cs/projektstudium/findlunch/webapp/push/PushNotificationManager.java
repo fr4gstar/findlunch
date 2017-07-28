@@ -197,7 +197,7 @@ public class PushNotificationManager implements PushMessagingInterface {
 		JSONObject notification = new JSONObject();
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
-		data.put("title","Deine Bestellung: "+reservation.getReservationNumber());
+		data.put("title","Deine Bestellung");
 		data.put("body", "Deine Bestellung "+reservation.getReservationNumber()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" bestätigt");
 		data.put("icon", "/images/FL.png");
 		notification.put("data", data);
@@ -216,9 +216,9 @@ public class PushNotificationManager implements PushMessagingInterface {
 		JSONObject notification = new JSONObject();
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
-		data.put("titel:","Deine Bestellung: "+reservation.getReservationNumber());
-		data.put("body:", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt. Begründung: "+reservation.getReservationStatus().getStatus());
-		data.put("icon:", "/images/FL.png");
+		data.put("titel","Deine Bestellung");
+		data.put("body", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt. Begründung: "+reservation.getReservationStatus().getStatus());
+		data.put("icon", "/images/FL.png");
 		notification.put("data", data);
 		return notification;
 	}
@@ -234,9 +234,9 @@ public class PushNotificationManager implements PushMessagingInterface {
 		JSONObject notification = new JSONObject();
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
-		data.put("titel:","Deine Bestellung: "+reservation.getReservationNumber());
-		data.put("body:", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde nicht durch das Restaurant "+reservation.getRestaurant().getName()+" nicht rechtzeitig bearbeitet");
-		data.put("icon:", "/images/FL.png");
+		data.put("titel","Deine Bestellung: "+reservation.getReservationNumber());
+		data.put("body", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde durch das Restaurant "+reservation.getRestaurant().getName()+" nicht rechtzeitig bearbeitet");
+		data.put("icon", "/images/FL.png");
 		notification.put("data", data);
 		return notification;
 	}
