@@ -147,7 +147,7 @@ class ReservationController {
 			reservation.setReservationStatus(reservationStatusRepository.findById(1));
 			reservationRepository.save(reservation);
 			increaseConsumerPoints(reservation);
-			confirmPush(reservation);
+			sendPush(reservation);
 			
 		}
 		return "redirect:/reservations?success";
@@ -188,7 +188,7 @@ class ReservationController {
 				Reservation reservation = reservationRepository.findOne(r.getId());
 				reservation.setReservationStatus(reservationStatusRepository.findById(2));
 				reservationRepository.save(reservation);
-				confirmPush(reservation);
+				sendPush(reservation);
 			}
 			return "redirect:/reservations?successReject";
 		
@@ -213,7 +213,7 @@ class ReservationController {
 		reservation.setReservationStatus(reservationStatusRepository.findOne(reason_id));
 		reservation.setTimestampResponded(new Date());
 		reservationRepository.save(reservation);
-		confirmPush(reservation);
+		sendPush(reservation);
 		
 		return "redirect:/reservations?successReject";
 		
@@ -238,7 +238,7 @@ class ReservationController {
 		reservation.setReservationStatus(reservationStatusRepository.findById(1));
 		
 		reservationRepository.save(reservation);
-		confirmPush(reservation);
+		sendPush(reservation);
 		
 		return "redirect:/reservations?successReject";
 	}
@@ -275,7 +275,7 @@ class ReservationController {
 			Reservation reservation = reservationRepository.findOne(r.getId());
 			reservation.setReservationStatus(reservationStatusRepository.findById(1));
 			reservationRepository.save(reservation);
-			confirmPush(reservation);
+			sendPush(reservation);
 			//calculateConsumerPoints(reservation);
 		}
 		return "redirect:/reservations?success";
@@ -318,12 +318,11 @@ class ReservationController {
 	}
 
 	/**
-	 * Sends a confirmation of the reservation via firebase push to the customer
+	 * Sends a confirmation or rejection of the reservation via firebase push to the customer
 	 * @param reservation the reservation
-	 * @param confirm true, if confirmed, false if rejected
-	 * @return
+	 * @return ture if a message was send
 	 */
-	private Boolean confirmPush(Reservation reservation) {
+	private Boolean sendPush(Reservation reservation) {
 		
 		PushNotificationManager pushManager = new PushNotificationManager();
 		
