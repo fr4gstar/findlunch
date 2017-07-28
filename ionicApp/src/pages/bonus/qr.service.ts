@@ -1,7 +1,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Toast, ToastController} from "ionic-angular";
 import {Http, RequestOptions, RequestMethod, Response} from "@angular/http";
-import {SERVER_URL, APP_LANG} from "../../app/app.module";
+import {SERVER_URL} from "../../app/app.module";
 import {BarcodeScanner, BarcodeScanResult} from '@ionic-native/barcode-scanner';
 import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../shared/auth.service";
@@ -30,13 +30,33 @@ export class QRService implements OnInit {
   }
   public ngOnInit(): void {
       this.translate.get('Success.confirmOrder').subscribe(
-          (value: string) => { this.strConfirmOrderSuccess = value; });
+          (value: string) => {
+              this.strConfirmOrderSuccess = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key Success.confirmOrder.", err);
+          });
       this.translate.get('Error.confirmOrderRestaurant').subscribe(
-          (value: string) => { this.strRestaurantNotFound = value; });
+          (value: string) => {
+              this.strRestaurantNotFound = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key Error.confirmOrderRestaurant.", err);
+          });
       this.translate.get('Error.confirmOrderOffer').subscribe(
-          (value: string) => { this.strOfferNotFound = value; });
+          (value: string) => {
+              this.strOfferNotFound = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key Error.confirmOrderOffer.", err);
+          });
       this.translate.get('Error.qr').subscribe(
-          (value: string) => { this.strQRError = value; });
+          (value: string) => {
+              this.strQRError = value;
+          },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key Error.qr.", err);
+          });
   }
   /**
    * Handles the barcode scanner function of the device.
@@ -84,7 +104,7 @@ export class QRService implements OnInit {
               toast.present();
             },
               (err: Error) => {
-                console.error("QR scan abort or server response error!");
+                console.error("QR Scan: Server response error!");
                 const toast: Toast = this.toastCtrl.create({
                     message: this.strQRError,
                     duration: 3000
@@ -93,7 +113,7 @@ export class QRService implements OnInit {
             }
           );
         },  (err: Error) => {
-          console.error("QR scan abort or server response error!");
+          console.error("QR-Scan Error!");
           const toast: Toast = this.toastCtrl.create({
               message: this.strQRError,
               duration: 3000

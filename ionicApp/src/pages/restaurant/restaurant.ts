@@ -34,10 +34,20 @@ export class RestaurantPage implements OnInit {
 
     public ngOnInit(): void {
         this.translate.get('Error.favorize').subscribe(
-            (res: string) => { this.strErrorFavorize = res; }
+            (res: string) => {
+                this.strErrorFavorize = res;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.favorize.", err);
+            }
         );
         this.translate.get('Error.deFavorize').subscribe(
-            (res: string) => { this.strErrorDeFavorize = res; }
+            (res: string) => {
+                this.strErrorDeFavorize = res;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.deFavorize.", err);
+            }
         );
     }
     /**
@@ -66,7 +76,7 @@ export class RestaurantPage implements OnInit {
                 },
                     (err: Error) => {
                     alert(this.strErrorDeFavorize);
-                    console.error(err);
+                    console.error("Defavorize restaurant failed.", err);
                 }
             );
         } else {
@@ -87,7 +97,7 @@ export class RestaurantPage implements OnInit {
                 },
                 (err: Error) => {
                     alert(this.strErrorFavorize);
-                    console.error(err);
+                    console.error("Favorize restaurant failed.", err);
                 });
         }
     }

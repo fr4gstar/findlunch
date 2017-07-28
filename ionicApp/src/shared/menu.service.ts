@@ -26,19 +26,44 @@ export class MenuService {
   constructor(private translate: TranslateService) {
       this.translate.setDefaultLang(APP_LANG);
       this.translate.get('home').subscribe(
-          (value: string) => { this.strHome = value; }
+          (value: string) => {
+              this.strHome = value;
+          },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key home.", err);
+          }
       );
       this.translate.get('ReservationsPage.title').subscribe(
-          (value: string) => { this.strMyOrders = value; }
+          (value: string) => {
+              this.strMyOrders = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key ReservationsPage.title.", err);
+          }
       );
       this.translate.get('BonusPage.title').subscribe(
-          (value: string) => { this.strMyPoints = value; }
+          (value: string) => {
+              this.strMyPoints = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key BonusPage.title.", err);
+          }
       );
       this.translate.get('LoginPage.title').subscribe(
-          (value: string) => { this.strLogin = value; }
+          (value: string) => {
+              this.strLogin = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key LoginPage.v.", err);
+          }
       );
       this.translate.get('LoginPage.register').subscribe(
-          (value: string) => { this.strRegister = value; }
+          (value: string) => {
+              this.strRegister = value;
+              },
+          (err: Error) => {
+              console.error("Error: translate.get did fail for key LoginPage.register.", err);
+          }
       );
       // Timeout is needed because of async translation without promise
       setTimeout(() => {

@@ -28,7 +28,12 @@ export class BonusPage implements OnInit {
     }
     public ngOnInit() : void {
         this.translate.get('Error.points').subscribe(
-            (value: string) => { this.strLoadPointsError = value; });
+            (value: string) => {
+                this.strLoadPointsError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.points.", err);
+            });
         this.loadPoints();
     }
     /**
@@ -58,9 +63,9 @@ export class BonusPage implements OnInit {
                     loader.dismiss();
                 },
                 (err: Error) => {
-                    console.error("Getting user points error!", err);
-                    alert(this.strLoadPointsError);
+                    console.error("Getting user points error.", err);
                     loader.dismiss();
+                    alert(this.strLoadPointsError);
                 }
             );
     }

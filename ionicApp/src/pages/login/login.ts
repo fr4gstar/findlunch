@@ -42,13 +42,31 @@ export class LoginPage implements OnInit {
 
     public ngOnInit(): void {
         this.translate.get('Error.login').subscribe(
-            (value: string)  => { this.strLoginError = value; });
+            (value: string)  => {
+                this.strLoginError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.login.", err);
+            });
         this.translate.get('Success.login').subscribe(
-            (value: string) => { this.strLoginSuccessful = value; });
+            (value: string) => {
+                this.strLoginSuccessful = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.login.", err);
+            });
         this.translate.get('Error.connection').subscribe(
-            (value: string) => { this.strConnectionError = value; });
+            (value: string) => { this.strConnectionError = value; },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.connection.", err);
+            });
         this.translate.get('Success.passwordReset').subscribe(
-            (value: string) => { this.strPasswordResetSuccess = value; });
+            (value: string) => {
+                this.strPasswordResetSuccess = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.passwordReset.", err);
+            });
     }
     /**
      * Logs the user in. //TODO kein Serverzustand sondern nur zugang zu logged in seiten

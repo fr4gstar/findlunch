@@ -101,21 +101,33 @@ export class OrderDetailsPage implements OnInit {
         this.translate.get('Error.emptyOrder').subscribe(
             (value: string) => {
                 this.strEmptyOrder = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.emptyOrder.", err);
             }
         );
         this.translate.get('Success.order').subscribe(
             (value: string) => {
                 this.strSuccessOrder = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.order.", err);
             }
         );
         this.translate.get('info').subscribe(
             (value: string) => {
                 this.strInfo = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key info.", err);
             }
         );
         this.translate.get('donationInfo').subscribe(
             (value: string) => {
                 this.strDonationInfo = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key donationInfo.", err);
             }
         );
     }
