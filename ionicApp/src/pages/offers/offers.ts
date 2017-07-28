@@ -100,7 +100,8 @@ export class OffersPage implements OnInit {
                     this.navCtrl.pop(); // go back so that the user can select another restaurant
                 }
             );
-        //get the allergenics, and additives from the server 
+        // get the allergenics, and additives from the server
+        // TODO Error handling
         this.allergenics$ = this.http.get(`${SERVER_URL}/api/all_allergenic`).map((res: Response) => res.json());
         this.additives$ = this.http.get(`${SERVER_URL}/api/all_additives`).map((res: Response) => res.json());
     }
@@ -150,7 +151,7 @@ export class OffersPage implements OnInit {
                             this.restaurant.isFavorite = false;
                             loader.dismiss();
                         } else {
-                            throw new Error("Unknown return value from server: " + res.json());
+                            throw new Error(`Unknown return value from server: ${res.json()}`);
                         }
                     },
                     (err: Error) => {
