@@ -5,10 +5,10 @@ import {HomePage} from "../home/home";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {LoadingService} from "../../shared/loading.service";
 import {Restaurant} from "../../model/Restaurant";
-import {OrderDetailsPage} from "../order-details/orderdetails";
+import {OrderDetailsPage} from "../orderdetails/orderdetails";
 import {TranslateService} from "@ngx-translate/core";
 import {SERVER_URL} from "../../app/app.module";
-import {Response} from "@angular/http";
+
 // TODO
 /**
  *

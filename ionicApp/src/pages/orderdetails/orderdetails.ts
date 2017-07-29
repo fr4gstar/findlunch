@@ -18,7 +18,7 @@ import {TranslateService} from "@ngx-translate/core";
  * @author Skanny Morandi, David Sautter
  */
 @Component({
-    templateUrl: 'order-details.html'
+    templateUrl: './orderdetails.html'
 })
 export class OrderDetailsPage implements OnInit {
 
@@ -209,7 +209,6 @@ export class OrderDetailsPage implements OnInit {
      */
     public incrementDonation(): void {
         // securing input parameters
-        // TODO check
         if (this.reservation.totalPrice === undefined || this.reservation.totalPrice === null || this.reservation.totalPrice < 0) {
             console.error(`Tried to increment Donation, but totalPrice is: ${this.reservation.totalPrice}`);
             return;
@@ -252,7 +251,6 @@ export class OrderDetailsPage implements OnInit {
         let donation: number;
 
         // securing input parameters
-        // TODO check
         if (this.reservation && this.reservation.donation <= 0) {
             console.error("Tried to decrement a donation of value: ", this.reservation.donation);
             this.reservation.donation = 0;
@@ -377,7 +375,7 @@ export class OrderDetailsPage implements OnInit {
 
     /**
      * Sends the user to the Loginpage. After successful Login by sending along the
-     * "comeBack"-boolean he is automatically coming back to this order-details-page.
+     * "comeBack"-boolean he is automatically coming back to this orderdetails-page.
      */
     public goToLogin(): void {
         this.navCtrl.push(LoginPage, {comeBack: true, restaurant: this.restaurant});
@@ -386,7 +384,7 @@ export class OrderDetailsPage implements OnInit {
     /**
      * Sends the user to the Registry. After successful Registration and
      * involved Login by sending along the "comeBack"-boolean he is
-     * automatically coming back to this order-details-page.
+     * automatically coming back to this orderdetails-page.
      */
     public goToRegister(): void {
         this.navCtrl.push(RegistryPage, {comeBack: true, restaurant: this.restaurant});
@@ -483,7 +481,9 @@ export class OrderDetailsPage implements OnInit {
             this.pickUpTimeISOFormat = date.toISOString();
 
             date.setTime(date.getTime() - 120 * 60 * 1000);
-            this.earliestPickUp = date.toLocaleTimeString();
+            this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
+
+            console.debug(this.earliestPickUp);
         } catch (e) {
             console.error(e);
             alert(this.strOpeningProblem);

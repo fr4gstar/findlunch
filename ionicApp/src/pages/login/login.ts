@@ -1,12 +1,12 @@
 import {Component, OnInit} from "@angular/core";
-import {Alert, Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
+import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
 import {AuthService} from "../../shared/auth.service";
 import {SERVER_URL} from "../../app/app.module";
 import {LoadingService} from "../../shared/loading.service";
-import {OrderDetailsPage} from "../order-details/orderdetails";
+import {OrderDetailsPage} from "../orderdetails/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {TranslateService} from '@ngx-translate/core';
 import {PushService} from "../../shared/push.service";

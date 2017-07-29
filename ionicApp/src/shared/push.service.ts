@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
 import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
 import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
@@ -7,6 +7,7 @@ import {Alert, AlertController} from "ionic-angular";
 import {AuthService} from "./auth.service";
 import {Error} from "tslint/lib/error";
 import {TranslateService} from "@ngx-translate/core";
+
 /**
  * Initializing push and notfication settings.
  * @author Sergej Bardin
