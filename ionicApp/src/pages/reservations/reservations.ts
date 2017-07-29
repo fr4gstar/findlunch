@@ -110,7 +110,7 @@ export class ReservationsPage implements OnInit {
         //put together the options for http-call
         const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/getCustomerReservations`, options)
-            .retry(2)
+            .timeout(8000)
             .subscribe(
                 (res: Response) => {
                     this.reservations = res.json();
@@ -124,7 +124,7 @@ export class ReservationsPage implements OnInit {
                     loader.dismiss();
                     console.error("Error on loading reservations.", err);
                     //noinspection TsLint
-                    // TODO check button actions
+                    // TODO CHECK -  button actions
                     const alert: Alert = this.alertCtrl.create({
                         title: this.strGeneralError,
                         subTitle: this.strReservationError,
