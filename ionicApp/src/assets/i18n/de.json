@@ -83,6 +83,7 @@
     "address": "Adresse",
     "cancel": "Abbrechen",
     "retry": "Erneut versuchen",
+    "status": "Status",
     "Success": {
         "logoutSuccess": "Logout erfolgt",
         "login": "Login Erfolgreich",
