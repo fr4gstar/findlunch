@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
+import {Alert, Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
@@ -8,7 +8,7 @@ import {SERVER_URL} from "../../app/app.module";
 import {LoadingService} from "../../shared/loading.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 
 /**
  * Page that lets the user enter his account credentials and gives him access to the
@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
 
     public ngOnInit(): void {
         this.translate.get('Error.login').subscribe(
-            (value: string)  => {
+            (value: string) => {
                 this.strLoginError = value;
             },
             (err: Error) => {
@@ -49,25 +49,26 @@ export class LoginPage implements OnInit {
         this.translate.get('Success.login').subscribe(
             (value: string) => {
                 this.strLoginSuccessful = value;
-                },
+            },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Success.login.", err);
             });
         this.translate.get('Error.connection').subscribe(
             (value: string) => {
                 this.strConnectionError = value;
-                },
+            },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.connection.", err);
             });
         this.translate.get('Success.passwordReset').subscribe(
             (value: string) => {
                 this.strPasswordResetSuccess = value;
-                },
+            },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Success.passwordReset.", err);
             });
     }
+
     /**
      * Logs the user in. LoggedIn is stateless (without session etc.).
      * If the authentication fails it activates the password reset button.
@@ -78,33 +79,40 @@ export class LoginPage implements OnInit {
     public login(userName: string, password: string): void {
         const loader: Loading = this.loading.prepareLoader();
         loader.present().then(() => {
-            // TODO Error handling
-            this.auth.login(userName, password).subscribe((data: Response) => {
-                if (data) {
-                    const toast: Toast = this.toastCtrl.create({
-                        message: this.strLoginSuccessful,
-                        duration: 3000
-                    });
-                    toast.present();
-                    // When comeBack is true, after login user is sent back to the view he came from
-                    if (this.popThisPage) {
-                        this.restaurant = this.navParams.get("restaurant");
-                        this.navCtrl.push(OrderDetailsPage, {
-                            restaurant: this.restaurant
+            this.auth.login(userName, password).subscribe(
+                (data: Response) => {
+                    if (data) {
+                        const toast: Toast = this.toastCtrl.create({
+                            message: this.strLoginSuccessful,
+                            duration: 3000
                         });
-                        loader.dismiss();
+                        toast.present();
+                        // When comeBack is true, after login user is sent back to the view he came from
+                        if (this.popThisPage) {
+                            this.restaurant = this.navParams.get("restaurant");
+                            this.navCtrl.push(OrderDetailsPage, {
+                                restaurant: this.restaurant
+                            });
+                            loader.dismiss();
 
+                        } else {
+                            // else go back to homePage
+                            this.navCtrl.setRoot(HomePage);
+                            loader.dismiss();
+                        }
                     } else {
-                        // else go back to homePage
-                        this.navCtrl.setRoot(HomePage);
+                        this.counterPasswordWrong++;
                         loader.dismiss();
+                        alert(this.strLoginError);
                     }
-                } else {
+                },
+                (err: Error) => {
                     this.counterPasswordWrong++;
                     loader.dismiss();
+                    console.error("Login failed!", err);
                     alert(this.strLoginError);
                 }
-            });
+            );
         });
     }
 
@@ -121,7 +129,7 @@ export class LoginPage implements OnInit {
      * @param username = email address of user
      */
     public isEmptyUser(username: string): boolean {
-         return !(username && this.counterPasswordWrong >= 1);
+        return !(username && this.counterPasswordWrong >= 1);
     }
 
     /**
@@ -129,20 +137,21 @@ export class LoginPage implements OnInit {
      * @param username = email adress of user
      */
     public sendPasswordReset(username: string): void {
-            const headers: Headers = new Headers({
-                'Content-Type': 'application/json'
-            });
+        const headers: Headers = new Headers({
+            'Content-Type': 'application/json'
+        });
 
-            const user: Object = {username: username};
+        const user: Object = {username: username};
 
-            const options: RequestOptions = new RequestOptions({
-                headers: headers,
-                method: RequestMethod.Post,
-                body: JSON.stringify(user)
-            });
-
+        const options: RequestOptions = new RequestOptions({
+            headers: headers,
+            method: RequestMethod.Put,
+            body: JSON.stringify(user)
+        });
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present().then(() => {
             this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
-                .retry(2)
+                .timeout(8000)
                 .subscribe(
                     (res: Response) => {
                         let msg: string;
@@ -165,6 +174,6 @@ export class LoginPage implements OnInit {
                         alert(this.strConnectionError);
                     }
                 );
-        }
-
+        });
     }
+}
