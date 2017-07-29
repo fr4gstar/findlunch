@@ -1,12 +1,13 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
-import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
-import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
-import {SERVER_URL, APP_LANG} from "../app/app.module";
+import {EventResponse, Push, PushObject, PushOptions} from "@ionic-native/push";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
+import {APP_LANG, SERVER_URL} from "../app/app.module";
 import {Alert, AlertController} from "ionic-angular";
 import {AuthService} from "./auth.service";
 import {Error} from "tslint/lib/error";
 import {TranslateService} from "@ngx-translate/core";
+
 /**
  * Initializing push and notfication settings.
  * @author Sergej Bardin
@@ -120,7 +121,7 @@ export class PushService {
                         });
                     this.pushObject.on('error').subscribe((error: Error) => console.error("Error with receiving push from firebase", error));
                 } else {
-                    console.warn("Push permission NOT granted, reservation confirmation can not reveiced!");
+                    console.warn("Push permission NOT granted, reservation confirmation can not received!");
                 }
             });
     }
