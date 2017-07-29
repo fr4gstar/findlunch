@@ -34,8 +34,7 @@ export class PushService {
         );
         const pushOptions: PushOptions = {
             android: {
-                senderID: '343682752512',
-                icon: 'ic_notify',
+                senderID: FCM_SENDER_ID,
                 vibrate: true
             },
             ios: {
@@ -75,7 +74,7 @@ export class PushService {
                         });
 
                 } else {
-                    console.warn("Not logged in or push permission NOT granted, reservation confirmation can not reveiced!");
+                    console.warn("Not logged in or push permission NOT granted, reservation confirmation can not received!");
                     alert(this.strPushError);
                 }
             });
