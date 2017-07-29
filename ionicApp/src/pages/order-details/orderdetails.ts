@@ -78,7 +78,9 @@ export class OrderDetailsPage implements OnInit {
             this.calcNeededPoints();
             this.getUserPoints();
         }
-
+        this.param = {
+            name: this.restaurant.name
+        }
         this.nowOpen = this.restaurant.currentlyOpen;
         // sets the earliest settable time in the datepicker to 10 minutes from now.
         this.calcTimings(10);

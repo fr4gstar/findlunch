@@ -37,8 +37,10 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {Network} from "@ionic-native/network";
 
-export const SERVER_URL: string = "https://shrouded-dusk-87807.herokuapp.com";
+// export const SERVER_URL: string = "https://shrouded-dusk-87807.herokuapp.com";
+export const SERVER_URL: string = "https://findlunch.biz.tm:8443";
 export const APP_LANG: string = "de";
+export const FCM_SENDER_ID: string = '343682752512';
 
 @NgModule({
     declarations: [

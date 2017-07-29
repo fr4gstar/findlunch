@@ -90,6 +90,7 @@ export class LoginPage implements OnInit {
                         });
                         toast.present();
                         this.push.pushSetup();
+                        this.push.notificationSetup();
                         // When comeBack is true, after login user is sent back to the view he came from
                         if (this.popThisPage) {
                             this.restaurant = this.navParams.get("restaurant");

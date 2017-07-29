@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import 'rxjs/add/operator/map';
 import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
 import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
-import {SERVER_URL, APP_LANG} from "../app/app.module";
+import {SERVER_URL, APP_LANG, FCM_SENDER_ID} from "../app/app.module";
 import {Alert, AlertController} from "ionic-angular";
 import {AuthService} from "./auth.service";
 import {Error} from "tslint/lib/error";
@@ -74,7 +74,8 @@ export class PushService {
                         });
 
                 } else {
-                    console.warn("Push permission NOT granted, reservation confirmation can not reveiced!");
+                    console.warn("Not logged in or push permission NOT granted, reservation confirmation can not reveiced!");
+                    alert(this.strPushError);
                 }
             });
     }
@@ -85,8 +86,7 @@ export class PushService {
     public pushSetup(): void {
         const pushOptions: PushOptions = {
             android: {
-                senderID: '343682752512',
-                icon: 'ic_notify',
+                senderID: FCM_SENDER_ID,
                 vibrate: true
             },
             ios: {
@@ -121,6 +121,7 @@ export class PushService {
                     this.pushObject.on('error').subscribe((error: Error) => console.error("Error with receiving push from firebase", error));
                 } else {
                     console.warn("Push permission NOT granted, reservation confirmation can not reveiced!");
+                    alert(this.strPushError);
                 }
             });
     }
