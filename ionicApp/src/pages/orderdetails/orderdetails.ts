@@ -18,7 +18,7 @@ import {TranslateService} from "@ngx-translate/core";
  * @author Skanny Morandi, David Sautter
  */
 @Component({
-    templateUrl: 'order-details.html'
+    templateUrl: 'src/pages/orderdetails/orderdetails.html'
 })
 export class OrderDetailsPage implements OnInit {
 
@@ -373,7 +373,7 @@ export class OrderDetailsPage implements OnInit {
 
     /**
      * Sends the user to the Loginpage. After successful Login by sending along the
-     * "comeBack"-boolean he is automatically coming back to this order-details-page.
+     * "comeBack"-boolean he is automatically coming back to this orderdetails-page.
      */
     public goToLogin(): void {
         this.navCtrl.push(LoginPage, {comeBack: true, restaurant: this.restaurant});
@@ -382,7 +382,7 @@ export class OrderDetailsPage implements OnInit {
     /**
      * Sends the user to the Registry. After successful Registration and
      * involved Login by sending along the "comeBack"-boolean he is
-     * automatically coming back to this order-details-page.
+     * automatically coming back to this orderdetails-page.
      */
     public goToRegister(): void {
         this.navCtrl.push(RegistryPage, {comeBack: true, restaurant: this.restaurant});
@@ -477,6 +477,7 @@ export class OrderDetailsPage implements OnInit {
 
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
+            console.debug(this.pickUpTimeISOFormat);
 
             date.setTime(date.getTime() - 120 * 60 * 1000);
             this.earliestPickUp = date.toLocaleTimeString();

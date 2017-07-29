@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Loading, NavController, NavParams, Platform} from "ionic-angular";
 import {OffersService} from "./offers.service";
 import {OfferProductDetailsPage} from "../offer-product-details/offer-product-details";
-import {OrderDetailsPage} from "../order-details/orderdetails";
+import {OrderDetailsPage} from "../orderdetails/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {RestaurantPage} from "../restaurant/restaurant";
 import {Observable} from "rxjs/Observable";
