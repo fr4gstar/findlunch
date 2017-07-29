@@ -56,11 +56,15 @@ export class MyApp implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.translate.get('Success.logoutSuccessMsg').subscribe(
-            (value: string) => { this.strLogoutSuccess = value; }
+        this.translate.get('Success.logoutSuccess').subscribe(
+            (value: string) => {
+                this.strLogoutSuccess = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.logoutSuccess.", err);
+            }
         );
     }
-
     /**
      * opens the clicked page. Reset the content nav to have just this page.
      * @param page

@@ -84,7 +84,7 @@ export class BonusPage implements OnInit {
         //prepare http-options
         const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/get_points`, options)
-            .retry(2)
+            .timeout(8000)
             .subscribe(
                 (res: Response) => {
                     this.points = res.json();
