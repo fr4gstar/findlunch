@@ -218,7 +218,6 @@ export class OrderDetailsPage implements OnInit {
             return;
         }
         if (this.reservation.totalPrice < this.reservation.donation) {
-            //TODO deactivate tslint
             console.error(`Inconsistent state! totalPrice ${this.reservation.totalPrice} is smaller than donation ${this.reservation.donation}`);
             this.translate.get("Error.critical").subscribe((errorMsg: string) => {
                 alert(errorMsg);

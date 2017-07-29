@@ -58,7 +58,8 @@
         "no-import-side-effect": false,
         "interface-name": false,
         "function-name": false,
-        "possible-timing-attack": false
+        "possible-timing-attack": false,
+        "max-line-length": [200]
     },
     "rulesDirectory": [
         "node_modules/codelyzer"

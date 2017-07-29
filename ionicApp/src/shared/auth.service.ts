@@ -145,8 +145,7 @@ export class AuthService {
         // TODO check removeItem -> try catch
         //delete key-value pair stored under the key named after the most recently logged in user
         window.localStorage.removeItem(currentUser);
-    // TODO
-        // lösche den zuletzt eingeloggten usernamen gesetzt unter dem key-String "username"
+        // delete latest logged in user stored under key "username"
         window.localStorage.removeItem("username");
         this.loggedIn = false;
         this.userName = "";
@@ -164,13 +163,13 @@ export class AuthService {
 
         let options: RequestOptions;
         let headers: Headers;
-// TODO
+
         if (this.getLoggedIn()) {
             const user: string = window.localStorage.getItem("username");
             const token: string = window.localStorage.getItem(user);
             headers = new Headers({
                 'Content-Type': 'application/json',
-                Authorization: "Basic " + token
+                Authorization: `Basic ${token}`
             });
         }
 

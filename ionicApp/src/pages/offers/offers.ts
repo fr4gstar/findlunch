@@ -140,6 +140,7 @@ export class OffersPage implements OnInit {
         this.navCtrl.push(RestaurantPage, {restaurant: this.restaurant});
     }
 
+    // TODO to service
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
      * Shows a loading animation while request is running
