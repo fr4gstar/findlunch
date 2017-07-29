@@ -207,7 +207,6 @@ export class OrderDetailsPage implements OnInit {
      */
     public incrementDonation(): void {
         // securing input parameters
-        // TODO check
         if (this.reservation.totalPrice === undefined || this.reservation.totalPrice === null || this.reservation.totalPrice < 0) {
             console.error(`Tried to increment Donation, but totalPrice is: ${this.reservation.totalPrice}`);
             return;
@@ -250,7 +249,6 @@ export class OrderDetailsPage implements OnInit {
         let donation: number;
 
         // securing input parameters
-        // TODO check
         if (this.reservation && this.reservation.donation <= 0) {
             console.error("Tried to decrement a donation of value: ", this.reservation.donation);
             this.reservation.donation = 0;
