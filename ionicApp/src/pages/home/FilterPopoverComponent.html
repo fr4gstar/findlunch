@@ -1,7 +1,7 @@
 <ion-list style="margin: 0">
 
     <!-- filtering restaurants by their kitchen-type -->
-    <ion-item>
+    <ion-item *ngIf="service.kitchenTypes">
         <ion-label style="color: #000;">{{ 'kitchen' | translate }} </ion-label>
         <ion-select [(ngModel)]="service.selectedKitchenTypes" multiple="true" cancelText="Zurück">
             <ion-option *ngFor="let type of service.kitchenTypes" [value]="type">{{type.name}}</ion-option>

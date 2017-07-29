@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {KitchenType} from "../../model/KitchenType";
 import {Http, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
@@ -11,7 +11,7 @@ import {TranslateService} from "@ngx-translate/core";
  * @author David Sautter
  */
 @Injectable()
-export class FilterPopoverService implements OnInit {
+export class FilterPopoverService {
 
     // filter states
     public selectedKitchenTypes: KitchenType[];
@@ -33,9 +33,10 @@ export class FilterPopoverService implements OnInit {
         private translate: TranslateService,
         private platform: Platform
     ) {
+        this.init();
     }
 
-    public ngOnInit(): void {
+    public init(): void {
         // get translations
         this.translate.get('Error.general').subscribe(
             (res: string) => {
@@ -82,7 +83,6 @@ export class FilterPopoverService implements OnInit {
             .retry(2)
             .subscribe(
                 (res: Response) => {
-                    //FIXME: Kitchentypes are currently not visible in Filter Dialog...
                     this.kitchenTypes = res.json();
 
                     // initially select all kitchen-types
@@ -91,6 +91,7 @@ export class FilterPopoverService implements OnInit {
                 (err: Error) => {
                     console.error("Error fetching kitchenTypes", err);
 
+                    // show error alert with action-buttons
                     const alert: Alert = this.alertCtrl.create({
                         title: this.strErrorGeneral,
                         subTitle: this.strErrorServiceNotAvailable,
@@ -99,12 +100,14 @@ export class FilterPopoverService implements OnInit {
                                 text: this.strClose,
                                 role: 'cancel',
                                 handler: (): void => {
+                                    // close the app
                                     this.platform.exitApp();
                                 }
                             },
                             {
                                 text: this.strRetry,
                                 handler: (): void => {
+                                    // recursive call! Fetch kitchen types again.
                                     this.fetchKitchenTypes();
                                 }
                             }
