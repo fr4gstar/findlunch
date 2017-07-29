@@ -213,7 +213,6 @@ export class HomePage implements OnInit {
                         }
                     }
                 ]
-
             });
 
             alert.present();
