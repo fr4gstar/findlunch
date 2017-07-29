@@ -4,6 +4,7 @@ import {NativeGeocoder, NativeGeocoderForwardResult} from "@ionic-native/native-
 import {TranslateService} from "@ngx-translate/core";
 import AutocompleteService = google.maps.places.AutocompleteService;
 import AutocompletePrediction = google.maps.places.AutocompletePrediction;
+import PlacesServiceStatus = google.maps.places.PlacesServiceStatus;
 
 
 /**
@@ -59,6 +60,8 @@ export class AddressInputComponent implements OnInit {
      * @param {google.maps.places.AutocompletePrediction} item suggested location
      */
     public chooseItem(item: AutocompletePrediction): void {
+        console.debug("geocoding item", item);
+
         // geocode
         this.geocoder.forwardGeocode(item.description)
             .then(
@@ -83,7 +86,7 @@ export class AddressInputComponent implements OnInit {
             this.autocompleteItems = [];
             return;
         }
-        // TODO check error handling
+
         this.service.getPlacePredictions(
             {
                 input: this.acQuery,
@@ -91,7 +94,12 @@ export class AddressInputComponent implements OnInit {
                     country: 'DE'    // change this if you plan to use the app outside Germany
                 }
             },
-            (predictions: AutocompletePrediction[]) => {
+            (predictions: AutocompletePrediction[], status: PlacesServiceStatus) => {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                    alert(status);
+                    this.acQuery = "";
+                    return;
+                }
                 // need to run this in a zone to inform Angular's change-detection about the new data.
                 this.zone.run(() => this.autocompleteItems = predictions);
             });
