@@ -20,7 +20,7 @@ import {PushService} from "../../shared/push.service";
     templateUrl: 'login.html'
 })
 export class LoginPage implements OnInit {
-    private popThisPage: boolean;
+    private goBack: boolean;
     private counterPasswordWrong: number = 0;
     private restaurant: Restaurant;
     private strLoginError: string;
@@ -37,7 +37,7 @@ export class LoginPage implements OnInit {
                 private loading: LoadingService,
                 private translate: TranslateService) {
         // When comeBack is true, after login user is sent back to the view he came from
-        this.popThisPage = navParams.get("comeBack");
+        this.goBack = navParams.get("comeBack");
     }
 
     public ngOnInit(): void {
@@ -92,7 +92,7 @@ export class LoginPage implements OnInit {
                         this.push.pushSetup();
                         this.push.notificationSetup();
                         // When comeBack is true, after login user is sent back to the view he came from
-                        if (this.popThisPage) {
+                        if (this.goBack) {
                             this.restaurant = this.navParams.get("restaurant");
                             this.navCtrl.push(OrderDetailsPage, {
                                 restaurant: this.restaurant
