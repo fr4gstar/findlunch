@@ -18,7 +18,7 @@ import {TranslateService} from "@ngx-translate/core";
  * @author Skanny Morandi, David Sautter
  */
 @Component({
-    templateUrl: 'src/pages/orderdetails/orderdetails.html'
+    templateUrl: './orderdetails.html'
 })
 export class OrderDetailsPage implements OnInit {
 
@@ -477,10 +477,11 @@ export class OrderDetailsPage implements OnInit {
 
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
-            console.debug(this.pickUpTimeISOFormat);
 
             date.setTime(date.getTime() - 120 * 60 * 1000);
-            this.earliestPickUp = date.toLocaleTimeString();
+            this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
+
+            console.debug(this.earliestPickUp);
         } catch (e) {
             console.error(e);
             alert(this.strOpeningProblem);

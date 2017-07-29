@@ -36,7 +36,7 @@
       </ion-col>
       <ion-col col-5 text-wrap>
         <ion-icon name="ios-remove-circle-outline" (click)="decrementDonation()"></ion-icon>
-        <span item-right color="primary">{{this.reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
+        <span item-right color="primary">{{reservation.donation.toFixed(2) | currency:'EUR':true}}</span>
         <ion-icon name="ios-add-circle-outline" (click)="incrementDonation()"></ion-icon>
       </ion-col>
     </ion-row>
@@ -65,28 +65,28 @@
 
 
 
-    <ion-item *ngIf="this.auth.getLoggedIn()">
+    <ion-item *ngIf="auth.getLoggedIn()">
         <ion-label>{{ 'OrderDetailsPage.payWithPoints' | translate }}</ion-label>
-        <ion-toggle checked="false" [(ngModel)]="this.payWithPoints" disabled="{{!this.morePointsThanNeeded}}"></ion-toggle>
+        <ion-toggle checked="false" [(ngModel)]="payWithPoints" disabled="{{!morePointsThanNeeded}}"></ion-toggle>
     </ion-item>
-    <div *ngIf="this.auth.getLoggedIn()">
+    <div *ngIf="auth.getLoggedIn()">
         {{ 'OrderDetailsPage.points' | translate:param }}
     </div>
-    <ion-item *ngIf="this.nowOpen">
+    <ion-item *ngIf="nowOpen">
         <ion-label>{{ 'OrderDetailsPage.pickUpTime' | translate }}</ion-label>
-        <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min="{{this.earliestPickUp}}" max={{this.closingTime}} [(ngModel)]="this.pickUpTimeISOFormat"></ion-datetime>
+        <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min="{{earliestPickUp}}" max={{closingTime}} [(ngModel)]="pickUpTimeISOFormat"></ion-datetime>
         <span item-right>{{ 'OrderDetailsPage.clock' | translate }}</span>
     </ion-item>
-    <ion-item *ngIf="!this.nowOpen" text-wrap>
+    <ion-item *ngIf="!nowOpen" text-wrap>
         {{ 'OrderDetailsPage.isClosed' | translate }}
     </ion-item>
-    <ion-item *ngIf="!this.auth.getLoggedIn()" text-wrap>
+    <ion-item *ngIf="!auth.getLoggedIn()" text-wrap>
         {{ 'OrderDetailsPage.isNotLoggedIn' | translate }}
     </ion-item>
 
 
-    <button id="bestellen" *ngIf="this.auth.getLoggedIn()" ion-button (click)="sendOrder()">{{ 'OrderDetailsPage.order' | translate }}</button>
-    <div id="notLoggedIn" *ngIf="!this.auth.getLoggedIn()">
+    <button id="bestellen" *ngIf="auth.getLoggedIn()" ion-button (click)="sendOrder()">{{ 'OrderDetailsPage.order' | translate }}</button>
+    <div id="notLoggedIn" *ngIf="!auth.getLoggedIn()">
         <button  ion-button full (click)="goToLogin()">{{ 'OrderDetailsPage.login' | translate }}</button>
         <button  ion-button full (click)="goToRegister()">{{ 'OrderDetailsPage.register' | translate }}</button>
     </div>
