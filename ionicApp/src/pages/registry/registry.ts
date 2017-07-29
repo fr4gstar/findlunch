@@ -9,7 +9,6 @@ import {OrderDetailsPage} from "../orderdetails/orderdetails";
 import {TranslateService} from "@ngx-translate/core";
 import {SERVER_URL} from "../../app/app.module";
 
-// TODO
 /**
  *
  * Register a new user function. Gets "comeback" navParam, to determine whether to send the view back
@@ -21,7 +20,7 @@ import {SERVER_URL} from "../../app/app.module";
 })
 export class RegistryPage implements OnInit {
     private termsAndConditionsChecked: boolean;
-    private popThisPage: boolean;
+    private goBack: boolean;
     private restaurant: Restaurant;
 
     private strNoValidEmail: string;
@@ -39,8 +38,7 @@ export class RegistryPage implements OnInit {
                 private iab: InAppBrowser,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        // TODO change popthispage
-        this.popThisPage = navParams.get("comeBack");
+        this.goBack = navParams.get("comeBack");
         this.termsAndConditionsChecked = false;
     }
 
@@ -130,7 +128,7 @@ export class RegistryPage implements OnInit {
                     toast.present();
                     //if coming from Orderdetailspage, go back there after registry
 
-                    if (this.popThisPage) {
+                    if (this.goBack) {
                         this.restaurant = this.navParams.get("restaurant");
                         this.navCtrl.push(OrderDetailsPage, {
                             restaurant: this.restaurant
@@ -166,6 +164,13 @@ export class RegistryPage implements OnInit {
     }
 
     /**
+     * Opens the terms and conditions site via inapp browser
+     */
+    public goToTermsAndConditions(): void {
+        this.iab.create(`${SERVER_URL}/terms`);
+    }
+
+    /**
      * returns whether entered passwords are identical
      *
      * @param password
@@ -178,12 +183,5 @@ export class RegistryPage implements OnInit {
      */
     private passwordsIdentical(password: string, password2: string): boolean {
         return (password === password2);
-    }
-
-    /**
-     * Opens the terms and conditions site via inapp browser
-     */
-    private goToTermsAndConditions(): void {
-        this.iab.create(`${SERVER_URL}/terms`);
     }
 }
