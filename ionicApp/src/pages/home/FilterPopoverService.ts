@@ -80,7 +80,7 @@ export class FilterPopoverService {
      */
     private fetchKitchenTypes(): void {
         this.http.get(`${SERVER_URL}/api/kitchen_types`)
-            .retry(2)
+            .timeout(8000)
             .subscribe(
                 (res: Response) => {
                     this.kitchenTypes = res.json();
