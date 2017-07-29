@@ -327,22 +327,22 @@ export class HomePage implements OnInit {
         });
 
         // draw new markers
-        // TODO error handling
         restaurants.forEach((restaurant: Restaurant) => {
-            // noinspection TsLint - no types for current plugin-googlemaps available
-            this.map.addMarker({
-                position: {lat: restaurant.locationLatitude, lng: restaurant.locationLongitude},
-                icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png'
-            }, (marker: any) => {
-                // add html info window
+            try {
                 // noinspection TsLint - no types for current plugin-googlemaps available
-                const htmlInfoWindow: any = new plugin.google.maps.HtmlInfoWindow();
+                this.map.addMarker({
+                    position: {lat: restaurant.locationLatitude, lng: restaurant.locationLongitude},
+                    icon: 'http://maps.google.com/mapfiles/kml/shapes/dining.png'
+                }, (marker: any) => {
+                    // add html info window
+                    // noinspection TsLint - no types for current plugin-googlemaps available
+                    const htmlInfoWindow: any = new plugin.google.maps.HtmlInfoWindow();
 
-                const infoDiv: HTMLElement = document.createElement("div");
+                    const infoDiv: HTMLElement = document.createElement("div");
 
-                // costruct the html-info-window content and fill with data
-                // noinspection TsLint
-                infoDiv.innerHTML = `<div style="display: inline-block">
+                    // costruct the html-info-window content and fill with data
+                    // noinspection TsLint
+                    infoDiv.innerHTML = `<div style="display: inline-block">
 <div style="font-size: large; font-weight: bold; margin-bottom: 5px">${restaurant.name}</div>
 <div style="display: inline-block">${this.translatedStrs.address}: ${restaurant.street} ${restaurant.streetNumber}<br/>
 ${this.translatedStrs.phone}: ${restaurant.phone}<br/>
@@ -350,35 +350,38 @@ ${this.translatedStrs.kitchen}: ${restaurant.kitchenTypes.map(kitType => kitType
 ${this.translatedStrs.distance}: ${restaurant.distance}m<br/>
 <span style="color: ${restaurant.currentlyOpen === true ? "green" : "red"}">${restaurant.currentlyOpen === true ? this.translatedStrs.isOpen : this.translatedStrs.isClosed}</span><div/>
 </div>`;
-                infoDiv.addEventListener("click", () => {
-                    this.zone.run(() => {
-                        this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
+                    infoDiv.addEventListener("click", () => {
+                        this.zone.run(() => {
+                            this.navCtrl.push(OffersPage, {restaurant: restaurant}, {animate: false});
+                        });
                     });
+
+                    // marker size and styling must be done manually
+                    infoDiv.style.maxWidth = "85%";
+                    infoDiv.style.display = "inline-block";
+                    infoDiv.style.padding = "0";
+
+                    // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
+                    this.theMap.nativeElement.appendChild(infoDiv);
+                    infoDiv.style.height = `${infoDiv.offsetHeight + 1}px`;
+                    infoDiv.style.width = `${infoDiv.offsetWidth + 4}px`;
+                    this.theMap.nativeElement.removeChild(infoDiv);
+
+                    infoDiv.style.maxWidth = "none";
+                    infoDiv.style.margin = "6px";
+
+                    htmlInfoWindow.setContent(infoDiv);
+
+                    marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
+                        htmlInfoWindow.open(marker);
+                    });
+
+                    // add marker to the map
+                    this.mapMarkers.push(marker);
                 });
-
-                // marker size and styling must be done manually
-                infoDiv.style.maxWidth = "85%";
-                infoDiv.style.display = "inline-block";
-                infoDiv.style.padding = "0";
-
-                // append this to the DOM for a short time to be able to calculate offsetHeight and -Width
-                this.theMap.nativeElement.appendChild(infoDiv);
-                infoDiv.style.height = `${infoDiv.offsetHeight + 1}px`;
-                infoDiv.style.width = `${infoDiv.offsetWidth + 4}px`;
-                this.theMap.nativeElement.removeChild(infoDiv);
-
-                infoDiv.style.maxWidth = "none";
-                infoDiv.style.margin = "6px";
-
-                htmlInfoWindow.setContent(infoDiv);
-
-                marker.on(plugin.google.maps.event.MARKER_CLICK, () => {
-                    htmlInfoWindow.open(marker);
-                });
-
-                // add marker to the map
-                this.mapMarkers.push(marker);
-            });
+            } catch (err) {
+                console.error("Error adding marker for restaurant", restaurant, err);
+            }
         });
     }
 
