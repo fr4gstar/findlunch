@@ -9,6 +9,7 @@ import {LoadingService} from "../../shared/loading.service";
 import {OrderDetailsPage} from "../order-details/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
 import {TranslateService} from '@ngx-translate/core';
+import {PushService} from "../../shared/push.service";
 
 /**
  * Page that lets the user enter his account credentials and gives him access to the
@@ -31,6 +32,7 @@ export class LoginPage implements OnInit {
                 private toastCtrl: ToastController,
                 private auth: AuthService,
                 private http: Http,
+                private push: PushService,
                 private navParams: NavParams,
                 private loading: LoadingService,
                 private translate: TranslateService) {
@@ -87,6 +89,7 @@ export class LoginPage implements OnInit {
                             duration: 3000
                         });
                         toast.present();
+                        this.push.pushSetup();
                         // When comeBack is true, after login user is sent back to the view he came from
                         if (this.popThisPage) {
                             this.restaurant = this.navParams.get("restaurant");
