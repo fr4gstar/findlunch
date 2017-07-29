@@ -1,6 +1,13 @@
 import {Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core";
 import {
-    Alert, AlertController, Loading, Modal, ModalController, NavController, Platform, Popover,
+    Alert,
+    AlertController,
+    Loading,
+    Modal,
+    ModalController,
+    NavController,
+    Platform,
+    Popover,
     PopoverController
 } from "ionic-angular";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
@@ -15,6 +22,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {AuthService} from "../../shared/auth.service";
 import {KitchenType} from "../../model/KitchenType";
 import 'rxjs/add/operator/retry';
+import 'rxjs/add/operator/timeout';
 
 
 // this is needed for google maps plugin v2
@@ -66,7 +74,9 @@ export class HomePage implements OnInit {
         kitchen: "kitchen",
         isClosed: "isClosed",
         isOpen: "isOpen",
-        retry: "retry"
+        retry: "retry",
+        'Error.serviceNotAvailable': 'Error: Service not available!',
+        'Error.general': 'General Error'
     };
 
     //TODO device without internet -> platform exit
@@ -110,20 +120,6 @@ export class HomePage implements OnInit {
                     }
                 );
         });
-        this.translate.get('Error.serviceNotAvailable').subscribe(
-            (value: string) => {
-                this.strServiceNotAvailableError = value;
-            },
-            (err: Error) => {
-                console.error("Error: translate.get did fail for key Error.serviceNotAvailable.", err);
-            });
-        this.translate.get('Error.general').subscribe(
-            (value: string) => {
-                this.strGeneralError = value;
-            },
-            (err: Error) => {
-                console.error("Error: translate.get did fail for key Error.general.", err);
-            });
     }
 
     // noinspection JSUnusedGlobalSymbols - this is an ionic view lifecycle method so it is indeed used.
@@ -243,7 +239,7 @@ export class HomePage implements OnInit {
             // do not filter by radius, because there are just a few restaurants.
             // in the future it could filter by using the visible map-area.
             this.http.get(`${SERVER_URL}/api/restaurants?latitude=${latLng.lat}&longitude=${latLng.lng}&radius=9999999`, options)
-                .retry(2)
+                .timeout(15000)     // request is very big, because thumbnails are sent with restaurants
                 .subscribe(
                     (res: Response) => {
                         // needed for enabling filter-button in header dynamically
@@ -256,22 +252,23 @@ export class HomePage implements OnInit {
                     (err: Error) => {
                         loader.dismiss();
                         console.error("Error fetching restaurants", err);
-                        //TODO: CHECK - Prompt user. Actions: Retry, Close App
+
+                        // Prompt user. Actions: Retry, Close App
                         const alert: Alert = this.alertCtrl.create({
-                            title: this.strGeneralError,
-                            subTitle: this.strServiceNotAvailableError,
+                            title: this.translatedStrs['Error.general'],
+                            subTitle: this.translatedStrs['Error.serviceNotAvailable'],
                             buttons: [
                                 {
                                     text: 'Ok',
                                     role: 'cancel',
-                                    handler: () => {
+                                    handler: (): void => {
                                         this.platform.exitApp();
                                     }
                                 },
                                 {
                                     text: this.translatedStrs.retry,
-                                    handler: () => {
-                                        this.fetchRestaurants(latLng);
+                                    handler: (): void => {
+                                        this.fetchRestaurants(latLng);      // recursive call, if the user selects retry
                                     }
                                 }
                             ]
