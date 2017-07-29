@@ -124,7 +124,6 @@ export class ReservationsPage implements OnInit {
                     loader.dismiss();
                     console.error("Error on loading reservations.", err);
                     //noinspection TsLint
-                    // TODO CHECK -  button actions
                     const alert: Alert = this.alertCtrl.create({
                         title: this.strGeneralError,
                         subTitle: this.strReservationError,

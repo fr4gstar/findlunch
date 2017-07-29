@@ -33,7 +33,8 @@
         "component-class-suffix": [
             true,
             "Page",
-            "Component"
+            "Component",
+            "App"
         ],
         "directive-class-suffix": true,
         "templates-use-public": true,

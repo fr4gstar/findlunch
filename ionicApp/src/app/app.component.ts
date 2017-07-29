@@ -22,8 +22,6 @@ import {Page} from "ionic-angular/navigation/nav-util";
 @Component({
     templateUrl: 'app.html'
 })
-
-
 export class MyApp implements OnInit {
     @ViewChild(Nav) public nav: Nav;
     /**
@@ -46,11 +44,9 @@ export class MyApp implements OnInit {
                 private push: PushService,
                 private translate: TranslateService) {
         translate.setDefaultLang(APP_LANG);
-        // TODO Promise then pushSetup test
         this.auth.verifyUser();
 
         document.addEventListener('resume', () => {
-            // TODO Promise then pushSetup test
             this.auth.verifyUser();
         });
     }
@@ -118,6 +114,5 @@ export class MyApp implements OnInit {
         this.openUrl(`${SERVER_URL}/faq_customer`);
 
     }
-
 }
 
