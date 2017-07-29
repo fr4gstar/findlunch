@@ -23,6 +23,8 @@ import {AuthService} from "../../shared/auth.service";
 import {KitchenType} from "../../model/KitchenType";
 import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/timeout';
+import {Network} from "@ionic-native/network";
+import {Subscription} from "rxjs/Subscription";
 
 
 // this is needed for google maps plugin v2
@@ -55,9 +57,6 @@ export class HomePage implements OnInit {
     // reference to the rendered map HTML-element
     @ViewChild('map') private theMap: ElementRef;
 
-    private strGeneralError: string;
-    private strServiceNotAvailableError: string;
-
     // noinspection TsLint - no types for current plugin-googlemaps available
     private map: any;
     // noinspection TsLint - no types for current plugin-googlemaps available
@@ -76,10 +75,10 @@ export class HomePage implements OnInit {
         isOpen: "isOpen",
         retry: "retry",
         'Error.serviceNotAvailable': 'Error: Service not available!',
-        'Error.general': 'General Error'
+        'Error.general': 'General Error',
+        close: "close"
     };
 
-    //TODO device without internet -> platform exit
     constructor(private navCtrl: NavController,
                 private modalCtrl: ModalController,
                 private http: Http,
@@ -90,7 +89,8 @@ export class HomePage implements OnInit {
                 private loading: LoadingService,
                 private auth: AuthService,
                 private translate: TranslateService,
-                private alertCtrl: AlertController) {
+                private alertCtrl: AlertController,
+                private network: Network) {
 
         // load the map as soon as the platform is ready
         this.platform.ready().then(
@@ -146,6 +146,7 @@ export class HomePage implements OnInit {
         });
     }
 
+
     /**
      * Applies the filters set in FilterPopoverService to the restaurants
      * @returns {Restaurant[]} the filtered restaurants to show
@@ -181,44 +182,79 @@ export class HomePage implements OnInit {
 
 
     /**
-     * Initializes the Map and positions the current device on it.
+     * Checks the internet connection and if it is ok,
+     * initializes the Map and positions the current device on it.
      */
     private loadMap(): void {
-        // create map
-        const element: HTMLElement = this.theMap.nativeElement;
-        this.map = plugin.google.maps.Map.getMap(element, {});
-
-        // listen to MAP_READY event
-        // You must wait for this event to fire before adding something to the map or modifying it in anyway
-        this.map.one(plugin.google.maps.event.MAP_READY, () => {
-
-                this.map.setMyLocationEnabled(true);
-                this.map.setAllGesturesEnabled(true);
-                this.map.setCompassEnabled(true);
-
-            // noinspection TsLint - no types for current plugin-googlemaps available
-            this.map.getMyLocation(
-                    null,
-                    (pos: any) => {
-                        // get restaurants around this location
-                        // currently, all restaurants are fetched, but I leave this code here (though it's slower this way),
-                        // because once you start really filtering restaurants based on the location, you'll need it here.
-                        this.fetchRestaurants(pos.latLng);
-
-                        // move map to current location
-                        // noinspection TsLint - no types for current plugin-googlemaps available
-                        const camPos = {
-                            target: pos.latLng,
-                            zoom: MAP_DEFAULT_ZOOM_LEVEL
-                        };
-                        this.map.moveCamera(camPos);
+        // check internet connection
+        if (!(this.network.type.match(/^(3g|4g|wifi)$/))) {
+            // no connection or not good enough
+            const alert: Alert = this.alertCtrl.create({
+                title: this.translatedStrs['Error.general'],
+                subTitle: this.translatedStrs['Error.serviceNotAvailable'],
+                buttons: [
+                    {
+                        text: this.translatedStrs.close,
+                        role: 'cancel',
+                        handler: (): void => {
+                            this.platform.exitApp();
+                        }
                     },
-                    (err: Error) => {
-                        console.error("Error getting location: ", err);
-                        this.showAddressInput();
-                    });
-            }
-        );
+                    {
+                        text: this.translatedStrs.retry,
+                        handler: (): void => {
+                            // watch network for a connection
+                            const connectSubscription: Subscription = this.network.onConnect().subscribe(() => {
+                                connectSubscription.unsubscribe();
+
+                                // need to wait a bit before determining network type again
+                                setTimeout(() => this.loadMap(), 3000);         // recursive call!
+                            });
+                        }
+                    }
+                ]
+
+            });
+
+            alert.present();
+
+        } else {
+            // create map
+            const element: HTMLElement = this.theMap.nativeElement;
+            this.map = plugin.google.maps.Map.getMap(element, {});
+
+            // listen to MAP_READY event
+            // You must wait for this event to fire before adding something to the map or modifying it in anyway
+            this.map.one(plugin.google.maps.event.MAP_READY, () => {
+
+                    this.map.setMyLocationEnabled(true);
+                    this.map.setAllGesturesEnabled(true);
+                    this.map.setCompassEnabled(true);
+
+                    // noinspection TsLint - no types for current plugin-googlemaps available
+                    this.map.getMyLocation(
+                        null,
+                        (pos: any) => {
+                            // get restaurants around this location
+                            // currently, all restaurants are fetched, but I leave this code here (though it's slower this way),
+                            // because once you start really filtering restaurants based on the location, you'll need it here.
+                            this.fetchRestaurants(pos.latLng);
+
+                            // move map to current location
+                            // noinspection TsLint - no types for current plugin-googlemaps available
+                            const camPos = {
+                                target: pos.latLng,
+                                zoom: MAP_DEFAULT_ZOOM_LEVEL
+                            };
+                            this.map.moveCamera(camPos);
+                        },
+                        (err: Error) => {
+                            console.error("Error getting location: ", err);
+                            this.showAddressInput();
+                        });
+                }
+            );
+        }
     }
 
 
@@ -227,7 +263,7 @@ export class HomePage implements OnInit {
      * animation while fetching. It also triggers filtering the restaurants after they were fetched.
      * @param latLng location of type LatLng
      */
-    private fetchRestaurants(latLng: {lat: number, lng: number}): void {
+    private fetchRestaurants(latLng: { lat: number, lng: number }): void {
 
         // setup loading spinner
         const loader: Loading = this.loading.prepareLoader();
@@ -259,7 +295,7 @@ export class HomePage implements OnInit {
                             subTitle: this.translatedStrs['Error.serviceNotAvailable'],
                             buttons: [
                                 {
-                                    text: 'Ok',
+                                    text: this.translatedStrs.close,
                                     role: 'cancel',
                                     handler: (): void => {
                                         this.platform.exitApp();
