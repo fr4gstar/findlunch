@@ -301,7 +301,12 @@ export class OrderDetailsPage implements OnInit {
 
             //starts the loading spinner
             loader.present().then(() => {
-                this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat);
+                //timestamp in ionic and timestamp on server have 2 hrs difference 
+                const date: Date = this.pickUpTime;
+                const timeDifference: number = 120 * 60 * 1000;
+                date.setTime(date.getTime() - timeDifference);
+                const correctedPickUpTime: string= date.toISOString();
+                this.reservation.collectTime = Date.parse(correctedPickUpTime);
 
                 //if logged in,
                 if (this.auth.getLoggedIn()) {
@@ -471,16 +476,13 @@ export class OrderDetailsPage implements OnInit {
             }
 
             this.closingTime = this.restaurant.timeSchedules[day].openingTimes[0].closingTime.split(" ")[1];
-            // TODO check needed?
-            this.openingTime = this.restaurant.timeSchedules[day].openingTimes[0].openingTime.split(" ")[1];
-
             const prepTimeInMs: number = prepTime * 60 * 1000 + 120 * 60 * 1000; //= +2hrs difference from UTC time
             date.setTime(date.getTime() + prepTimeInMs);
 
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
 
-            date.setTime(date.getTime() - 120 * 60 * 1000);
+            date.setTime(date.getTime());
             this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
 
             console.debug(this.earliestPickUp);
