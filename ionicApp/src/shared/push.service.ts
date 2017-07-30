@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map';
 import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
 import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL, APP_LANG, FCM_SENDER_ID} from "../app/app.module";
-import {Alert, AlertController} from "ionic-angular";
+import {Alert, AlertController, Platform} from "ionic-angular";
 import {AuthService} from "./auth.service";
 import {Error} from "tslint/lib/error";
 import {TranslateService} from "@ngx-translate/core";
@@ -23,7 +23,8 @@ export class PushService {
                 private alertCtrl: AlertController,
                 private auth: AuthService,
                 private http: Http,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private platform: Platform) {
         this.translate.setDefaultLang(APP_LANG);
         this.translate.get('Error.pushReg').subscribe(
             (value: string) => {
@@ -41,19 +42,34 @@ export class PushService {
                 console.error("Error: translate.get did fail for key Error.general.", err);
             }
         );
-        const pushOptions: PushOptions = {
-            android: {
-                senderID: FCM_SENDER_ID,
-                vibrate: true
+        this.platform.ready().then(
+            () => {
+                const pushOptions: PushOptions = {
+                    android: {
+                        senderID: FCM_SENDER_ID,
+                        vibrate: true
+                    },
+                    ios: {
+                        alert: 'false',
+                        badge: true,
+                        sound: 'false'
+                    }
+                };
+                this.pushObject = this.push.init(pushOptions);
+                this.notificationSetup();
             },
-            ios: {
-                alert: 'false',
-                badge: true,
-                sound: 'false'
-            }
-        };
-        this.pushObject = this.push.init(pushOptions);
-        this.notificationSetup();
+            (err: Error) => {
+                console.error("Platform did not become ready!", err);
+                const alert: Alert = this.alertCtrl.create({
+                    title: this.strError,
+                    message: this.strPushError,
+                    buttons: [{
+                        text: 'Ok',
+                        role: 'cancel'
+                    }]
+                });
+                alert.present();
+            });
     }
 
     /**
