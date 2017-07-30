@@ -160,10 +160,11 @@ export class RegistryPage implements OnInit {
                     loader.dismiss();
                 })
                     .catch((error: string) => {
-                        loader.dismiss()
+                        loader.dismiss();
+                        const alert: Alert;
                         switch (error) {
                             case "1" :
-                                const alert: Alert = this.alertCtrl.create({
+                                 alert: Alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strNoValidEmail,
                                     buttons: [{
@@ -171,10 +172,10 @@ export class RegistryPage implements OnInit {
                                         role: 'cancel'
                                     }]
                                 });
-                                alert.present();
-                                break;
+                                 alert.present();
+                                 break;
                             case "2" :
-                                const alert: Alert = this.alertCtrl.create({
+                                 alert: Alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strNoValidPassword,
                                     buttons: [{
@@ -182,9 +183,9 @@ export class RegistryPage implements OnInit {
                                         role: 'cancel'
                                     }]
                                 });
-                                break;
+                                 break;
                             case "3" :
-                                const alert: Alert = this.alertCtrl.create({
+                                 alert: Alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strUsedEmail,
                                     buttons: [{
@@ -192,10 +193,10 @@ export class RegistryPage implements OnInit {
                                         role: 'cancel'
                                     }]
                                 });
-                                break;
+                                 break;
 
                             default :
-                                const alert: Alert = this.alertCtrl.create({
+                                 alert: Alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strConnectionError,
                                     buttons: [{
@@ -204,7 +205,7 @@ export class RegistryPage implements OnInit {
                                     }]
                                 });
                         }
-                        ;
+                        
                     });
             });
         }
