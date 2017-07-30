@@ -142,7 +142,6 @@ export class AuthService {
     public logout(): void {
         const currentUser: string = window.localStorage.getItem("username");
 
-        // TODO check removeItem -> try catch
         //delete key-value pair stored under the key named after the most recently logged in user
         window.localStorage.removeItem(currentUser);
         // delete latest logged in user stored under key "username"

@@ -7,6 +7,7 @@ import {AuthService} from "../../shared/auth.service";
 import {TranslateService} from "@ngx-translate/core";
 import {LoadingService} from "../../shared/loading.service";
 import {Error} from "tslint/lib/error";
+import {FavorizeService} from "../../shared/favorize.service";
 
 /**
  * This pages displays the information of a restaurant.
@@ -27,6 +28,7 @@ export class RestaurantPage implements OnInit {
     constructor(private navParams: NavParams,
                 private auth: AuthService,
                 private http: Http,
+                private fav: FavorizeService,
                 private loading: LoadingService,
                 private alertCtrl: AlertController,
                 private translate: TranslateService) {
@@ -60,29 +62,37 @@ export class RestaurantPage implements OnInit {
             }
         );
     }
-    //TODO -> BITTE DIESEN BENUTZEN, wegen der alerts ... -> auslagern in service
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
+     * Shows a loading animation while request is running
+     * @author Skanny Morandi
      */
-    public toggleIsFavourite(): void {
-
+    public toggleIsFavorite(): void {
+        // prepare loader
         const loader: Loading = this.loading.prepareLoader();
         loader.present();
-        // unset as favorite
+
+        // unset as favorite if already favorite
         if (this.restaurant.isFavorite) {
-            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Delete);
-            this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}`, options)
-                .retry(2)
+            this.fav.toggleFavorize(this.restaurant.isFavorite, this.restaurant.id)
+                .timeout(8000)
                 .subscribe(
-                    (res: Response) => {
-                    if (res.json() === 0) {
-                        this.restaurant.isFavorite = false;
-                        //dismiss loading spinner
-                        loader.dismiss();
-                    } else {
-                      throw new Error(`Unknown return value from server: ${res.json()}`);
-                    }
-                },
+                    (data: Response) => {
+                        if (data) {
+                            this.restaurant.isFavorite = false;
+                            loader.dismiss();
+                        } else {
+                            const alert: Alert = this.alertCtrl.create({
+                                title: this.strError,
+                                message: this.strErrorDeFavorize,
+                                buttons: [{
+                                    text: 'Ok',
+                                    role: 'cancel'
+                                }]
+                            });
+                            alert.present();
+                        }
+                    },
                     (err: Error) => {
                         loader.dismiss();
                         console.error("Defavorize restaurant failed.", err);
@@ -95,37 +105,41 @@ export class RestaurantPage implements OnInit {
                             }]
                         });
                         alert.present();
-                }
-            );
-        } else {
-            // set as favorite
-            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
-            this.http.put(`${SERVER_URL}/api/register_favorite/${this.restaurant.id}`, "", options)
-                .retry(2)
-                .subscribe(
-                (res: Response) => {
-                    if (res.json() === 0) {
-                        this.restaurant.isFavorite = true;
-                        //dismiss loading spinner
-                        loader.dismiss();
-
-                    } else {
-                        throw new Error(`Unknown return value from server: ${res.json()}`);
-                    }
-                },
-                (err: Error) => {
-                    console.error("Favorize restaurant failed.", err);
-                    loader.dismiss();
-                    const alert: Alert = this.alertCtrl.create({
-                        title: this.strError,
-                        message: this.strErrorFavorize,
-                        buttons: [{
-                            text: 'Ok',
-                            role: 'cancel'
-                        }]
                     });
-                    alert.present();
-                });
+        // if not yet set as favorite, set it
+        } else {
+            this.fav.toggleFavorize(this.restaurant.isFavorite, this.restaurant.id)
+                .timeout(8000)
+                .subscribe(
+                    (data: Response) => {
+                        if(data){
+                            this.restaurant.isFavorite = true;
+                            loader.dismiss();
+                        } else {
+                            const alert: Alert = this.alertCtrl.create({
+                                title: this.strError,
+                                message: this.strErrorFavorize,
+                                buttons: [{
+                                    text: 'Ok',
+                                    role: 'cancel'
+                                }]
+                            });
+                            alert.present();
+                        }
+                    },
+                    (err: Error) => {
+                        loader.dismiss();
+                        console.error("Favorize restaurant failed.", err);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strErrorFavorize,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
+                    });
         }
     }
 }
