@@ -71,7 +71,7 @@ export class AuthService {
         const options: RequestOptions = new RequestOptions({headers: headers});
     // TODO
         return new Promise((resolve, reject) => {
-            this.http.post(SERVER_URL + "/api/register_user", user, options).subscribe(
+            this.http.post(`${SERVER_URL}/api/register_user`, user, options).subscribe(
                 (res: Response) => {
                     //On successful registration -> login
                     this.login(username, password);

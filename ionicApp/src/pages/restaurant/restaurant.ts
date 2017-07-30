@@ -112,10 +112,11 @@ export class RestaurantPage implements OnInit {
                 .timeout(8000)
                 .subscribe(
                     (data: Response) => {
-                        if(data){
+                        if (data) {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
                         } else {
+                            loader.dismiss();
                             const alert: Alert = this.alertCtrl.create({
                                 title: this.strError,
                                 message: this.strErrorFavorize,

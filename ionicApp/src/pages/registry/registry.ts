@@ -160,22 +160,51 @@ export class RegistryPage implements OnInit {
                     loader.dismiss();
                 })
                     .catch((error: string) => {
+                        loader.dismiss()
                         switch (error) {
                             case "1" :
-                                alert(this.strNoValidEmail);
+                                const alert: Alert = this.alertCtrl.create({
+                                    title: this.strError,
+                                    message: this.strNoValidEmail,
+                                    buttons: [{
+                                        text: 'Ok',
+                                        role: 'cancel'
+                                    }]
+                                });
+                                alert.present();
                                 break;
                             case "2" :
-                                alert(this.strNoValidPassword);
+                                const alert: Alert = this.alertCtrl.create({
+                                    title: this.strError,
+                                    message: this.strNoValidPassword,
+                                    buttons: [{
+                                        text: 'Ok',
+                                        role: 'cancel'
+                                    }]
+                                });
                                 break;
                             case "3" :
-                                alert(this.strUsedEmail);
+                                const alert: Alert = this.alertCtrl.create({
+                                    title: this.strError,
+                                    message: this.strUsedEmail,
+                                    buttons: [{
+                                        text: 'Ok',
+                                        role: 'cancel'
+                                    }]
+                                });
                                 break;
 
                             default :
-                                alert(this.strConnectionError);
-
+                                const alert: Alert = this.alertCtrl.create({
+                                    title: this.strError,
+                                    message: this.strConnectionError,
+                                    buttons: [{
+                                        text: 'Ok',
+                                        role: 'cancel'
+                                    }]
+                                });
                         }
-                        loader.dismiss();
+                        ;
                     });
             });
         }

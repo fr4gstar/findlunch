@@ -119,7 +119,15 @@ export class LoginPage implements OnInit {
                     } else {
                         this.counterPasswordWrong++;
                         loader.dismiss();
-                        alert(this.strLoginError);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strLoginError,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                     }
                 },
                 (err: Error) => {

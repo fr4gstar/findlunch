@@ -202,7 +202,7 @@ export class OffersPage implements OnInit {
                 .timeout(8000)
                 .subscribe(
                     (data: Response) => {
-                        if(data){
+                        if (data) {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
                         } else {
