@@ -5,51 +5,42 @@ import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
-import {RestaurantsPage} from "../pages/restaurants/restaurants";
 import {BonusPage} from "../pages/bonus/bonus";
 import {LoginPage} from "../pages/login/login";
-import {OrderDetailsPage} from "../pages/order-details/orderdetails";
+import {OrderDetailsPage} from "../pages/orderdetails/orderdetails";
 import {RegistryPage} from "../pages/registry/registry";
-import {OffersProductViewPage} from "../pages/offers-product-view/offers-product-view";
-import {RestaurantViewPage} from "../pages/restaurant-view/restaurant-view";
-import {AuthService} from "../providers/auth-service";
-import {MenuService} from "../providers/menu-service";
-import {OffersService} from "../pages/offers/OffersService";
+import {OfferProductDetailsPage} from "../pages/offer-product-details/offer-product-details";
+import {RestaurantPage} from "../pages/restaurant/restaurant";
+import {ReservationPage} from "../pages/reservation/reservation";
+import {AuthService} from "../shared/auth.service";
+import {MenuService} from "../shared/menu.service";
+import {OffersService} from "../pages/offers/offers.service";
 import {ReservationsPage} from "../pages/reservations/reservations";
-import {ReservationViewPage} from "../pages/reservation-view/reservation-view";
 
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {Geolocation} from "@ionic-native/geolocation";
 import {OffersPage} from "../pages/offers/offers";
-import {CommonModule} from "@angular/common";
-import {HttpModule, Http} from "@angular/http";
+import {CommonModule, DatePipe} from "@angular/common";
+import {Http, HttpModule} from "@angular/http";
 import {BarcodeScanner} from "@ionic-native/barcode-scanner";
-import {QRService} from "../providers/QRService";
+import {QRService} from "../pages/bonus/qr.service";
 import {FilterPopoverComponent} from "../pages/home/FilterPopoverComponent";
 import {FilterPopoverService} from "../pages/home/FilterPopoverService";
 import {AddressInputComponent} from "../pages/home/AddressInputComponent";
 import {NativeGeocoder} from "@ionic-native/native-geocoder";
-import {CartService} from "../services/CartService";
+import {CartService} from "../shared/cart.service";
 import {Push} from "@ionic-native/push";
-import {LoadingService} from "../providers/loading-service";
-import {PushService} from "../providers/push-service";
-import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {LoadingService} from "../shared/loading.service";
+import {PushService} from "../shared/push.service";
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {Network} from "@ionic-native/network";
+import {FavorizeService} from '../shared/favorize.service';
 
-
-// online Server:
-// export const SERVER_URL = "https://findlunch.biz.tm:8444";
-
-// for web app
-// export const SERVER_URL = "https://localhost:8443";
-
-// please Change this to the respective Server
-export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
-// export const SERVER_URL = "https://192.168.178.38:8443";
-
+export const SERVER_URL: string = "https://findlunch.biz.tm:8443";
+export const APP_LANG: string = "de";
+export const FCM_SENDER_ID: string = '343682752512';
 
 @NgModule({
     declarations: [
@@ -57,16 +48,15 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         HomePage,
         OffersPage,
         BonusPage,
-        RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
-        OffersProductViewPage,
-        RestaurantViewPage,
+        OfferProductDetailsPage,
+        RestaurantPage,
         LoginPage,
         RegistryPage,
         ReservationsPage,
-        ReservationViewPage
+        ReservationPage
 
     ],
     imports: [
@@ -90,20 +80,18 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         HomePage,
         OffersPage,
         BonusPage,
-        RestaurantsPage,
         OrderDetailsPage,
         FilterPopoverComponent,
         AddressInputComponent,
-        OffersProductViewPage,
-        RestaurantViewPage,
+        OfferProductDetailsPage,
+        ReservationPage,
+        RestaurantPage,
         LoginPage,
         RegistryPage,
-        ReservationsPage,
-        ReservationViewPage
+        ReservationsPage
     ],
     providers: [
         StatusBar,
-        Geolocation,
         SplashScreen,
         {provide: ErrorHandler, useClass: IonicErrorHandler},
         FilterPopoverService,
@@ -118,14 +106,21 @@ export const SERVER_URL = "https://shrouded-dusk-87807.herokuapp.com";
         MenuService,
         InAppBrowser,
         PushService,
-        TranslateService,
-        LoadingService
+        LoadingService,
+        DatePipe,
+        Network,
+        FavorizeService
     ]
 
 })
 export class AppModule {
 }
-
-export function createTranslateLoader(http: Http) {
+/**
+ * Function prepares the loader for the translation service
+ * from './assets/i18n/*.json'.
+ * @param http
+ * @returns {TranslateHttpLoader}
+ */
+export function createTranslateLoader(http: Http): TranslateHttpLoader {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

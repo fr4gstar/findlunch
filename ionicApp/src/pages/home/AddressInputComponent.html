@@ -1,9 +1,9 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons start>
-            <button ion-button (click)="dismiss()">{{ 'close' | translate }}</button>
+            <button ion-button (click)="viewCtrl.dismiss()">{{ 'close' | translate }}</button>
         </ion-buttons>
-        <ion-searchbar [(ngModel)]="autocomplete.query" [showCancelButton]="false" (ionInput)="updateSearch()"
+        <ion-searchbar [(ngModel)]="acQuery" [showCancelButton]="false" (ionInput)="updateSearch()"
                        [placeholder]="'enterAdress' | translate"
         ></ion-searchbar>
     </ion-toolbar>

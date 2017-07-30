@@ -1,73 +1,121 @@
-import {Component} from "@angular/core";
-import {ToastController} from "ionic-angular";
-import {Http, RequestMethod} from "@angular/http";
+import {Component, OnInit} from "@angular/core";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {SERVER_URL} from "../../app/app.module";
-import {QRService} from "../../providers/QRService";
+import {QRService} from "./qr.service";
 import {TranslateService} from '@ngx-translate/core';
-import {LoadingService} from "../../providers/loading-service";
-import {AuthService} from "../../providers/auth-service";
+import {LoadingService} from "../../shared/loading.service";
+import {AuthService} from "../../shared/auth.service";
+import {Event} from "_debugger";
+import {Loading, Alert, AlertController, NavController} from "ionic-angular";
+import {Error} from "tslint/lib/error";
+import {HomePage} from "../home/home";
 
 /**
  * This pages loads and shows the points of an user per restaurant.
  * Also shows the barcode scanner (qr scanner) function.
+ * @author Sergej Bardin
  */
 @Component({
-    selector: 'bonus',
     templateUrl: 'bonus.html'
 })
-
-export class BonusPage {
-    /**
-     * Object with restaurant and user points
-     */
-    public points: Object[];
-
-    /**
-     *  Initialize modules and loadPoints for an user.
-     *
-     * @param toastCtrl for displaying messages
-     * @param http for requests
-     * @param qr for using barcode functions
-     */
-    constructor(private toastCtrl: ToastController,
-                private http: Http,
+export class BonusPage implements OnInit {
+    //noinspection TsLint
+    public points: any[];
+    private strLoadPointsError: string;
+    private strGeneralError: string;
+    private strCancel: string;
+    private strRetry: string;
+    constructor(private http: Http,
                 private qr: QRService,
                 private auth: AuthService,
+                private alertCtrl: AlertController,
                 private loading: LoadingService,
-                translate: TranslateService) {
-        this.loadPoints();
-        translate.setDefaultLang('de');
+                private translate: TranslateService,
+                private navCtrl: NavController) {
     }
-
+    public ngOnInit() : void {
+        this.translate.get('Error.points').subscribe(
+            (value: string) => {
+                this.strLoadPointsError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.points.", err);
+            });
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strGeneralError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            });
+        this.translate.get('retry').subscribe(
+            (value: string) => {
+                this.strRetry = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key retry.", err);
+            });
+        this.translate.get('cancel').subscribe(
+            (value: string) => {
+                this.strCancel = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key cancel.", err);
+            });
+        this.loadPoints();
+    }
     /**
      * Opens the barcode scanner(camera) of the device via service
-     * @param event
      */
-    onQRClicked(event) {
-        this.qr.onQRClicked(event).then(
-            () => {
+    private onQRClicked (event: Event) : void {
+        this.qr.onQRClicked(event)
+            .then(() => {
                 this.loadPoints();
-            }
-        );
+            });
     }
-
     /**
      * Loads available points of an authorized user per restaurant
      */
-    loadPoints() {
+    private loadPoints () : void {
         //prepare and start loading spinner
-       let loader = this.loading.prepareLoader();
-       loader.present();
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present();
 
-       //prepare http-options
-        let options = this.auth.prepareHttpOptions(RequestMethod.Get);
+        //prepare http-options
+        const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Get);
         this.http.get(`${SERVER_URL}/api/get_points`, options)
+            .timeout(8000)
             .subscribe(
-                res => {
-                    this.points = res.json()
+                (res: Response) => {
+                    this.points = res.json();
                     loader.dismiss();
                 },
-                        err => console.error("Getting userPoints error" + err)
-            )
+                (err: Error) => {
+                    console.error("Getting user points error.", err);
+                    loader.dismiss();
+                    //noinspection TsLint
+                    const alert: Alert = this.alertCtrl.create({
+                        title: this.strGeneralError,
+                        subTitle: this.strLoadPointsError,
+                        buttons: [
+                            {
+                                text: 'Ok',
+                                role: 'cancel',
+                                handler: () => {
+                                    this.navCtrl.setRoot(HomePage);
+                                }
+                            },
+                                {
+                                    text: this.strRetry,
+                                    handler: () => {
+                                        this.loadPoints();
+                                    }
+                                }
+                            ]
+
+                    });
+                    alert.present();
+                }
+            );
     }
 }

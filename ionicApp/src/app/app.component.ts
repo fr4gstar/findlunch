@@ -1,54 +1,38 @@
-import {Component, ViewChild} from "@angular/core";
-import {AlertController, Events, Nav, Platform, ToastController} from "ionic-angular";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {Events, Nav, Platform, Toast, ToastController} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {AuthService} from "../providers/auth-service";
-import {MenuService} from "../providers/menu-service";
-import {QRService} from "../providers/QRService";
+import {AuthService} from "../shared/auth.service";
+import {MenuService} from "../shared/menu.service";
+import {QRService} from "../pages/bonus/qr.service";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
-import {EVENT_TOPIC_MAP_CLICKABLE, HomePage} from "../pages/home/home";
-import {PushService} from "../providers/push-service";
+import {HomePage} from "../pages/home/home";
+import {PushService} from "../shared/push.service";
 import {TranslateService} from "@ngx-translate/core";
-import {SERVER_URL} from "../app/app.module";
+import {APP_LANG, SERVER_URL} from "./app.module";
+import {Page} from "ionic-angular/navigation/nav-util";
+import {MenuPage} from "../model/MenuPage";
 
 /**
  * Initialize the application.
  * 1. Verifies the user from the local storage.
  * 2. Sets the firebase-functionality of the application up.
+ * 3. Shows the Page listings for navigation according to login status of the user
+ * @author Skanny Morandi
  */
 @Component({
     templateUrl: 'app.html'
 })
-export class MyApp {
-    @ViewChild(Nav) nav: Nav;
+export class MyApp implements OnInit {
+    @ViewChild(Nav) public nav: Nav;
     /**
      * Sets the first site of the app
      * @type {HomePage}
      */
-    rootPage: any = HomePage;
-    private logoutSuccess;
-    pages: Array<{ title: string, component: any }>;
+    public rootPage: Component = HomePage;
+    private strLogoutSuccess: string;
+    private pages: { title: string, component: Component } [];
 
-    /**
-     * Initialize modules.
-     * 1. Verify user
-     * 2. Push setup - firebase
-     * 3. Translation settings
-     *
-     * @param platform
-     * @param statusBar
-     * @param http
-     * @param splashScreen
-     * @param events
-     * @param auth
-     * @param menu
-     * @param toastCtrl
-     * @param push
-     * @param qr
-     * @param iab
-     * @param alertCtrl
-     * @param translate
-     */
     constructor(public platform: Platform,
                 public statusBar: StatusBar,
                 public splashScreen: SplashScreen,
@@ -58,83 +42,77 @@ export class MyApp {
                 private toastCtrl: ToastController,
                 public qr: QRService,
                 public iab: InAppBrowser,
-                public alertCtrl: AlertController,
                 private push: PushService,
                 private translate: TranslateService) {
-
-        translate.setDefaultLang('de');
+        translate.setDefaultLang(APP_LANG);
         this.auth.verifyUser();
-        this.push.pushSetup();
 
-        this.translate.get('Success.logoutSuccess').subscribe(
-            value => { this.logoutSuccess = value }
-        );
-
-        //Listener, der bei "pausieren und wieder öffnen" der App loggedIn Status am Server verifiziert
         document.addEventListener('resume', () => {
             this.auth.verifyUser();
-            this.push.pushSetup();
-        })
-
+        });
     }
 
-    openPage(page) {
-        // Reset the content nav to have just this page
-        // we wouldn't want the back button to show in this scenario
-        this.nav.setRoot(page.component);
+    public ngOnInit(): void {
+        this.translate.get('Success.logoutSuccess').subscribe(
+            (value: string) => {
+                this.strLogoutSuccess = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.logoutSuccess.", err);
+            }
+        );
+    }
+    /**
+     * opens the clicked page. Reset the content nav to have just this page.
+     * @param page
+     *  the page the user clicked
+     */
+    public openPage(page: MenuPage): void {
+        if (page !== null) {
+            this.nav.setRoot(page.component);
+        }
     }
 
     /**
-     * Logout function
+     * Logs the user out. After that a toast is shown that logout was successful.
+     * After logout view gets sent back to rootPage.
      */
-    public logout() {
+    public logout(): void {
         this.auth.logout();
-        const toast = this.toastCtrl.create({
-            message: this.logoutSuccess,
+
+        const toast: Toast = this.toastCtrl.create({
+            message: this.strLogoutSuccess,
             duration: 3000
         });
         toast.present();
-        this.nav.setRoot(this.rootPage);
-    }
 
-    /**
-     * Handles on menu closed action
-     */
-    onMenuClosed() {
-        this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, true);
-    }
-
-    /**
-     * Handles on menu opened action
-     */
-    onMenuOpened() {
-        this.events.publish(EVENT_TOPIC_MAP_CLICKABLE, false);
-    }
+        this.nav.setRoot(this.rootPage);    }
 
     /**
      * Opens a url in the inapp browser
      * @param url
      */
-    openUrl(url) {
-        this.platform.ready().then(() => {
-            let browser = this.iab.create(url);
-        });
+    public openUrl(url: string): void {
+        if (url !== null) {
+            this.platform.ready().then(() => {
+                this.iab.create(url);
+            });
+        }
     }
 
     /**
-     * Handles on menu closed action
+     * opens in app browser on about url
      */
-    goToImpressum() {
-        this.openUrl(`${SERVER_URL}/api/confirm_reservation/about_findlunch`);
+    public goToImprint(): void {
+        this.openUrl(`${SERVER_URL}/about_findlunch`);
     }
 
     /**
-     * Opens the faq site
+     *  opens in app browser on Faq url
      */
-    goToFaq() {
-        this.openUrl(`${SERVER_URL}/api/confirm_reservation/faq_customer`);
+    public goToFaq(): void {
+        this.openUrl(`${SERVER_URL}/faq_customer`);
 
     }
-
 }
 

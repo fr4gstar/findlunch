@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-navbar color="dark">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>{{ 'ReservationPage.title' | translate }}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <h3>{{ 'ReservationPage.subtitle' | translate: param }}</h3>
+
+    <div *ngFor='let offer of offers;'>
+        <ion-item text-wrap>
+            <span>{{offer.offer.title}} x {{offer.amount}}</span>
+            <span item-right>{{offer.offer.price | currency:'EUR':true}}</span>
+        </ion-item>
+    </div>
+    <div *ngIf='reservation.donation !== 0;'>
+        <ion-item>
+            <span>{{ 'ReservationPage.donation' | translate }}</span>
+            <span item-right>{{reservation.donation | currency:'EUR':true}}</span>
+        </ion-item>
+    </div>
+    <ion-item>
+        <span>{{ 'ReservationPage.total' | translate }}</span>
+        <span item-right>{{reservation.totalPrice | currency:'EUR':true}}</span>
+    </ion-item>
+
+    <span *ngIf='reservation.pointsCollected'>{{ 'ReservationPage.points' | translate:param }}</span>
+    <span style="color: blue;"
+          *ngIf='reservation.reservationStatus.key === 0'>{{ 'status' | translate }}: {{reservation.reservationStatus.status}}</span>
+    <span style="color: green;"
+          *ngIf='reservation.reservationStatus.key === 1'>{{ 'status' | translate }}: {{reservation.reservationStatus.status}}</span>
+    <span style="color: red;"
+          *ngIf='reservation.reservationStatus.key === 2'>{{ 'status' | translate }}: {{reservation.reservationStatus.status}}</span>
+
+</ion-content>

@@ -1,158 +1,219 @@
-import {Component} from "@angular/core";
-import {NavController, NavParams, ToastController} from "ionic-angular";
-import {Headers, Http, RequestMethod, RequestOptions} from "@angular/http";
+import {Component, OnInit} from "@angular/core";
+import {Alert, AlertController, Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
+import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
-import {AuthService} from "../../providers/auth-service";
+import {AuthService} from "../../shared/auth.service";
 import {SERVER_URL} from "../../app/app.module";
-import {LoadingService} from "../../providers/loading-service";
-import {OrderDetailsPage} from "../order-details/orderdetails";
+import {LoadingService} from "../../shared/loading.service";
+import {OrderDetailsPage} from "../orderdetails/orderdetails";
 import {Restaurant} from "../../model/Restaurant";
-import {PushService} from "../../providers/push-service";
-import { TranslateService } from '@ngx-translate/core';
-
-@Component({
-    selector: 'login-page',
-    templateUrl: 'login.html'
-
-})
+import {TranslateService} from '@ngx-translate/core';
+import {PushService} from "../../shared/push.service";
 
 /**
  * Page that lets the user enter his account credentials and gives him access to the
  * logged-in user functionalities and pages.
+ * @author Skanny Morandi - Sergej Bardin
  */
-export class LoginPage {
-
-    popThisPage: boolean;
+@Component({
+    templateUrl: 'login.html'
+})
+export class LoginPage implements OnInit {
+    private goBack: boolean;
     private counterPasswordWrong: number = 0;
     private restaurant: Restaurant;
-    private loginError;
-    private loginSuccessful;
-    private connectionError;
-    private passwordResetSuccess;
+    private strLoginError: string;
+    private strLoginSuccessful: string;
+    private strConnectionError: string;
+    private strPasswordResetSuccess: string;
+    private strError: string;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
                 private auth: AuthService,
                 private http: Http,
-                private navParams: NavParams,
-                private loading: LoadingService,
                 private push: PushService,
+                private navParams: NavParams,
+                private alertCtrl: AlertController,
+                private loading: LoadingService,
                 private translate: TranslateService) {
-        translate.setDefaultLang('de');
-        this.popThisPage = navParams.get("comeBack");
-        this.restaurant = null;
+        // When comeBack is true, after login user is sent back to the view he came from
+        this.goBack = navParams.get("comeBack");
+    }
+
+    public ngOnInit(): void {
         this.translate.get('Error.login').subscribe(
-            value => { this.loginError = value }
-        )
+            (value: string) => {
+                this.strLoginError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.login.", err);
+            });
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            });
         this.translate.get('Success.login').subscribe(
-            value => { this.loginSuccessful = value }
-        )
+            (value: string) => {
+                this.strLoginSuccessful = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.login.", err);
+            });
         this.translate.get('Error.connection').subscribe(
-            value => { this.connectionError = value }
-        )
+            (value: string) => {
+                this.strConnectionError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.connection.", err);
+            });
         this.translate.get('Success.passwordReset').subscribe(
-            value => { this.passwordResetSuccess = value }
-        )
+            (value: string) => {
+                this.strPasswordResetSuccess = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Success.passwordReset.", err);
+            });
     }
 
     /**
-     * Logs the user in.
+     * Logs the user in. LoggedIn is stateless (without session etc.).
+     * If the authentication fails it activates the password reset button.
      *
      * @param userName
      * @param password
      */
-    public login(userName: string, password: string) {
-        this.counterPasswordWrong++;
-        let loader = this.loading.prepareLoader();
-        loader.present().then(res => {
-
-            this.auth.login(userName, password).then(data => {
-                if (data) {
-                    const toast = this.toastCtrl.create({
-                        message: this.loginSuccessful,
-                        duration: 3000
-                    });
-                    toast.present();
-
-                    this.push.pushSetup();
-
-                    if (this.popThisPage) {
-                        this.restaurant = this.navParams.get("restaurant");
-                        this.navCtrl.push(OrderDetailsPage, {
-                            restaurant: this.restaurant
+    public login(userName: string, password: string): void {
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present().then(() => {
+            this.auth.login(userName, password)
+                .timeout(8000)
+                .subscribe(
+                (data: Response) => {
+                    if (data) {
+                        const toast: Toast = this.toastCtrl.create({
+                            message: this.strLoginSuccessful,
+                            duration: 3000
                         });
-                        loader.dismiss();
+                        toast.present();
+                        this.push.pushSetup();
+                        // When comeBack is true, after login user is sent back to the view he came from
+                        if (this.goBack) {
+                            this.restaurant = this.navParams.get("restaurant");
+                            this.navCtrl.push(OrderDetailsPage, {
+                                restaurant: this.restaurant
+                            });
+                            loader.dismiss();
 
+                        } else {
+                            // else go back to homePage
+                            this.navCtrl.setRoot(HomePage);
+                            loader.dismiss();
+                        }
                     } else {
-                        this.navCtrl.setRoot(HomePage);
+                        this.counterPasswordWrong++;
                         loader.dismiss();
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strLoginError,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                     }
-                } else {
+                },
+                (err: Error) => {
+                    this.counterPasswordWrong++;
                     loader.dismiss();
-                    alert(this.loginError);
+                    console.error("Login failed!", err);
+                    const alert: Alert = this.alertCtrl.create({
+                        title: this.strError,
+                        message: this.strLoginError,
+                        buttons: [{
+                            text: 'Ok',
+                            role: 'cancel'
+                        }]
+                    });
+                    alert.present();
                 }
-            })
-        })
-
+            );
+        });
     }
 
-    public goToRegisterPage() {
+    /**
+     * sends user to RegisterPage
+     */
+    public goToRegisterPage(): void {
         this.navCtrl.push(RegistryPage);
     }
 
     /**
-     * Checks the input username
+     * Checks whether there is a string in the user name field and whether password was
+     * entered wrong
+     * @param username = email address of user
+     */
+    public isEmptyUser(username: string): boolean {
+        return !(username && this.counterPasswordWrong >= 1);
+    }
+
+    /**
+     * Requesting a password reset by the backend
      * @param username = email adress of user
      */
-    public isEmptyUser(username) {
-        if (username && this.counterPasswordWrong >= 1) {
-            return false;
-        }
-        return true;
-    };
+    public sendPasswordReset(username: string): void {
+        const headers: Headers = new Headers({
+            'Content-Type': 'application/json'
+        });
 
-        /**
-         * Requesting a password reset by the backend
-         * @param username = email adress of user
-         */
-    public sendPasswordReset(username)
-        {
-            let headers = new Headers({
-                'Content-Type': 'application/json'
-            });
+        const user: any = {username: username};
 
-            let user = {
-                username: username
-            };
-
-            let options = new RequestOptions({
-                headers: headers,
-                method: RequestMethod.Post,
-                body: JSON.stringify(user)
-            });
-
+        const options: RequestOptions = new RequestOptions({
+            headers: headers,
+            method: RequestMethod.Post,
+            body: JSON.stringify(user)
+        });
+        const loader: Loading = this.loading.prepareLoader();
+        loader.present().then(() => {
             this.http.get(`${SERVER_URL}/api/get_reset_token`, options)
+                .timeout(8000)
                 .subscribe(
-                    (res) => {
-                        let msg;
+                    (res: Response) => {
+                        let msg: string;
                         switch (res.json()) {
                             case 0:
-                                msg = this.passwordResetSuccess;
+                                msg = this.strPasswordResetSuccess;
                                 break;
                             default:
-                                msg = this.connectionError;
+                                msg = this.strConnectionError;
                                 break;
                         }
-                        const toast = this.toastCtrl.create({
+                        const toast: Toast = this.toastCtrl.create({
                             message: msg,
                             duration: 3000
                         });
+                        loader.dismiss();
                         toast.present();
-                    }, (err) => {
-                        console.error(err)
+                    },
+                    (err: Error) => {
+                        loader.dismiss();
+                        console.error(err);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strConnectionError,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                     }
-                )
-        }
-
+                );
+        });
     }
+}

@@ -1,66 +1,107 @@
 import {Component, NgZone, OnInit} from "@angular/core";
 import {ViewController} from "ionic-angular";
-import {NativeGeocoder} from "@ionic-native/native-geocoder";
-import ComponentRestrictions = google.maps.places.ComponentRestrictions;
-import {} from '@types/googlemaps';
+import {NativeGeocoder, NativeGeocoderForwardResult} from "@ionic-native/native-geocoder";
 import {TranslateService} from "@ngx-translate/core";
+import AutocompleteService = google.maps.places.AutocompleteService;
+import AutocompletePrediction = google.maps.places.AutocompletePrediction;
+import PlacesServiceStatus = google.maps.places.PlacesServiceStatus;
 
+
+/**
+ * This uses the google-places-service to translate a address, that the user can type in, into
+ * a location-suggestion. If the user clicks on that suggestions, this component uses the Geocoder to
+ * retrieve it's coordinates.
+ *
+ * @author David Sautter
+ */
 @Component({
-    selector: 'AddressInputComponent',
     templateUrl: 'AddressInputComponent.html'
 })
-
 export class AddressInputComponent implements OnInit {
 
-    autocompleteItems;
-    autocomplete;
-    service = new google.maps.places.AutocompleteService();
+    public autocompleteItems: Object[];
+    public acQuery: string;
 
-    constructor(
-        public viewCtrl: ViewController,
-        private zone: NgZone,
-        private geocoder: NativeGeocoder,
-        private translate: TranslateService) {
-        translate.setDefaultLang('de');
+    public service: AutocompleteService = new google.maps.places.AutocompleteService();
+
+    private locationNotFoundErrorMsg: string;
+
+    constructor(public viewCtrl: ViewController,
+                private geocoder: NativeGeocoder,
+                private zone: NgZone,
+                public translate: TranslateService) {
+
         this.autocompleteItems = [];
-        this.autocomplete = {
-            query: ''
-        };
+        this.acQuery = '';
     }
 
-    ngOnInit() {
+    /**
+     * Get the string-translations on init
+     */
+    public ngOnInit(): void {
+        this.translate.get("Error.locationNotFound")
+            .subscribe(
+                (transStr: string) => {
+                    this.locationNotFoundErrorMsg = transStr;
+                },
+                (err: Error) => {
+                    // this should not be happening, because if translate does not
+                    // find strings, it uses the key. However something could be wrong...
+                    console.error("Error: translate.get did fail for key Error.locationNotFound.", err);
+                }
+            );
     }
 
-    dismiss() {
-        this.viewCtrl.dismiss();
-    }
 
-    chooseItem(item: any) {
+    /**
+     * This method get's executed, when the user clicks on a suggested location-item.
+     * It will use the geocoder to retrieve the Coordinates of that location.
+     *
+     * @param {google.maps.places.AutocompletePrediction} item suggested location
+     */
+    public chooseItem(item: AutocompletePrediction): void {
+        console.debug("geocoding item", item);
+
         // geocode
-        this.geocoder.forwardGeocode(item.description).then(coords => {
-            this.viewCtrl.dismiss(coords);
-        });
+        this.geocoder.forwardGeocode(item.description)
+            .then(
+                (coords: NativeGeocoderForwardResult) => {
+                    this.viewCtrl.dismiss(coords);
+                },
+                (err: Error) => {
+                    console.error("Could not retrieve Coordinates from item: ", item, err);
+                    alert(this.locationNotFoundErrorMsg);
+                }
+            );
     }
 
-    updateSearch() {
-        if (this.autocomplete.query == '') {
+
+    /**
+     * This method will get executed every time the user changes it's input into the searchbar.
+     * It will query the Places API for matching location-predictions based on the provided input.
+     */
+    public updateSearch(): void {
+        // delete suggestion if nothing is entered
+        if (!this.acQuery) {
             this.autocompleteItems = [];
             return;
         }
-        let me = this;
-        this.service.getPlacePredictions({
-                input: this.autocomplete.query,
+
+        this.service.getPlacePredictions(
+            {
+                input: this.acQuery,
                 componentRestrictions: {
-                    country: 'DE'
+                    country: 'DE'    // change this if you plan to use the app outside Germany
                 }
             },
-            function (predictions, status) {
-                me.autocompleteItems = [];
-                me.zone.run(function () {
-                    predictions.forEach(function (prediction) {
-                        me.autocompleteItems.push(prediction);
-                    });
-                });
+            (predictions: AutocompletePrediction[], status: PlacesServiceStatus) => {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                    alert(status);
+                    this.acQuery = "";
+                    return;
+                }
+                // need to run this in a zone to inform Angular's change-detection about the new data.
+                this.zone.run(() => this.autocompleteItems = predictions);
             });
     }
 }

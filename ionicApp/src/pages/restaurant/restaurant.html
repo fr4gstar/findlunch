@@ -3,10 +3,10 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>{{ 'RestaurantViewPage.title' | translate }}</ion-title>
+    <ion-title>{{ 'RestaurantPage.title' | translate }}</ion-title>
       <ion-buttons end>
 
-          <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
+          <button id="favourite" ion-button icon-only (click)="toggleIsFavorite()">
               <ion-icon name="star-outline" *ngIf="this.auth.getLoggedIn()&& !restaurant.isFavorite"></ion-icon>
               <ion-icon name="star" *ngIf="this.auth.getLoggedIn()&&restaurant.isFavorite"></ion-icon>
           </button>
@@ -36,7 +36,7 @@
   </div>
 
   <div style="padding: 10px">
-    <ion-icon name="time"> {{ 'RestaurantViewPage.openingTimes' | translate }}:</ion-icon>
+    <ion-icon name="time"> {{ 'RestaurantPage.openingTimes' | translate }}:</ion-icon>
     <div *ngFor="let opened of restaurant.timeSchedules">
         {{opened.dayOfWeek.name}}: {{opened.offerStartTime.toString().substr(11, 15)}} - {{opened.offerEndTime.toString().substr(11, 15)}}
     </div>

@@ -5,9 +5,11 @@
     </button>
     <ion-title>{{ 'title' | translate }}</ion-title>
     <ion-buttons end>
+      <!-- button for putting in a custom location -->
       <button ion-button icon-only (click)="showAddressInput()">
         <ion-icon name="ios-search"></ion-icon>
       </button>
+      <!-- button for opening the filter-dialog for the restaurants -->
       <button ion-button icon-only [disabled]="!allRestaurants" (click)="openFilterDialog($event)">
         <ion-icon name="ios-funnel"></ion-icon>
       </button>
@@ -16,5 +18,6 @@
 </ion-header>
 
 <ion-content>
-  <div #map id="map" style="height:100%;"></div>
+  <!-- be careful, this needs to stay exactly like this (see plugin docs)-->
+  <div #map id="map"></div>
 </ion-content>

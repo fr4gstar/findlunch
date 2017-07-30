@@ -1,35 +1,69 @@
 {
-  "rules": {
-    "no-duplicate-variable": true,
-    "no-unused-variable": [
-      true
+    "rules": {
+        "no-duplicate-variable": true,
+        "no-unused-variable": [
+            true
+        ],
+        "directive-selector": [
+            true,
+            "attribute",
+            "fl",
+            "camelCase"
+        ],
+        "component-selector": [
+            true,
+            "element",
+            "fl",
+            "kebab-case"
+        ],
+        "use-input-property-decorator": true,
+        "use-output-property-decorator": true,
+        "use-host-property-decorator": true,
+        "no-attribute-parameter-decorator": true,
+        "no-input-rename": true,
+        "no-output-rename": true,
+        "no-forward-ref": true,
+        "use-life-cycle-interface": true,
+        "use-pipe-transform-interface": true,
+        "pipe-naming": [
+            true,
+            "camelCase",
+            "fl"
+        ],
+        "component-class-suffix": [
+            true,
+            "Page",
+            "Component",
+            "App"
+        ],
+        "directive-class-suffix": true,
+        "templates-use-public": true,
+        "no-access-missing-member": true,
+        "invoke-injectable": true,
+        "template-to-ng-template": true,
+        "no-parameter-properties": false,
+        "newline-before-return": false,
+        "no-increment-decrement": false,
+        "no-backbone-get-set-outside-model": false,
+        "quotemark": false,
+        "no-relative-imports": false,
+        "ordered-imports": false,
+        "missing-jsdoc": false,
+        "no-consecutive-blank-lines": [
+            true,
+            2
+        ],
+        "export-name": false,
+        "no-http-string": false,
+        "no-inner-html": false,
+        "no-import-side-effect": false,
+        "interface-name": false,
+        "function-name": false,
+        "possible-timing-attack": false,
+        "max-line-length": [200]
+    },
+    "rulesDirectory": [
+        "node_modules/codelyzer"
     ],
-    "directive-selector": [true, "attribute", "fl", "camelCase"],
-    "component-selector": [true, "element", "fl", "kebab-case"],
-    "use-input-property-decorator": true,
-    "use-output-property-decorator": true,
-    "use-host-property-decorator": true,
-    "no-attribute-parameter-decorator": true,
-    "no-input-rename": true,
-    "no-output-rename": true,
-    "no-forward-ref": true,
-    "use-life-cycle-interface": true,
-    "use-pipe-transform-interface": true,
-    "pipe-naming": [true, "camelCase", "fl"],
-    "component-class-suffix": true,
-    "directive-class-suffix": true,
-    "templates-use-public": true,
-    "no-access-missing-member": true,
-    "invoke-injectable": true,
-    "template-to-ng-template": true,
-    "no-parameter-properties": false,
-    "newline-before-return": false,
-    "no-increment-decrement": false,
-    "no-backbone-get-set-outside-model": false,
-    "quotemark": false
-  },
-  "rulesDirectory": [
-    "node_modules/codelyzer"
-  ],
-  "extends": "tslint-microsoft-contrib"
+    "extends": "tslint-microsoft-contrib"
 }

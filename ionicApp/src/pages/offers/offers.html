@@ -5,13 +5,14 @@
         </button>
 
         <ion-title (click)="onRestaurantClicked($event)">
-            <img *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
-                 style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
-            {{restaurant.name}}
+            <img id="restaurantLogo" *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail">
+            <div id="titleText">
+                {{restaurant.name| slice:0:10}}
+            </div>
         </ion-title>
         <ion-buttons end>
 
-            <button id="favourite" ion-button icon-only (click)="toggleIsFavourite()">
+            <button id="favorite" ion-button icon-only (click)="toggleIsFavorite()">
                 <ion-icon name="star-outline" *ngIf="this.auth.getLoggedIn()&& !restaurant.isFavorite"></ion-icon>
                 <ion-icon name="star" *ngIf="this.auth.getLoggedIn()&&restaurant.isFavorite"></ion-icon>
             </button>
@@ -39,7 +40,7 @@
                 <div *ngIf="isGroupShown(category)">
                     <div *ngFor='let offer of offers[category]'>
                         <ion-item (click)="onOfferClicked($event, offer)" no-lines>
-                            <span>{{offer.title}}<sup class="exponent-allergenics">{{offerService.getALGsAndADDsOfOffer(offer)}}</sup></span>
+                            <span>{{offer.title}}<sup class="exponent-allergenics">{{getALGsAndADDsOfOffer(offer)}}</sup></span>
                             <span item-right>{{offer.price | currency:'EUR':true}}</span>
                         </ion-item>
                     </div>
