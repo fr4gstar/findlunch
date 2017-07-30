@@ -68,7 +68,6 @@ export class ReservationsPage implements OnInit {
         this.loadReservations();
     }
 
-    // TODO Unit testing
     /**
      * Saving the restaurants from reserveration to array
      */
@@ -89,7 +88,6 @@ export class ReservationsPage implements OnInit {
         this.navCtrl.push(ReservationPage, {reservation: reservation});
     }
 
-    // TODO Unit testing
     /**
      * Sorts several reserverations by collect time
      * @param reservations

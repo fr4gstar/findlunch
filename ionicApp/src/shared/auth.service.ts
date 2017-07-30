@@ -57,7 +57,6 @@ export class AuthService {
      * @returns {Promise<T>}
      *  result whether registration was successful returned to the calling method
      */
-    // TODO
     public register(username: string, password: string) {
         const user: User = {
             username: username,
@@ -69,7 +68,6 @@ export class AuthService {
             'Content-Type': 'application/json'
         });
         const options: RequestOptions = new RequestOptions({headers: headers});
-    // TODO
         return new Promise((resolve, reject) => {
             this.http.post(`${SERVER_URL}/api/register_user`, user, options).subscribe(
                 (res: Response) => {
@@ -88,7 +86,6 @@ export class AuthService {
      * If no more existent, logs the user out
      * @returns {Promise<T>}
      */
-    // TODO
     public verifyUser() {
         //if there is a username stored at all in the local storage...
         if (window.localStorage.getItem("username") !== null) {
@@ -100,7 +97,6 @@ export class AuthService {
                 //also retrieve the according token and put it into the header of the http-call
                 Authorization: "Basic " + window.localStorage.getItem(currentUser)
             });
-// TODO
             const options: RequestOptions = new RequestOptions({headers: headers});
             return new Promise((resolve) => {
                 this.http.get(SERVER_URL + "/api/login_user", options).subscribe(

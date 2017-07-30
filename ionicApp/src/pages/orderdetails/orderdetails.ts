@@ -292,7 +292,6 @@ export class OrderDetailsPage implements OnInit {
      * @author Skanny Morandi, David Sautter
      */
     public sendOrder(): void {
-        //TODO check reservation -> price == negative, reservation null, donation > totalprice
         //sending an empty order is not possible
         if (this.reservation.items.length === 0) {
             alert(this.strEmptyOrder);
@@ -301,7 +300,7 @@ export class OrderDetailsPage implements OnInit {
 
             //starts the loading spinner
             loader.present().then(() => {
-                //timestamp in ionic and timestamp on server have 2 hrs difference 
+                //timestamp in ionic and timestamp on server have 2 hrs difference
                 const date: Date = this.pickUpTime;
                 const timeDifference: number = 120 * 60 * 1000;
                 date.setTime(date.getTime() - timeDifference);

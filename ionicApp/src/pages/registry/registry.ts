@@ -137,7 +137,6 @@ export class RegistryPage implements OnInit {
         } else {
             const loader: Loading = this.loading.prepareLoader();
             loader.present().then(() => {
-                // TODO add .timeout(8000) -> auth.register .do() etc. -> subscribe
                 this.auth.register(username, password).then(() => {
                     const toast: Toast = this.toastCtrl.create({
                         message: this.strRegisterSuccess,
