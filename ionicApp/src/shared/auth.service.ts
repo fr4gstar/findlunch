@@ -71,7 +71,7 @@ export class AuthService {
         const options: RequestOptions = new RequestOptions({headers: headers});
     // TODO
         return new Promise((resolve, reject) => {
-            this.http.post(SERVER_URL + "/api/register_user", user, options).subscribe(
+            this.http.post(`${SERVER_URL}/api/register_user`, user, options).subscribe(
                 (res: Response) => {
                     //On successful registration -> login
                     this.login(username, password);
@@ -142,7 +142,6 @@ export class AuthService {
     public logout(): void {
         const currentUser: string = window.localStorage.getItem("username");
 
-        // TODO check removeItem -> try catch
         //delete key-value pair stored under the key named after the most recently logged in user
         window.localStorage.removeItem(currentUser);
         // delete latest logged in user stored under key "username"

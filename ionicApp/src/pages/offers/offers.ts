@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController, NavParams, Platform} from "ionic-angular";
+import {Alert, AlertController, Loading, NavController, NavParams, Platform} from "ionic-angular";
 import {OffersService} from "./offers.service";
 import {OfferProductDetailsPage} from "../offer-product-details/offer-product-details";
 import {OrderDetailsPage} from "../orderdetails/orderdetails";
@@ -16,6 +16,7 @@ import {Offer} from "../../model/Offer";
 import {Error} from "tslint/lib/error";
 import {Event} from "_debugger";
 import 'rxjs/add/operator/catch';
+import {FavorizeService} from "../../shared/favorize.service";
 
 /**
  * Page for showing the offers of a specific restaurant in a list.
@@ -40,6 +41,7 @@ export class OffersPage implements OnInit {
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
     private strOpeningError: string;
+    private strError: string;
 
     constructor(navParams: NavParams,
                 public offerService: OffersService,
@@ -49,6 +51,8 @@ export class OffersPage implements OnInit {
                 public auth: AuthService,
                 private platform: Platform,
                 private loading: LoadingService,
+                private alertCtrl: AlertController,
+                private fav: FavorizeService,
                 private translate: TranslateService) {
 
         this.restaurant = navParams.get("restaurant");
@@ -82,6 +86,13 @@ export class OffersPage implements OnInit {
             },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.openingProblem.", err);
+            });
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strError = value;
+                },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
             }
         );
 
@@ -140,7 +151,6 @@ export class OffersPage implements OnInit {
         this.navCtrl.push(RestaurantPage, {restaurant: this.restaurant});
     }
 
-    // TODO to service
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
      * Shows a loading animation while request is running
@@ -153,44 +163,73 @@ export class OffersPage implements OnInit {
 
         // unset as favorite if already favorite
         if (this.restaurant.isFavorite) {
-
-            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Delete);
-            this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}`, options)
-                .retry(2)
+            this.fav.toggleFavorize(this.restaurant.isFavorite, this.restaurant.id)
+                .timeout(8000)
                 .subscribe(
-                    (res: Response) => {
-                        if (res.json() === 0) {
+                    (data: Response) => {
+                        if (data) {
                             this.restaurant.isFavorite = false;
                             loader.dismiss();
                         } else {
-                            // TODO change to alert and log
-                            throw new Error(`Unknown return value from server: ${res.json()}`);
+                            loader.dismiss();
+                            const alert: Alert = this.alertCtrl.create({
+                                title: this.strError,
+                                message: this.strErrorDeFavorize,
+                                buttons: [{
+                                    text: 'Ok',
+                                    role: 'cancel'
+                                }]
+                            });
+                            alert.present();
                         }
                     },
                     (err: Error) => {
                         loader.dismiss();
-                        console.error(err);
-                        alert(this.strErrorDeFavorize);
+                        console.error("Defavorize restaurant failed.", err);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strErrorDeFavorize,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                     });
-            // if not yet set as favorite, set it
+        // if not yet set as favorite, set it
         } else {
-            const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Put);
-            this.http.put(`${SERVER_URL}/api/register_favorite/${this.restaurant.id}`, "", options)
-                .retry(2)
+            this.fav.toggleFavorize(this.restaurant.isFavorite, this.restaurant.id)
+                .timeout(8000)
                 .subscribe(
-                    (res: Response) => {
-                        if (res.json() === 0) {
+                    (data: Response) => {
+                        if (data) {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
                         } else {
-                            // TODO change to alert and log
-                            throw new Error(`Unknown return value from server: ${res.json()}`);
+                            loader.dismiss();
+                            const alert: Alert = this.alertCtrl.create({
+                                title: this.strError,
+                                message: this.strErrorFavorize,
+                                buttons: [{
+                                    text: 'Ok',
+                                    role: 'cancel'
+                                }]
+                            });
+                            alert.present();
                         }
                     },
                     (err: Error) => {
                         loader.dismiss();
-                        console.error(err);
-                        alert(this.strErrorFavorize);
+                        console.error("Favorize restaurant failed.", err);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strErrorFavorize,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                     });
         }
     }
@@ -203,7 +242,6 @@ export class OffersPage implements OnInit {
         return this.cartService.getCartItemCount(this.restaurant.id);
     }
 
-    // TODO toggleGroupDetails
     /**
      * Toggles a food category on click and shows the food items in it
      * @param group {string}
