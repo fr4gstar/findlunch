@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
-import {Push, PushObject, PushOptions, EventResponse} from "@ionic-native/push";
-import {RequestMethod, Http, RequestOptions, Response} from "@angular/http";
-import {SERVER_URL, APP_LANG, FCM_SENDER_ID} from "../app/app.module";
+import {EventResponse, Push, PushObject, PushOptions} from "@ionic-native/push";
+import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
+import {APP_LANG, FCM_SENDER_ID, SERVER_URL} from "../app/app.module";
 import {Alert, AlertController} from "ionic-angular";
 import {AuthService} from "./auth.service";
 import {Error} from "tslint/lib/error";
@@ -75,9 +75,17 @@ export class PushService {
                                     buttons: [{
                                         text: 'Ok',
                                         role: 'cancel'
-                                    }]
+                                    }],
+                                    enableBackdropDismiss: false
                                 });
                                 alert.present();
+
+                                // dismiss after 10 seconds
+                                setTimeout(
+                                    () => {
+                                        alert.dismiss();
+                                    },
+                                    10000);
                             }
                             // If background then display as typical notification
                         });
