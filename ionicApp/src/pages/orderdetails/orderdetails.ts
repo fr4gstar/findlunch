@@ -301,12 +301,8 @@ export class OrderDetailsPage implements OnInit {
 
             //starts the loading spinner
             loader.present().then(() => {
-                //timestamp in ionic and timestamp on server have 2 hrs difference 
-                const date: Date = this.pickUpTime;
-                const timeDifference: number = 120 * 60 * 1000;
-                date.setTime(date.getTime() - timeDifference);
-                const correctedPickUpTime: string= date.toISOString();
-                this.reservation.collectTime = Date.parse(correctedPickUpTime);
+
+                this.reservation.collectTime = Date.parse(this.pickUpTime.toISOString());
 
                 //if logged in,
                 if (this.auth.getLoggedIn()) {
@@ -481,8 +477,7 @@ export class OrderDetailsPage implements OnInit {
 
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
-
-            date.setTime(date.getTime());
+            date.setTime(date.getTime() - 120 * 60 * 1000)
             this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
         } catch (e) {
             console.error(e);
