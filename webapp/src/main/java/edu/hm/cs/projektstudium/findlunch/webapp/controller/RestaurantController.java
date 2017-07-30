@@ -663,8 +663,10 @@ public class RestaurantController {
 			return "restaurant";
 		}
 		
-		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
-		restaurant.setRestaurantLogos(restaurantLogos);
+		if (null!=session.getAttribute("logoList")){
+			List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+			restaurant.setRestaurantLogos(restaurantLogos);
+		}
 		restaurant.addRestaurantLogo(newLogo);
 		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
@@ -930,7 +932,7 @@ public class RestaurantController {
 		restaurant.setRestaurantLogos((List<RestaurantLogo>) session.getAttribute("logoList"));
 		restaurant.removeRestaurantLogo(restaurant.getRestaurantLogos().get(imageId));
 		
-		if(restaurant.getRestaurantLogos().isEmpty()){
+		if(null == restaurant.getRestaurantLogos() || restaurant.getRestaurantLogos().isEmpty()) {
 			addDefaultLogo(restaurant);
 		}
 		

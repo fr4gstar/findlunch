@@ -859,6 +859,11 @@ public class Restaurant implements Serializable {
 	 * @return the restaurant logo
 	 */
 	public RestaurantLogo addRestaurantLogo(RestaurantLogo restaurantLogo) {
+		
+		if(null==getRestaurantLogos()){
+			this.restaurantLogos = new ArrayList<RestaurantLogo>();
+		}
+		
 		getRestaurantLogos().add(restaurantLogo);
 		restaurantLogo.setRestaurant(this);
 
