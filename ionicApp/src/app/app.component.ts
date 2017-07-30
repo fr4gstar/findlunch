@@ -11,6 +11,7 @@ import {PushService} from "../shared/push.service";
 import {TranslateService} from "@ngx-translate/core";
 import {APP_LANG, SERVER_URL} from "./app.module";
 import {Page} from "ionic-angular/navigation/nav-util";
+import {MenuPage} from "../model/MenuPage";
 
 /**
  * Initialize the application.
@@ -66,7 +67,7 @@ export class MyApp implements OnInit {
      * @param page
      *  the page the user clicked
      */
-    public openPage(page): void {
+    public openPage(page: MenuPage): void {
         if (page !== null) {
             this.nav.setRoot(page.component);
         }
@@ -85,8 +86,7 @@ export class MyApp implements OnInit {
         });
         toast.present();
 
-        this.openPage(this.rootPage);
-    }
+        this.nav.setRoot(this.rootPage);    }
 
     /**
      * Opens a url in the inapp browser
