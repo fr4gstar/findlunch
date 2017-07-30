@@ -5,9 +5,10 @@
         </button>
 
         <ion-title (click)="onRestaurantClicked($event)">
-            <img *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail"
-                 style="max-width: 64px; height: 30px; display:inline-block; margin: auto">
-            {{restaurant.name}}
+            <img id="restaurantLogo" *ngIf="restaurant.defaultLogo" [src]="'data:image/jpg;base64,' + restaurant.defaultLogo.thumbnail">
+            <div id="titleText">
+                {{restaurant.name| slice:0:10}}
+            </div>
         </ion-title>
         <ion-buttons end>
 
