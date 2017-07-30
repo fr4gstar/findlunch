@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
+import {Loading, NavController, NavParams, Toast, ToastController, AlertController, Alert
+} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
@@ -27,6 +28,7 @@ export class LoginPage implements OnInit {
     private strLoginSuccessful: string;
     private strConnectionError: string;
     private strPasswordResetSuccess: string;
+    private strError: string;
 
     constructor(private navCtrl: NavController,
                 private toastCtrl: ToastController,
@@ -34,6 +36,7 @@ export class LoginPage implements OnInit {
                 private http: Http,
                 private push: PushService,
                 private navParams: NavParams,
+                private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
         // When comeBack is true, after login user is sent back to the view he came from
@@ -47,6 +50,13 @@ export class LoginPage implements OnInit {
             },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.login.", err);
+            });
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
             });
         this.translate.get('Success.login').subscribe(
             (value: string) => {
@@ -81,7 +91,9 @@ export class LoginPage implements OnInit {
     public login(userName: string, password: string): void {
         const loader: Loading = this.loading.prepareLoader();
         loader.present().then(() => {
-            this.auth.login(userName, password).subscribe(
+            this.auth.login(userName, password)
+                .timeout(8000)
+                .subscribe(
                 (data: Response) => {
                     if (data) {
                         const toast: Toast = this.toastCtrl.create({
@@ -114,7 +126,15 @@ export class LoginPage implements OnInit {
                     this.counterPasswordWrong++;
                     loader.dismiss();
                     console.error("Login failed!", err);
-                    alert(this.strLoginError);
+                    const alert: Alert = this.alertCtrl.create({
+                        title: this.strError,
+                        message: this.strLoginError,
+                        buttons: [{
+                            text: 'Ok',
+                            role: 'cancel'
+                        }]
+                    });
+                    alert.present();
                 }
             );
         });
@@ -145,11 +165,11 @@ export class LoginPage implements OnInit {
             'Content-Type': 'application/json'
         });
 
-        const user: Object = {username: username};
+        const user: any = {username: username};
 
         const options: RequestOptions = new RequestOptions({
             headers: headers,
-            method: RequestMethod.Put,
+            method: RequestMethod.Post,
             body: JSON.stringify(user)
         });
         const loader: Loading = this.loading.prepareLoader();
@@ -171,11 +191,21 @@ export class LoginPage implements OnInit {
                             message: msg,
                             duration: 3000
                         });
+                        loader.dismiss();
                         toast.present();
                     },
                     (err: Error) => {
+                        loader.dismiss();
                         console.error(err);
-                        alert(this.strConnectionError);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strConnectionError,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                     }
                 );
         });

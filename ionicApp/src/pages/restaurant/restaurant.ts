@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavParams} from "ionic-angular";
+import {Alert, AlertController, Loading, NavParams} from "ionic-angular";
 import {SERVER_URL} from "../../app/app.module";
 import {Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {Restaurant} from "../../model/Restaurant";
@@ -22,14 +22,15 @@ export class RestaurantPage implements OnInit {
 
     private strErrorFavorize: string;
     private strErrorDeFavorize: string;
+    private strError: string;
 
     constructor(private navParams: NavParams,
                 private auth: AuthService,
                 private http: Http,
                 private loading: LoadingService,
+                private alertCtrl: AlertController,
                 private translate: TranslateService) {
         this.restaurant = navParams.get("restaurant");
-        // TODO Backend or check null
         this.openingTime = this.restaurant.timeSchedules;
     }
 
@@ -42,6 +43,14 @@ export class RestaurantPage implements OnInit {
                 console.error("Error: translate.get did fail for key Error.favorize.", err);
             }
         );
+        this.translate.get('Error.general').subscribe(
+            (res: string) => {
+                this.strError = res;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            }
+        );
         this.translate.get('Error.deFavorize').subscribe(
             (res: string) => {
                 this.strErrorDeFavorize = res;
@@ -51,7 +60,7 @@ export class RestaurantPage implements OnInit {
             }
         );
     }
-    //TODO -> service
+    //TODO -> BITTE DIESEN BENUTZEN, wegen der alerts ... -> auslagern in service
     /**
      * Toggles the isFavorite status of the restaurant and also sends this to the server.
      */
@@ -61,7 +70,6 @@ export class RestaurantPage implements OnInit {
         loader.present();
         // unset as favorite
         if (this.restaurant.isFavorite) {
-
             const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Delete);
             this.http.delete(`${SERVER_URL}/api/unregister_favorite/${this.restaurant.id}`, options)
                 .retry(2)
@@ -71,14 +79,22 @@ export class RestaurantPage implements OnInit {
                         this.restaurant.isFavorite = false;
                         //dismiss loading spinner
                         loader.dismiss();
-
                     } else {
                       throw new Error(`Unknown return value from server: ${res.json()}`);
                     }
                 },
                     (err: Error) => {
-                    alert(this.strErrorDeFavorize);
-                    console.error("Defavorize restaurant failed.", err);
+                        loader.dismiss();
+                        console.error("Defavorize restaurant failed.", err);
+                        const alert: Alert = this.alertCtrl.create({
+                            title: this.strError,
+                            message: this.strErrorDeFavorize,
+                            buttons: [{
+                                text: 'Ok',
+                                role: 'cancel'
+                            }]
+                        });
+                        alert.present();
                 }
             );
         } else {
@@ -98,8 +114,17 @@ export class RestaurantPage implements OnInit {
                     }
                 },
                 (err: Error) => {
-                    alert(this.strErrorFavorize);
                     console.error("Favorize restaurant failed.", err);
+                    loader.dismiss();
+                    const alert: Alert = this.alertCtrl.create({
+                        title: this.strError,
+                        message: this.strErrorFavorize,
+                        buttons: [{
+                            text: 'Ok',
+                            role: 'cancel'
+                        }]
+                    });
+                    alert.present();
                 });
         }
     }

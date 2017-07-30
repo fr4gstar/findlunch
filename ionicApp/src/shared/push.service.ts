@@ -9,7 +9,7 @@ import {Error} from "tslint/lib/error";
 import {TranslateService} from "@ngx-translate/core";
 
 /**
- * Initializing push and notfication settings.
+ * Initializing push and notification settings.
  * @author Sergej Bardin
  */
 @Injectable()
@@ -17,6 +17,7 @@ export class PushService {
 
     private pushObject: PushObject;
     private strPushError: string;
+    private strError: string;
 
     constructor(public push: Push,
                 private alertCtrl: AlertController,
@@ -30,6 +31,14 @@ export class PushService {
             },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.pushReg.", err);
+            }
+        );
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
             }
         );
         const pushOptions: PushOptions = {
@@ -48,7 +57,7 @@ export class PushService {
     }
 
     /**
-     *  Setup of the display of the push notification
+     *  Setup of the display settings of the push notification
      */
     public notificationSetup(): void {
         //noinspection TsLint
@@ -75,7 +84,6 @@ export class PushService {
 
                 } else {
                     console.warn("Not logged in or push permission NOT granted, reservation confirmation can not received!");
-                    alert(this.strPushError);
                 }
             });
     }
@@ -111,17 +119,25 @@ export class PushService {
                                 .subscribe(
                                     (res: Response) => {
                                         console.warn("Device registered at firebase and backend");
+                                        this.notificationSetup();
                                     },
                                     (err: Error) => {
                                         console.error(err);
-                                        alert(this.strPushError);
+                                        const alert: Alert = this.alertCtrl.create({
+                                            title: this.strError,
+                                            message: this.strPushError,
+                                            buttons: [{
+                                                text: 'Ok',
+                                                role: 'cancel'
+                                            }]
+                                        });
+                                        alert.present();
                                     }
                                 );
                         });
                     this.pushObject.on('error').subscribe((error: Error) => console.error("Error with receiving push from firebase", error));
                 } else {
-                    console.warn("Push permission NOT granted, reservation confirmation can not reveiced!");
-                    alert(this.strPushError);
+                    console.warn("Push permission NOT granted, reservation confirmation can not received!");
                 }
             });
     }

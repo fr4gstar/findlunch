@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
+import {Alert, AlertController, Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {AuthService} from "../../shared/auth.service";
 import {HomePage} from "../home/home";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
@@ -30,12 +30,14 @@ export class RegistryPage implements OnInit {
     private strConfirmPasswordError: string;
     private strTermsAndConditionError: string;
     private strRegisterSuccess: string;
+    private strError: string;
 
     constructor(private auth: AuthService,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
                 private navParams: NavParams,
                 private iab: InAppBrowser,
+                private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
         this.goBack = navParams.get("comeBack");
@@ -49,6 +51,14 @@ export class RegistryPage implements OnInit {
             },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.noValidEmail.", err);
+            }
+        );
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
             }
         );
         this.translate.get('Error.noValidPassword').subscribe(
@@ -108,7 +118,15 @@ export class RegistryPage implements OnInit {
      */
     public onRegisterClicked(username: string, password: string, password2: string): void {
         if (!this.passwordsIdentical(password, password2)) {
-            alert(this.strConfirmPasswordError);
+            const alert: Alert = this.alertCtrl.create({
+                title: this.strError,
+                message: this.strConfirmPasswordError,
+                buttons: [{
+                    text: 'Ok',
+                    role: 'cancel'
+                }]
+            });
+            alert.present();
 
         } else if (!this.termsAndConditionsChecked) {
             const toast: Toast = this.toastCtrl.create({
@@ -119,7 +137,7 @@ export class RegistryPage implements OnInit {
         } else {
             const loader: Loading = this.loading.prepareLoader();
             loader.present().then(() => {
-
+                // TODO add .timeout(8000) -> auth.register .do() etc. -> subscribe
                 this.auth.register(username, password).then(() => {
                     const toast: Toast = this.toastCtrl.create({
                         message: this.strRegisterSuccess,
