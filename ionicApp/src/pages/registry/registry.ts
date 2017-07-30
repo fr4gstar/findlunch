@@ -161,10 +161,10 @@ export class RegistryPage implements OnInit {
                 })
                     .catch((error: string) => {
                         loader.dismiss();
-                        const alert: Alert;
+                        let alert: Alert;
                         switch (error) {
                             case "1" :
-                                 alert: Alert = this.alertCtrl.create({
+                                 alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strNoValidEmail,
                                     buttons: [{
@@ -175,7 +175,7 @@ export class RegistryPage implements OnInit {
                                  alert.present();
                                  break;
                             case "2" :
-                                 alert: Alert = this.alertCtrl.create({
+                                 alert= this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strNoValidPassword,
                                     buttons: [{
@@ -185,7 +185,7 @@ export class RegistryPage implements OnInit {
                                 });
                                  break;
                             case "3" :
-                                 alert: Alert = this.alertCtrl.create({
+                                 alert= this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strUsedEmail,
                                     buttons: [{
@@ -196,7 +196,7 @@ export class RegistryPage implements OnInit {
                                  break;
 
                             default :
-                                 alert: Alert = this.alertCtrl.create({
+                                 alert= this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strConnectionError,
                                     buttons: [{
@@ -205,7 +205,6 @@ export class RegistryPage implements OnInit {
                                     }]
                                 });
                         }
-                        
                     });
             });
         }
