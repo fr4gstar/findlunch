@@ -91,9 +91,17 @@ export class PushService {
                                     buttons: [{
                                         text: 'Ok',
                                         role: 'cancel'
-                                    }]
+                                    }],
+                                    enableBackdropDismiss: false
                                 });
                                 alert.present();
+
+                                // dismiss after 10 seconds
+                                setTimeout(
+                                    () => {
+                                        alert.dismiss();
+                                    },
+                                    10000);
                             }
                             // If background then display as typical notification
                         });
