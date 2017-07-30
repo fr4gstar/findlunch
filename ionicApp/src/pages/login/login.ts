@@ -1,6 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Loading, NavController, NavParams, Toast, ToastController, AlertController, Alert
-} from "ionic-angular";
+import {Alert, AlertController, Loading, NavController, NavParams, Toast, ToastController} from "ionic-angular";
 import {Headers, Http, RequestMethod, RequestOptions, Response} from "@angular/http";
 import {HomePage} from "../home/home";
 import {RegistryPage} from "../registry/registry";
@@ -102,7 +101,6 @@ export class LoginPage implements OnInit {
                         });
                         toast.present();
                         this.push.pushSetup();
-                        this.push.notificationSetup();
                         // When comeBack is true, after login user is sent back to the view he came from
                         if (this.goBack) {
                             this.restaurant = this.navParams.get("restaurant");

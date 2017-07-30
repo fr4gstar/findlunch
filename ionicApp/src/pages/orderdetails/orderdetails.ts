@@ -484,8 +484,6 @@ export class OrderDetailsPage implements OnInit {
 
             date.setTime(date.getTime());
             this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
-
-            console.debug(this.earliestPickUp);
         } catch (e) {
             console.error(e);
             alert(this.strOpeningProblem);

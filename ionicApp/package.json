@@ -45,7 +45,6 @@
         "cordova-plugin-console": "^1.0.7",
         "cordova-plugin-datepicker": "^0.9.3",
         "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
         "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
         "cordova-plugin-inappbrowser": "^1.7.1",
@@ -104,9 +103,6 @@
         "plugins": {
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
-            "cordova-plugin-geolocation": {
-                "GEOLOCATION_USAGE_DESCRIPTION": " "
-            },
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
