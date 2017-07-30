@@ -171,6 +171,7 @@ export class OffersPage implements OnInit {
                             this.restaurant.isFavorite = false;
                             loader.dismiss();
                         } else {
+                            loader.dismiss();
                             const alert: Alert = this.alertCtrl.create({
                                 title: this.strError,
                                 message: this.strErrorDeFavorize,
@@ -205,6 +206,7 @@ export class OffersPage implements OnInit {
                             this.restaurant.isFavorite = true;
                             loader.dismiss();
                         } else {
+                            loader.dismiss();
                             const alert: Alert = this.alertCtrl.create({
                                 title: this.strError,
                                 message: this.strErrorFavorize,
