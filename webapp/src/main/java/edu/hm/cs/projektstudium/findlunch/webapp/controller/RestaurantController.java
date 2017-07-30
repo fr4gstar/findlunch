@@ -548,15 +548,6 @@ public class RestaurantController {
 		restaurant.addAdmin(u);
 		
 		//
-		Account account = accountRepository.findByUsers(restaurant.getAdmins());
-		if(account == null){
-			account = new Account();
-			account.setAccountType(accountTypeRepository.findOne(2));
-			account.addUser(u);
-			account.setAccountNumber(generateId());
-			accountRepository.save(account);
-		}
-		//
 		if(null == restaurant.getRestaurantLogos() || restaurant.getRestaurantLogos().isEmpty()) {
 			addDefaultLogo(restaurant);
 		}
@@ -582,6 +573,16 @@ public class RestaurantController {
 
 		session.removeAttribute("logoList");
 		restaurantRepository.save(restaurant);
+		
+		//
+		Account account = accountRepository.findByUsers(restaurant.getAdmins());
+		if(account == null){
+			account = new Account();
+			account.setAccountType(accountTypeRepository.findOne(2));
+			account.addUser(u);
+			account.setAccountNumber(generateId());
+			accountRepository.save(account);
+		}
 		
 		// Update UserDetails
 		User updatedUserDetails = customUserDetailsService.loadUserByUsername(authenticatedUser.getUsername());
