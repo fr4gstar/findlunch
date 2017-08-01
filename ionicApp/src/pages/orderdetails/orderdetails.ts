@@ -49,7 +49,7 @@ export class OrderDetailsPage implements OnInit {
     private param: Object;
 
     constructor(private http: Http,
-                navParams: NavParams,
+                private navParams: NavParams,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
                 private cartService: CartService,
@@ -57,7 +57,10 @@ export class OrderDetailsPage implements OnInit {
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        this.restaurant = navParams.get("restaurant");
+        this.ionViewDidEnter();
+    }
+        private ionViewDidEnter(): void {
+        this.restaurant = this.navParams.get("restaurant");
 
         this.reservation = {
             id: 0,
@@ -67,7 +70,7 @@ export class OrderDetailsPage implements OnInit {
             pointsCollected: true,
             points: 0,
             reservationNumber: 0,
-            items: cartService.getCart(this.restaurant.id),
+            items: this.cartService.getCart(this.restaurant.id),
             restaurant: this.restaurant,
             bill: null,
             reservationStatus: null,

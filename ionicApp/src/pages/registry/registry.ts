@@ -149,10 +149,7 @@ export class RegistryPage implements OnInit {
                         toast.present();
                         //if coming from Orderdetailspage, go back there after registry
                         if (this.goBack) {
-                            this.restaurant = this.navParams.get("restaurant");
-                            this.navCtrl.push(OrderDetailsPage, {
-                                restaurant: this.restaurant
-                            });
+                            this.navCtrl.pop();
                             loader.dismiss();
 
                             //else go to Home
