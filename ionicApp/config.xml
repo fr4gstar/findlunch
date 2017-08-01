@@ -84,7 +84,7 @@
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
-    <plugin name="cordova-plugin-googlemaps" spec="git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#20c6b30b594c0401229b86f5e520737d6d3bb55c">
+    <plugin name="cordova-plugin-googlemaps" spec="git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyChZUcKHflDgjQ3fhhHBzws4cAFjEncBz0" />
     </plugin>
