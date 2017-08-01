@@ -5,9 +5,9 @@ import {HomePage} from "../home/home";
 import {InAppBrowser} from "@ionic-native/in-app-browser";
 import {LoadingService} from "../../shared/loading.service";
 import {Restaurant} from "../../model/Restaurant";
-import {OrderDetailsPage} from "../orderdetails/orderdetails";
 import {TranslateService} from "@ngx-translate/core";
 import {SERVER_URL} from "../../app/app.module";
+import {PushService} from "../../shared/push.service";
 
 /**
  *
@@ -21,7 +21,6 @@ import {SERVER_URL} from "../../app/app.module";
 export class RegistryPage implements OnInit {
     private termsAndConditionsChecked: boolean;
     private goBack: boolean;
-    private restaurant: Restaurant;
 
     private strNoValidEmail: string;
     private strNoValidPassword: string;
@@ -39,7 +38,8 @@ export class RegistryPage implements OnInit {
                 private iab: InAppBrowser,
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private push: PushService) {
         this.goBack = navParams.get("comeBack");
         this.termsAndConditionsChecked = false;
     }
@@ -147,6 +147,8 @@ export class RegistryPage implements OnInit {
                             duration: 3000
                         });
                         toast.present();
+                        this.push.pushSetup();
+
                         //if coming from Orderdetailspage, go back there after registry
                         if (this.goBack) {
                             this.navCtrl.pop();
