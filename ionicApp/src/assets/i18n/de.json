@@ -116,7 +116,8 @@
         "failedLoadPoints": "Ihre Punkte konnten nicht geladen werden. Bitte versuchen Sie es in Kürze noch einmal",
         "openingProblem": "Leider steht das gewählte Restaurant im Moment nicht zur Verfügung. Bitte wählen Sie ein anderes Restaurant oder versuchen es später noch einmal",
         "pushReg": "Push-Funktionalität ist nicht gegeben. Sie erhalten keine Bestellungsbestätigung!",
-        "serviceNotAvailable": "Der FindLunch-Dienst ist nicht erreichbar. Überprüfen Sie ihre Internetverbindung oder versuchen Sie es später erneut."
+        "serviceNotAvailable": "Der FindLunch-Dienst ist nicht erreichbar. Überprüfen Sie ihre Internetverbindung oder versuchen Sie es später erneut.",
+        "orderPriceImpossible": "Bei der Berechnung Ihrer Bestellung ist ein Fehler unterlaufen, Bitte gehen sie erneut zum Warenkorb"
     }
 
 }
