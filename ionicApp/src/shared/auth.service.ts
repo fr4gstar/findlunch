@@ -53,7 +53,7 @@ export class AuthService {
      * @param userName
      *  chosen username
      * @param password
-     *  chose password
+     *  chosen password
      * @returns {Promise<T>}
      *  result whether registration was successful returned to the calling method
      */
@@ -84,32 +84,20 @@ export class AuthService {
      * If no more existent, logs the user out
      * @returns {Promise<T>}
      */
-    // TODO
-    public verifyUser() {
+    public verifyUser() : void {
         //if there is a username stored at all in the local storage...
         if (window.localStorage.getItem("username") !== null) {
 
-            //retrieve it...
-            const currentUser: string = window.localStorage.getItem("username");
-            const headers: Headers = new Headers({
-                'Content-Type': 'application/json',
-                //also retrieve the according token and put it into the header of the http-call
-                Authorization: "Basic " + window.localStorage.getItem(currentUser)
-            });
-// TODO
-            const options: RequestOptions = new RequestOptions({headers: headers});
-            return new Promise((resolve) => {
-                this.http.get(SERVER_URL + "/api/login_user", options).subscribe(
-                    (res: Response) => {
-                        //if verification successful..
-                        this.loggedIn = true;
-                        this.userName = currentUser;
-                        //else..
-                    },
-                    (err: Error) => {
-                        console.warn("Verifiying user failed.", err);
-                        this.logout();
-                    });
+            const options: RequestOptions = this.prepareHttpOptions(RequestMethod.Get);
+            this.http.get(`${SERVER_URL}/api/login_user`, options).subscribe(
+                (res: Response) => {
+                    //if verification successful..
+                    this.loggedIn = true;
+                    this.userName = window.localStorage.getItem("username");
+            },
+                //else..
+                (err: Error) => {
+                    this.logout();
             });
         }
     }
