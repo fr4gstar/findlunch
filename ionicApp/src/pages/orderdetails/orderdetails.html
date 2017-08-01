@@ -74,7 +74,7 @@
     </div>
     <ion-item *ngIf="nowOpen">
         <ion-label>{{ 'OrderDetailsPage.pickUpTime' | translate }}</ion-label>
-        <ion-datetime id="pickUpTime" displayFormat ="HH:mm"  min="{{earliestPickUp}}" max={{closingTime}} [(ngModel)]="pickUpTimeISOFormat"></ion-datetime>
+        <ion-datetime id="pickUpTime" cancelText="{{strCancel}}" doneText="{{strDone}}"  displayFormat ="HH:mm"  min="{{earliestPickUp}}" max={{closingTime}} [(ngModel)]="pickUpTimeISOFormat"></ion-datetime>
         <span item-right>{{ 'OrderDetailsPage.clock' | translate }}</span>
     </ion-item>
     <ion-item *ngIf="!nowOpen" text-wrap>

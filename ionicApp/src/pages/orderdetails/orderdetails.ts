@@ -31,7 +31,6 @@ export class OrderDetailsPage implements OnInit {
     public morePointsThanNeeded: boolean; //user's points are more than is needed to pay with points
     public payWithPoints: boolean = false;
 
-    public openingTime: string; //of today the current restaurant
     public closingTime: string; //of today the current restaurant
     public earliestPickUp: string;
     public nowOpen: boolean;
@@ -44,6 +43,8 @@ export class OrderDetailsPage implements OnInit {
     private strOpeningProblem: string;
     private strError : string;
     private strOrderPriceImpossible: string;
+    private strDone: string;
+    private strCancel: string;
 
 
     private param: Object;
@@ -59,7 +60,25 @@ export class OrderDetailsPage implements OnInit {
                 private translate: TranslateService) {
         this.ionViewDidEnter();
     }
-        private ionViewDidEnter(): void {
+
+
+    /**
+     * Calculates the total price of a given Array of Offer-items.
+     * @param items
+     * @returns {number} the total price of all items respecting their amounts.
+     *
+     * @author David Sautter
+     */
+    private static calcTotalPrice(items: Offer[]): number {
+        return items
+            .map((offer: Offer) => offer.price * offer.amount)
+            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
+    }
+
+    /**
+     * Does all the calculations everyTime the view gets entered
+     */
+    private ionViewDidEnter(): void {
         this.restaurant = this.navParams.get("restaurant");
 
         this.reservation = {
@@ -91,19 +110,6 @@ export class OrderDetailsPage implements OnInit {
         // sets the earliest settable time in the datepicker to 10 minutes from now.
         this.calcTimings(10);
 
-    }
-
-    /**
-     * Calculates the total price of a given Array of Offer-items.
-     * @param items
-     * @returns {number} the total price of all items respecting their amounts.
-     *
-     * @author David Sautter
-     */
-    private static calcTotalPrice(items: Offer[]): number {
-        return items
-            .map((offer: Offer) => offer.price * offer.amount)
-            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
     }
 
 
@@ -177,6 +183,20 @@ export class OrderDetailsPage implements OnInit {
             },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.orderPriceImpossible.", err);
+            });
+        this.translate.get('OrderDetailsPage.done').subscribe(
+            (value: string) => {
+                this.strDone = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key OrderDetailsPage.done", err);
+            });
+        this.translate.get('cancel').subscribe(
+            (value: string) => {
+                this.strCancel = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key cancel", err);
             });
     }
 

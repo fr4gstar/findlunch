@@ -43,7 +43,8 @@
         "isNotLoggedIn": "Sie müssen eingeloggt sein um eine Bestellung abzusenden!",
         "order": "Bestellen",
         "login": "Login",
-        "register": "Registrieren"
+        "register": "Registrieren",
+        "done": "Fertig"
     },
     "RegistryPage": {
         "title": "Registrieren",
