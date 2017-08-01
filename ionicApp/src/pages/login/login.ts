@@ -103,10 +103,7 @@ export class LoginPage implements OnInit {
                         this.push.pushSetup();
                         // When comeBack is true, after login user is sent back to the view he came from
                         if (this.goBack) {
-                            this.restaurant = this.navParams.get("restaurant");
-                            this.navCtrl.push(OrderDetailsPage, {
-                                restaurant: this.restaurant
-                            });
+                            this.navCtrl.pop();
                             loader.dismiss();
 
                         } else {

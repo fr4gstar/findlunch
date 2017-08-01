@@ -31,7 +31,6 @@ export class OrderDetailsPage implements OnInit {
     public morePointsThanNeeded: boolean; //user's points are more than is needed to pay with points
     public payWithPoints: boolean = false;
 
-    public openingTime: string; //of today the current restaurant
     public closingTime: string; //of today the current restaurant
     public earliestPickUp: string;
     public nowOpen: boolean;
@@ -42,11 +41,16 @@ export class OrderDetailsPage implements OnInit {
     private strEmptyOrder: string;
     private strFailedLoadPoints: string;
     private strOpeningProblem: string;
+    private strError : string;
+    private strOrderPriceImpossible: string;
+    private strDone: string;
+    private strCancel: string;
+
 
     private param: Object;
 
     constructor(private http: Http,
-                navParams: NavParams,
+                private navParams: NavParams,
                 private toastCtrl: ToastController,
                 private navCtrl: NavController,
                 private cartService: CartService,
@@ -54,7 +58,28 @@ export class OrderDetailsPage implements OnInit {
                 private alertCtrl: AlertController,
                 private loading: LoadingService,
                 private translate: TranslateService) {
-        this.restaurant = navParams.get("restaurant");
+        this.ionViewDidEnter();
+    }
+
+
+    /**
+     * Calculates the total price of a given Array of Offer-items.
+     * @param items
+     * @returns {number} the total price of all items respecting their amounts.
+     *
+     * @author David Sautter
+     */
+    private static calcTotalPrice(items: Offer[]): number {
+        return items
+            .map((offer: Offer) => offer.price * offer.amount)
+            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
+    }
+
+    /**
+     * Does all the calculations everyTime the view gets entered
+     */
+    private ionViewDidEnter(): void {
+        this.restaurant = this.navParams.get("restaurant");
 
         this.reservation = {
             id: 0,
@@ -64,7 +89,7 @@ export class OrderDetailsPage implements OnInit {
             pointsCollected: true,
             points: 0,
             reservationNumber: 0,
-            items: cartService.getCart(this.restaurant.id),
+            items: this.cartService.getCart(this.restaurant.id),
             restaurant: this.restaurant,
             bill: null,
             reservationStatus: null,
@@ -85,19 +110,6 @@ export class OrderDetailsPage implements OnInit {
         // sets the earliest settable time in the datepicker to 10 minutes from now.
         this.calcTimings(10);
 
-    }
-
-    /**
-     * Calculates the total price of a given Array of Offer-items.
-     * @param items
-     * @returns {number} the total price of all items respecting their amounts.
-     *
-     * @author David Sautter
-     */
-    private static calcTotalPrice(items: Offer[]): number {
-        return items
-            .map((offer: Offer) => offer.price * offer.amount)
-            .reduce((prevOfferSum: number, offerSum: number) => prevOfferSum + offerSum, 0);
     }
 
 
@@ -158,6 +170,34 @@ export class OrderDetailsPage implements OnInit {
                 console.error("Error: translate.get did fail for key Error.openingProblem", err);
             }
         );
+        this.translate.get('Error.general').subscribe(
+            (value: string) => {
+                this.strError = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.general.", err);
+            });
+        this.translate.get('Error.orderPriceImpossible').subscribe(
+            (value: string) => {
+                this.strOrderPriceImpossible = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key Error.orderPriceImpossible.", err);
+            });
+        this.translate.get('OrderDetailsPage.done').subscribe(
+            (value: string) => {
+                this.strDone = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key OrderDetailsPage.done", err);
+            });
+        this.translate.get('cancel').subscribe(
+            (value: string) => {
+                this.strCancel = value;
+            },
+            (err: Error) => {
+                console.error("Error: translate.get did fail for key cancel", err);
+            });
     }
 
     /**
@@ -292,79 +332,101 @@ export class OrderDetailsPage implements OnInit {
      * @author Skanny Morandi, David Sautter
      */
     public sendOrder(): void {
-        //sending an empty order is not possible
-        if (this.reservation.items.length === 0) {
-            alert(this.strEmptyOrder);
-        } else {
-            const loader: Loading = this.loading.prepareLoader();
-
-            //starts the loading spinner
-            loader.present().then(() => {
-                //timestamp in ionic and timestamp on server have 2 hrs difference
-                const date: Date = this.pickUpTime;
-                const timeDifference: number = 120 * 60 * 1000;
-                date.setTime(date.getTime() - timeDifference);
-                const correctedPickUpTime: string= date.toISOString();
-                this.reservation.collectTime = Date.parse(correctedPickUpTime);
-
-                //if logged in,
-                if (this.auth.getLoggedIn()) {
-                    this.reservation.usedPoints = this.payWithPoints;
-                    this.reservation.pointsCollected = !this.reservation.usedPoints;
-
-                    this.reservation.points = this.neededPoints;
-                }
-                //noinspection TsLint
-                const payload: any = {
-                    ...this.reservation,
-                    reservation_offers: [],
-                    restaurant: {
-                        id: this.reservation.restaurant.id      // do only send id with request payload (faster)
-                    }
-                };
-                payload.items.forEach((item: Offer) => {
-                    payload.reservation_offers.push({
-                        offer: {
-                            id: item.id
-                        },
-                        amount: item.amount
-                    });
+        if (this.reservation !== null) {
+            // total price smaller then donation or total price negative
+            if (this.reservation.totalPrice < this.reservation.donation ||
+                this.reservation.totalPrice < 0) {
+                const alert: Alert = this.alertCtrl.create({
+                    title: this.strError,
+                    message: this.strOrderPriceImpossible,
+                    buttons: [{
+                        text: 'Ok',
+                        role: 'cancel'
+                    }]
                 });
-                delete payload.items;
+                alert.present();
+                this.navCtrl.pop();
 
-                //prepare RequestOptions for http-call
-                const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Post);
+            }
+            //sending an empty order is not possible
+            else if (this.reservation.items.length === 0) {
+                const alert: Alert = this.alertCtrl.create({
+                    title: this.strError,
+                    message: this.strEmptyOrder,
+                    buttons: [{
+                        text: 'Ok',
+                        role: 'cancel'
+                    }]
+                });
+                alert.present();
+            } else {
+                const loader: Loading = this.loading.prepareLoader();
 
-                this.http.post(`${SERVER_URL}/api/register_reservation`, JSON.stringify(payload), options)
-                    .retry(2)
-                    .subscribe(
-                        (res: Response) => {
-                            const toast: Toast = this.toastCtrl.create({
-                                message: this.strSuccessOrder,
-                                duration: 3000
-                            });
-                            toast.present();
+                //starts the loading spinner
+                loader.present().then(() => {
 
-                            // empty the cart for this restaurant
-                            this.cartService.emptyCart(this.restaurant.id);
+                    //times in ionic and timestamp on server have 2 hrs difference
+                    const timeDifference: number = 120 * 60 * 1000;
+                    this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat) - timeDifference;
 
-                            // go back to restaurants-overview
-                            this.navCtrl.popToRoot();
+                    //if logged in,
+                    if (this.auth.getLoggedIn()) {
+                        this.reservation.usedPoints = this.payWithPoints;
+                        this.reservation.pointsCollected = !this.reservation.usedPoints;
 
-                            //stop the spinner
-                            loader.dismiss();
-                        },
-                        (err: Error) => {
-                            console.error(err);
-                            alert(this.strFailOrder);
-                            //stop the spinner
-                            loader.dismiss();
-
+                        this.reservation.points = this.neededPoints;
+                    }
+                    //noinspection TsLint
+                    const payload: any = {
+                        ...this.reservation,
+                        reservation_offers: [],
+                        restaurant: {
+                            id: this.reservation.restaurant.id      // do only send id with request payload (faster)
+                        }
+                    };
+                    payload.items.forEach((item: Offer) => {
+                        payload.reservation_offers.push({
+                            offer: {
+                                id: item.id
+                            },
+                            amount: item.amount
                         });
-            });
+                    });
+                    delete payload.items;
+
+                    //prepare RequestOptions for http-call
+                    const options: RequestOptions = this.auth.prepareHttpOptions(RequestMethod.Post);
+
+                    this.http.post(`${SERVER_URL}/api/register_reservation`, JSON.stringify(payload), options)
+                        .retry(2)
+                        .subscribe(
+                            (res: Response) => {
+                                const toast: Toast = this.toastCtrl.create({
+                                    message: this.strSuccessOrder,
+                                    duration: 3000
+                                });
+                                toast.present();
+
+                                // empty the cart for this restaurant
+                                this.cartService.emptyCart(this.restaurant.id);
+
+                                // go back to restaurants-overview
+                                this.navCtrl.popToRoot();
+
+                                //stop the spinner
+                                loader.dismiss();
+                            },
+                            (err: Error) => {
+                                console.error(err);
+                                alert(this.strFailOrder);
+                                //stop the spinner
+                                loader.dismiss();
+
+                            });
+                });
+            }
         }
     }
-
     /**
      * Shows explanation for donation option in the view
      */
@@ -460,6 +522,8 @@ export class OrderDetailsPage implements OnInit {
      *  amount of time that is needed for the order to be prepared. the time of Now + the prepTime equals
      *  the lower threshold of the datepicker.
      */
+
+    //TODO Unit Testing
     public calcTimings(prepTime: number): void {
         const date: Date = new Date();
         // restaurant.timeSchedules is an Array of Objects with opening time strings for single
@@ -481,7 +545,7 @@ export class OrderDetailsPage implements OnInit {
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
 
-            date.setTime(date.getTime());
+            date.setTime(this.pickUpTime.getTime() - 120 * 60 * 1000);
             this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
         } catch (e) {
             console.error(e);

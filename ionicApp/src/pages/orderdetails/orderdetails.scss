@@ -1,57 +1,60 @@
 
 .gericht, .spende {
-  font-size:  1.4rem;
+    font-size: 1.4rem;
 }
 
 #überschrift {
-  font-size: 1.7rem;
-  font-weight: bold;
+    font-size: 1.7rem;
+    font-weight: bold;
 }
 
 #gesamt {
-  border-top: 1px solid black;
+    border-top: 1px solid black;
 }
 
 #orderDetails ion-row ion-col:not(:first-child) {
-  text-align : right;
+    text-align: right;
 }
 
 #orderDetails ion-col:first-child {
-  font-size: 1.7rem;
+    font-size: 1.7rem;
 }
 
-#mehrwertsteuer > ion-col:nth-child(1){
-  font-size: 1rem;
+#mehrwertsteuer > ion-col:nth-child(1) {
+    font-size: 1rem;
 }
 
+#pickUpTime {
+    max-width: 100%;
+    text-align: right;
 
-#pickUpTime{
-  max-width : 100%;
-  text-align: right;
+    & .datetime-text {
+        float: right;
+        margin: 0;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid black;
+    }
+}
 
-  & .datetime-text{
-    float: right;
-    margin: 0;
-    padding: 8px;
+#bestellen {
+    width: 80%;
+    float: left;
     border-radius: 4px;
-    border : 1px solid black;
-  }
+    margin: 10%;
 }
 
-#bestellen{
-  width: 80%;
-  float:left;
-  border-radius: 4px;
-  margin: 10%;
+#notLoggedIn > button {
+    width: calc(50% - 5px);
+    float: left;
+    border-radius: 4px;
+
+    &:first-child {
+        margin-right: 10px;
+    }
+
 }
 
-#notLoggedIn > button{
-  width: calc(50% - 5px);
-  float: left;
-  border-radius: 4px;
-
-  &:first-child {
-    margin-right: 10px;
-  }
+#pointsText {
+    margin: 2%;
 }
-
