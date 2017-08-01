@@ -73,8 +73,11 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.http.post(`${SERVER_URL}/api/register_user`, user, options).subscribe(
                 (res: Response) => {
-                    //On successful registration -> login
-                    this.login(username, password);
+                    const encodedCredentials: string = btoa(`${username}:${password}`);
+                    window.localStorage.setItem("username", username);
+                    window.localStorage.setItem(username, encodedCredentials);
+                    this.userName = window.localStorage.getItem("username");
+                    this.loggedIn = true;
                     resolve(true);
                 }, (err) => {
                     reject(err._body);
