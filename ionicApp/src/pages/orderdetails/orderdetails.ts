@@ -170,7 +170,7 @@ export class OrderDetailsPage implements OnInit {
             });
         this.translate.get('Error.orderPriceImpossible').subscribe(
             (value: string) => {
-                this.strError = value;
+                this.strOrderPriceImpossible = value;
             },
             (err: Error) => {
                 console.error("Error: translate.get did fail for key Error.orderPriceImpossible.", err);
@@ -341,12 +341,10 @@ export class OrderDetailsPage implements OnInit {
 
                 //starts the loading spinner
                 loader.present().then(() => {
-                    //timestamp in ionic and timestamp on server have 2 hrs difference
-                    const date: Date = this.pickUpTime;
+
+                    //times in ionic and timestamp on server have 2 hrs difference
                     const timeDifference: number = 120 * 60 * 1000;
-                    date.setTime(date.getTime() - timeDifference);
-                    const correctedPickUpTime: string = date.toISOString();
-                    this.reservation.collectTime = Date.parse(correctedPickUpTime);
+                    this.reservation.collectTime = Date.parse(this.pickUpTimeISOFormat) - timeDifference;
 
                     //if logged in,
                     if (this.auth.getLoggedIn()) {
@@ -524,7 +522,7 @@ export class OrderDetailsPage implements OnInit {
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
 
-            date.setTime(date.getTime());
+            date.setTime(this.pickUpTime.getTime() - 120 * 60 * 1000);
             this.earliestPickUp = `${date.getHours()}:${date.getMinutes()}`;
         } catch (e) {
             console.error(e);
