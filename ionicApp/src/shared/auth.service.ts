@@ -57,8 +57,7 @@ export class AuthService {
      * @returns {Promise<T>}
      *  result whether registration was successful returned to the calling method
      */
-    // TODO
-    public register(username: string, password: string) {
+    public register  (username: string, password: string) : Observable<any>{
         const user: User = {
             username: username,
             password: password
@@ -69,21 +68,15 @@ export class AuthService {
             'Content-Type': 'application/json'
         });
         const options: RequestOptions = new RequestOptions({headers: headers});
-    // TODO
-        return new Promise((resolve, reject) => {
-            this.http.post(`${SERVER_URL}/api/register_user`, user, options).subscribe(
+        return this.http.post(`${SERVER_URL}/api/register_user`, user, options).do(
                 (res: Response) => {
+                    //producing "logged-in"-status
                     const encodedCredentials: string = btoa(`${username}:${password}`);
                     window.localStorage.setItem("username", username);
                     window.localStorage.setItem(username, encodedCredentials);
                     this.userName = window.localStorage.getItem("username");
                     this.loggedIn = true;
-                    resolve(true);
-                }, (err) => {
-                    reject(err._body);
-
                 });
-        });
     }
 
     /**

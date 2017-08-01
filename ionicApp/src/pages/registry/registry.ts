@@ -137,32 +137,36 @@ export class RegistryPage implements OnInit {
         } else {
             const loader: Loading = this.loading.prepareLoader();
             loader.present().then(() => {
-                // TODO add .timeout(8000) -> auth.register .do() etc. -> subscribe
-                this.auth.register(username, password).then(() => {
-                    const toast: Toast = this.toastCtrl.create({
-                        message: this.strRegisterSuccess,
-                        duration: 3000
-                    });
-                    toast.present();
-                    //if coming from Orderdetailspage, go back there after registry
-
-                    if (this.goBack) {
-                        this.restaurant = this.navParams.get("restaurant");
-                        this.navCtrl.push(OrderDetailsPage, {
-                            restaurant: this.restaurant
+                this.auth.register(username, password)
+                    .timeout(8000)
+                    .subscribe(
+                    (data: Response) => {
+                    if (data) {
+                        const toast: Toast = this.toastCtrl.create({
+                            message: this.strRegisterSuccess,
+                            duration: 3000
                         });
-                        loader.dismiss();
+                        toast.present();
+                        //if coming from Orderdetailspage, go back there after registry
+                        if (this.goBack) {
+                            this.restaurant = this.navParams.get("restaurant");
+                            this.navCtrl.push(OrderDetailsPage, {
+                                restaurant: this.restaurant
+                            });
+                            loader.dismiss();
 
-                        //else go to Home
-                    } else {
-                        this.navCtrl.setRoot(HomePage);
+                            //else go to Home
+                        } else {
+                            this.navCtrl.setRoot(HomePage);
+                        }
                     }
                     loader.dismiss();
-                })
-                    .catch((error: string) => {
+                    },
+                    (err: Response) => {
                         loader.dismiss();
                         let alert: Alert;
-                        switch (error) {
+                        const body: string = err.text().toString();
+                        switch (body) {
                             case "1" :
                                  alert = this.alertCtrl.create({
                                     title: this.strError,
@@ -175,7 +179,7 @@ export class RegistryPage implements OnInit {
                                  alert.present();
                                  break;
                             case "2" :
-                                 alert= this.alertCtrl.create({
+                                 alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strNoValidPassword,
                                     buttons: [{
@@ -185,7 +189,7 @@ export class RegistryPage implements OnInit {
                                 });
                                  break;
                             case "3" :
-                                 alert= this.alertCtrl.create({
+                                 alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strUsedEmail,
                                     buttons: [{
@@ -196,7 +200,7 @@ export class RegistryPage implements OnInit {
                                  break;
 
                             default :
-                                 alert= this.alertCtrl.create({
+                                 alert = this.alertCtrl.create({
                                     title: this.strError,
                                     message: this.strConnectionError,
                                     buttons: [{
@@ -205,6 +209,7 @@ export class RegistryPage implements OnInit {
                                     }]
                                 });
                         }
+                        alert.present();
                     });
             });
         }
