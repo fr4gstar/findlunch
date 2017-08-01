@@ -220,16 +220,25 @@ export class HomePage implements OnInit {
         } else {
             // create map
             const element: HTMLElement = this.theMap.nativeElement;
-            this.map = plugin.google.maps.Map.getMap(element, {});
+            this.map = plugin.google.maps.Map.getMap(element, {
+                'controls': {
+                    'compass': true,
+                    'myLocationButton': true,
+                    'indoorPicker': true,
+                    'zoom': true,
+                    'mapToolbar': true   // currently Android only
+                },
+                'gestures': {
+                    'scroll': true,
+                    'tilt': true,
+                    'rotate': true,
+                    'zoom': true
+                }
+            });
 
             // listen to MAP_READY event
             // You must wait for this event to fire before adding something to the map or modifying it in anyway
             this.map.one(plugin.google.maps.event.MAP_READY, () => {
-
-                    this.map.setMyLocationEnabled(true);
-                    this.map.setAllGesturesEnabled(true);
-                    this.map.setCompassEnabled(true);
-
                     // noinspection TsLint - no types for current plugin-googlemaps available
                     this.map.getMyLocation(
                         null,
