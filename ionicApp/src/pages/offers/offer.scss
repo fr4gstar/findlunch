@@ -1,31 +1,36 @@
 // "allergenics" always targets additives also
 
 .allergenics-header {
-  font-size: 7pt;
-  margin-top: 10px;
-  margin-bottom: 4px;
-  color: grey;
+    font-size: 7pt;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    color: grey;
 }
 
 .allergenics, .exponent-allergenics {
-  font-size: 6pt;
-  color: grey;
+    font-size: 6pt;
+    color: grey;
 }
 
 .allergenics-area-border {
-  border-top: 1px solid #dedede;
+    border-top: 1px solid #dedede;
 }
 
 #titleText {
-    float: left;
+    max-width: calc(100% - 71px);
     margin-top: 5px;
+    display: inline-block;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 #restaurantLogo {
     float: left;
     max-width: 64px;
     height: 30px;
-    display:inline-block;
+    display: inline-block;
     margin: auto;
     margin-right: 7px;
 }
