@@ -221,18 +221,18 @@ export class HomePage implements OnInit {
             // create map
             const element: HTMLElement = this.theMap.nativeElement;
             this.map = plugin.google.maps.Map.getMap(element, {
-                'controls': {
-                    'compass': true,
-                    'myLocationButton': true,
-                    'indoorPicker': true,
-                    'zoom': true,
-                    'mapToolbar': true   // currently Android only
+                controls: {
+                    compass: true,
+                    myLocationButton: true,
+                    indoorPicker: true,
+                    zoom: true,
+                    mapToolbar: true   // currently Android only
                 },
-                'gestures': {
-                    'scroll': true,
-                    'tilt': true,
-                    'rotate': true,
-                    'zoom': true
+                gestures: {
+                    scroll: true,
+                    tilt: true,
+                    rotate: true,
+                    zoom: true
                 }
             });
 
