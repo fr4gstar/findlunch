@@ -522,8 +522,6 @@ export class OrderDetailsPage implements OnInit {
      *  amount of time that is needed for the order to be prepared. the time of Now + the prepTime equals
      *  the lower threshold of the datepicker.
      */
-
-    //TODO Unit Testing
     public calcTimings(prepTime: number): void {
         const date: Date = new Date();
         // restaurant.timeSchedules is an Array of Objects with opening time strings for single
