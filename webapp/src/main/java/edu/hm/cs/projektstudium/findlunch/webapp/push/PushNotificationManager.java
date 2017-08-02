@@ -216,7 +216,7 @@ public class PushNotificationManager implements PushMessagingInterface {
 		JSONObject notification = new JSONObject();
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
-		data.put("titel","Deine Bestellung");
+		data.put("title","Deine Bestellung");
 		data.put("body", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt. Begründung: "+reservation.getReservationStatus().getStatus());
 		data.put("icon", "/images/FL.png");
 		notification.put("data", data);
