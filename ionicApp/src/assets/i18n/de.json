@@ -9,11 +9,11 @@
     },
     "ReservationsPage": {
         "title": "Meine Bestellungen",
-        "rejected": "Abgelehnt"
+        "rejected": "abgelehnt"
     },
     "ReservationPage": {
         "title": "Bestelldetails",
-        "rejected": "Abgelehnt",
+        "rejected": "abgelehnt",
         "donation": "Spende",
         "total": "Gesamt",
         "subtitle": "Ihre Bestellung bei {{name}} vom {{collectTime}}",
@@ -24,8 +24,8 @@
         "password": "Passwort",
         "login": "Einloggen",
         "register": "Registrieren",
-        "passwordReset": "Passwort Vergessen",
-        "securityToken": "Sicherheitstoken Anfordern"
+        "passwordReset": "Passwort vergessen",
+        "securityToken": "Sicherheitstoken anfordern"
     },
     "OrderDetailsPage": {
         "title": "Warenkorb",
@@ -34,9 +34,9 @@
         "amount": "Menge",
         "donation": "Freiwillige Spende",
         "total": "Gesamtpreis",
-        "tax": "inkl. 19%MwSt",
+        "tax": "inkl. 19% MwSt",
         "payWithPoints": "Mit Treuepunkten bezahlen",
-        "points": "Sie haben bei {{name}} derzeit {{points}} Punkte. Um diese Bestellung mit Treuepunkten zu bezahlen benötigen Sie {{nPoints}}",
+        "points": "Sie haben bei {{name}} derzeit {{points}} Punkte. Um diese Bestellung mit Treuepunkten zu bezahlen benötigen Sie {{nPoints}}.",
         "pickUpTime": "Abholen um (Wunschzeit)",
         "clock": "Uhr",
         "isClosed": "Das ausgewählte Restaurant hat leider gerade geschlossen.",
@@ -51,20 +51,20 @@
         "termsAndConditions": "allgemeinen Geschäftsbedingungen",
         "termsAndConditions1": "Ich habe die",
         "termsAndConditions2": "gelesen und stimme ihnen hiermit zu.",
-        "register": "REGISTRIERUNG ABSENDEN",
+        "register": "Registrierung absenden",
         "confirmPassword": "Passwort bestätigen"
     },
     "OffersProductPage": {
         "priceInPoints": "Preis in Treuepunkten",
-        "prepTime": "Zubereitungszeit",
-        "addToCart": "Zum Warenkorb Hinzufügen"
+        "prepTime": "Zubereitungszeit in Minuten",
+        "addToCart": "Zum Warenkorb hinzufügen"
     },
     "home": "Home",
     "containsAllergenics": "Enthaltene Allergene",
     "containsAdditives": "Enthaltene Zusatzstoffe",
     "allergenics": "Allergene",
     "additives": "Zusatzstoffe",
-    "password" : "Password",
+    "password" : "Passwort",
     "email": "E-Mail",
     "price": "Preis",
     "imprint": "Impressum",
@@ -78,7 +78,7 @@
     "close": "Schließen",
     "enterAdress": "Adresse eingeben",
     "info": "Info",
-    "donationInfo": "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Mit jedem Klick auf das plus-Zeichen wird Ihre Spende so gewählt, dass sie den Gesamtbetrag auf die nächsten 10 Cent aufrundet.",
+    "donationInfo": "Wenn Ihnen die App FindLunch gefällt, können Sie uns hier mit dieser Spende unterstützen. Mit jedem Klick auf das Plus-Zeichen wird Ihre Spende so gewählt, dass sie den Gesamtbetrag auf die nächsten 10 Cent aufrundet.",
     "phone": "Telefon",
     "distance": "Entfernung",
     "address": "Adresse",
@@ -87,7 +87,7 @@
     "status": "Status",
     "Success": {
         "logoutSuccess": "Logout erfolgt",
-        "login": "Login Erfolgreich",
+        "login": "Login erfolgreich",
         "order": "Bestellung wurde an Restaurant übermittelt. Sie erhalten eine Bestätigung.",
         "passwordReset": "Eine E-Mail mit der Passwortwiederherstellung wurde an Sie gesandt!",
         "register": "Registrierung erfolgreich!",
@@ -98,27 +98,27 @@
         "emptyOrder": "Sie können keine leere Bestellung absenden.",
         "favorize": "Konnte Restaurant nicht als Favorit setzen.",
         "deFavorize": "Konnte Restaurant nicht als Favorit entfernen.",
-        "login": "E-Mail und/oder Passwort nicht bekannt",
+        "login": "E-Mail und/oder Passwort nicht bekannt.",
         "connection": "Verbindungsfehler",
         "noValidEmail": "Keine gültige E-Mail Adresse!",
         "noValidPassword": "Passwort entspricht nicht den Passwortrichtlinien: mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen",
-        "usedEmail": "E-Mail adresse bereits vergeben.",
-        "confirmPassword": "Passwörter stimmen nicht überein",
-        "termsAndCondition": "Um sich zu registrieren, bitte bestätigen Sie bitte unsere allgemeinen Geschäftsbedingungen.",
+        "usedEmail": "E-Mail Adresse bereits vergeben.",
+        "confirmPassword": "Passwörter stimmen nicht überein!",
+        "termsAndCondition": "Um sich zu registrieren, bestätigen Sie bitte unsere allgemeinen Geschäftsbedingungen.",
         "confirmOrderRestaurant": "Fehler: Restaurant nicht gefunden!",
         "confirmOrderOffer": "Fehler: Angebot nicht gefunden!",
-        "qr": "Fehler beim Scannen des QR-Codes",
+        "qr": "Fehler beim Scannen des QR-Codes!",
         "points": "Punkte konnten nicht geladen werden!",
         "reservations": "Bestellungen konnten nicht geladen werden!",
-        "locationNotFound": "Ort wurde nicht gefunden",
-        "mapNotSupported": "Die Karte wird auf Ihrem Device nicht unterstützt.",
+        "locationNotFound": "Ihr Standort konnte nicht festgestellt werden!",
+        "mapNotSupported": "Die Karte wird auf Ihrem Gerät nicht unterstützt.",
         "critical": "Kritischer Fehler",
-        "failedOrder": "Bestellung konnte nicht abgeschickt werden. Bitte versuchen Sie es in Kürze noch einmal",
-        "failedLoadPoints": "Ihre Punkte konnten nicht geladen werden. Bitte versuchen Sie es in Kürze noch einmal",
-        "openingProblem": "Leider steht das gewählte Restaurant im Moment nicht zur Verfügung. Bitte wählen Sie ein anderes Restaurant oder versuchen es später noch einmal",
-        "pushReg": "Push-Funktionalität ist nicht gegeben. Sie erhalten keine Bestellungsbestätigung!",
-        "serviceNotAvailable": "Der FindLunch-Dienst ist nicht erreichbar. Überprüfen Sie ihre Internetverbindung oder versuchen Sie es später erneut.",
-        "orderPriceImpossible": "Bei der Berechnung Ihrer Bestellung ist ein Fehler unterlaufen, Bitte gehen sie erneut zum Warenkorb"
+        "failedOrder": "Bestellung konnte nicht abgeschickt werden. Bitte versuchen Sie es in Kürze noch einmal!",
+        "failedLoadPoints": "Ihre Punkte konnten nicht geladen werden. Bitte versuchen Sie es in Kürze noch einmal!",
+        "openingProblem": "Leider steht das gewählte Restaurant im Moment nicht zur Verfügung. Bitte wählen Sie ein anderes Restaurant oder versuchen Sie es in Kürze noch einmal!",
+        "pushReg": "Push-Funktionalität ist nicht gegeben. Sie erhalten keine keinerlei Bestellungsbestätigung!",
+        "serviceNotAvailable": "FindLunch ist gerade nicht erreichbar. Überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut.",
+        "orderPriceImpossible": "Bei der Berechnung Ihrer Bestellung ist ein Fehler unterlaufen. Bitte gehen Sie erneut zum Warenkorb!"
     }
 
 }
