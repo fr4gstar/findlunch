@@ -545,7 +545,6 @@ export class OrderDetailsPage implements OnInit {
             this.pickUpTime = date;
             this.pickUpTimeISOFormat = date.toISOString();
 
-            date.setTime(this.pickUpTime.getTime() - 120 * 60 * 1000);
             this.earliestPickUp = date.toISOString();
         } catch (e) {
             console.error(e);
