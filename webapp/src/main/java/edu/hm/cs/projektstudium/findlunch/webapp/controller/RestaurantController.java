@@ -548,15 +548,6 @@ public class RestaurantController {
 		restaurant.addAdmin(u);
 		
 		//
-		Account account = accountRepository.findByUsers(restaurant.getAdmins());
-		if(account == null){
-			account = new Account();
-			account.setAccountType(accountTypeRepository.findOne(2));
-			account.addUser(u);
-			account.setAccountNumber(generateId());
-			accountRepository.save(account);
-		}
-		//
 		if(null == restaurant.getRestaurantLogos() || restaurant.getRestaurantLogos().isEmpty()) {
 			addDefaultLogo(restaurant);
 		}
@@ -582,6 +573,16 @@ public class RestaurantController {
 
 		session.removeAttribute("logoList");
 		restaurantRepository.save(restaurant);
+		
+		//
+		Account account = accountRepository.findByUsers(restaurant.getAdmins());
+		if(account == null){
+			account = new Account();
+			account.setAccountType(accountTypeRepository.findOne(2));
+			account.addUser(u);
+			account.setAccountNumber(generateId());
+			accountRepository.save(account);
+		}
 		
 		// Update UserDetails
 		User updatedUserDetails = customUserDetailsService.loadUserByUsername(authenticatedUser.getUsername());
@@ -663,8 +664,10 @@ public class RestaurantController {
 			return "restaurant";
 		}
 		
-		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
-		restaurant.setRestaurantLogos(restaurantLogos);
+		if (null!=session.getAttribute("logoList")){
+			List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+			restaurant.setRestaurantLogos(restaurantLogos);
+		}
 		restaurant.addRestaurantLogo(newLogo);
 		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
@@ -930,7 +933,7 @@ public class RestaurantController {
 		restaurant.setRestaurantLogos((List<RestaurantLogo>) session.getAttribute("logoList"));
 		restaurant.removeRestaurantLogo(restaurant.getRestaurantLogos().get(imageId));
 		
-		if(restaurant.getRestaurantLogos().isEmpty()){
+		if(null == restaurant.getRestaurantLogos() || restaurant.getRestaurantLogos().isEmpty()) {
 			addDefaultLogo(restaurant);
 		}
 		
